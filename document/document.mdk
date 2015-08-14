@@ -1,0 +1,34 @@
+Title         : Static Analysis Results Interchange Format
+Heading Base  : 2
+Logo          : false
+
+~IsoNote: .block before='[NOTE&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=smaller
+~IsoNumberedNote: .block label='[@IsoNumberedNote]{.Example-label}' before='[NOTE\ &label;&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=smaller
+~IsoExample: .block before='[EXAMPLE&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=smaller
+~IsoNumberedExample: .block label='[@IsoNumberedExample]{.Example-label}' before='[EXAMPLE\ &label;&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=smaller
+
+[TITLE]
+
+~ Center
+Copyright © 2015 Microsoft Corporation. All rights reserved.
+~
+
+[TOC]
+
+[INCLUDE=Foreward]
+
+[INCLUDE=Introduction]
+
+[INCLUDE=Scope]
+
+[INCLUDE=Normative]
+
+[INCLUDE=Definitions]
+
+[INCLUDE=Format]
+
+[INCLUDE=AnnexA]
+
+[INCLUDE=AnnexB]
+
+[INCLUDE=Bibliography]

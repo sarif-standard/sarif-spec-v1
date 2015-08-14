@@ -1,0 +1,15 @@
+# Normative references
+
+The following documents, in whole or in part, are normatively referenced in this document
+and are indispensable for its application.
+For dated references, only the edition cited applies.
+For undated references, the latest edition of the referenced document (including any amendments) applies.
+
+ECMA-404, The JSON Data Interchange Format.
+Available from &lt;<http://ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf>&gt;
+
+FIPS PUB 180-4, Secure Hash Standard (SHS).
+Available from &lt;<http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf>&gt;
+
+RFC 2045, Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies.
+Available from &lt;<http://www.ietf.org/rfc/rfc2045.txt>&gt;

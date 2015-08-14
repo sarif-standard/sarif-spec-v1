@@ -1,0 +1,833 @@
+# File format
+
+## General
+
+A SARIF log file shall contain the results of a one or more static analysis runs.
+The runs need not be produced by the same static analysis tool.
+
+A SARIF log file shall conform to the requirements of the JSON format.
+The top-level value in the log file shall conform to the JSON object grammar;
+that is, it shall consist of a comma-separated sequence of string/value pairs, enclosed in curly brackets,
+as described in the JSON specification.
+We refer to the object represented by this top-level value as the `issueLog` object (&sect;[#issueLog]).
+
+Every JSON property name in the SARIF format shall be a camelCase name.
+
+~ IsoNumberedNote { @IsoNumberedNote=1}
+A single run of a static analysis tool that supports the SARIF format produces a SARIF log file
+containing the results of that one run.
+Other programs, such as build systems or issue management systems, can consolidate the contents
+of multiple single-run log files into a single SARIF log file that contains the results from all of those runs.
+This allows the aggregated results to be conveniently stored in a file or transported over a network.
+~
+
+~ IsoNumberedNote
+The remainder of this document contains several partial examples of the SARIF format.
+The examples are formatted for clarity, as permitted by the JSON standard, which allows "insignificant whitespace"
+before or after any token;
+implementations need not follow the whitespace convention used in these examples.
+In these examples, an ellipsis (&hellip;) is used to indicate that portions of the log file text
+required by this specification have been omitted for brevity.
+Also in these examples, a '#' character introduces a comment that extends to the end of the line.
+These comments are present for explanatory purposes and are not part of the SARIF file format.
+~
+
+## `issueLog` object { #issueLog }
+
+### General
+
+An `issueLog` object specifies the version of the file format and contains the results of one or more runs.
+
+~ IsoExample
+
+```
+{
+    "version" : "1.0",  # see \(&sect;[#issueLog-version]\)
+    "runLogs" :         # see \(&sect;[#issueLog-runLogs]\)
+    [
+        {
+            ...         # a runLog object (see \(&sect;[#runLog]\))
+        },
+        ...
+        {
+            ...         # another runLog object
+        }
+    ]
+}
+```
+~
+
+### `version` property { #issueLog-version }
+
+An `issueLog` object shall contain a property named `version` whose value is the string `"1.0"`.
+
+Although the order in which the string/value pairs appear in a JSON object value is not semantically significant,
+the `version` property should appear first.
+
+~ IsoNote
+This will make it easier for parsers to handle multiple versions of the SARIF format,
+if new versions are defined in the future.
+~
+
+### `runLogs` property { #issueLog-runLogs }
+
+An `issueLog` object shall contain a property named `runLogs` whose value is an array
+containing one or more runLog objects (&sect;[#runLog]).
+
+## `runLog` object { #runLog }
+
+### General
+
+A `runLog` object describes a single run of a static analysis tool,
+and enumerates the issues detected by that run.
+
+~ IsoExample
+
+```
+{
+    "toolInfo":    # see \(&sect;[#runLog-toolInfo]\)
+    {
+        ...        # a toolInfo object (see \(&sect;[#toolInfo]\))
+    },
+    "runInfo":     # see \(&sect;[#runLog-runInfo]\)
+    {
+        ...        # a runInfo object (see \(&sect;[#runInfo]\))
+    },
+    "issues":      # see \(&sect;[#runLog-issues]\)
+    [
+        {
+            ...    # an issue object (see \(&sect;[#issue]\))
+        },
+        ...
+        {
+            ...    # another issue object
+        }
+    ]
+}
+```
+~
+
+### `toolInfo` property { #runLog-toolInfo }
+
+A `runLog` object shall contain a property named `toolInfo` whose value is a `toolInfo` object (&sect;[#toolInfo]).
+
+### `runInfo` property { #runLog-runInfo }
+
+A `runLog` object shall contain a property named `runInfo` whose value is a `runInfo` object (&sect;[#runInfo]).
+
+### `issues` property { #runLog-issues }
+
+A `runLog` object shall contain a property named `issues` whose value is an array containing zero or more `issue` objects (&sect;[#issue]),
+each of which represents a single issue detected in the course of a run.
+
+The `issues` array shall be empty if the run that produced the `runLog` object did not detect any issues.
+
+## `toolInfo` object { #toolInfo }
+
+### General
+
+A `toolInfo` object contains information describing the static analysis tool that was run.
+
+~ IsoNote
+If another tool post-processes the log file (for example, by removing certain issues,
+or by adding information that was not known to the static analysis tool),
+the post-processing tool should not alter any part of the `toolInfo` object.
+~
+
+~ IsoExample
+
+```
+{
+    "name": "CodeScanner",                                       # see \(&sect;[#toolInfo-name]\)
+    "fullName": "CodeScanner 2.0, Developer Preview (en-US)",    # see \(&sect;[#toolInfo-fullName]\)
+    "version": "2.0.0-beta",                                     # see \(&sect;[#toolInfo-version]\)
+    "fileVersion": "2.0.1502.2"                                  # see \(&sect;[#toolInfo-fileVersion]\)
+}
+```
+~
+
+### `name` property { #toolInfo-name }
+
+A `toolInfo` object shall contain a property named `name` whose value is a string containing the name of the tool that produced the log file.
+
+~ IsoExample
+`"CodeScanner"`
+~
+
+### `fullName` property { #toolInfo-fullName }
+
+A `toolInfo` object may contain a property named `fullName` whose value is a string containing the name of the tool
+along with its version and any other useful identifying information, such as its locale.
+
+~ IsoExample
+`"CodeScanner 2.0, Developer Preview (en-US)"`
+~
+
+### `version` property { #toolInfo-version }
+
+A `toolInfo` object should contain a property named `version` whose value is a string containing the tool version.
+If present, the string should be in the format specified by Semantic Versioning 2.0.0.
+
+~ IsoNote
+Semantic versions have the property of being sortable in chronological order of release.
+~
+
+~ IsoExample
+`"1.0.0-beta"`
+~
+
+### `fileVersion` property { #toolInfo-fileVersion }
+
+If the operating system on which the tool runs provides a value for the file version of the tool's primary executable file,
+then the `toolInfo` object may contain a property named `fileVersion` whose value is
+a string representation of that file version.
+If the operating system does not provide such a value, the `fileVersion` property shall not be present.
+
+~ IsoExample
+On the Windows platform, this information is available in the `FILEVERSION` member of the `VERSIONINFO` structure.
+~
+
+## `runInfo` object { #runInfo }
+
+### General
+
+A `runInfo` object describes the invocation of the static analysis tool that produced the issues specified
+in the containing runLog object (&sect;[#runLog]).
+
+~ IsoNote
+The information in the `runInfo` object makes it possible to precisely repeat a run of a static analysis tool,
+and to verify that the issues reported in the log file were generated by an appropriate invocation of the tool.
+~
+
+### `commandLineArguments` property
+
+A `runInfo` object shall contain a property named `commandLineArguments` whose value is a string
+containing the command line arguments with which the tool was invoked.
+This string shall not include the file name or path to the executable itself.
+
+~ IsoExample
+Suppose a tool is invoked with the command line
+
+```
+    C:\Tools\CodeScanner\CodeScanner.exe /input C:\Code\*.cc
+```
+
+Then the value of the `commandLineArguments` property should be `"/input C:\Code\*.cc"`.
+~
+
+### `analysisTargets` property
+
+A `runInfo` object shall contain a property named `analysisTargets` whose value is an array,
+each of whose elements is a `fileReference` object (&sect;[#fileReference])
+representing the location of a single analysis target scanned during the run.
+This array shall contain one entry for each analysis target that was scanned,
+even if the analysis targets were not individually specified on the command line.
+
+~ IsoNumberedNote { @IsoNumberedNote=1 }
+The command line with which the tool was invoked might specify its input files
+by means of a wild card such as *.cc, or it might specify them implicitly,
+for example, by scanning the files in the current directory.
+~
+
+The `analysisTargets` array shall be empty if no analysis targets were scanned in the course of the run.
+
+~ IsoNumberedNote
+This could happen if the command line specified a wildcard such as *.cc for the input files,
+and no files matched the wildcard.
+~
+
+~ IsoExample
+`[ "C:\Code\a.cc", "C:\Code\b.cc", "C:\Code\c.cc" ]`
+~
+
+## `fileReference` object { #fileReference }
+
+### General
+
+A `fileReference` object represents a single file.
+
+### `uri` property { #fileReference-uri }
+
+A `fileReference` object shall contain a property named `uri` with a string value that represents
+the location of the file as a valid URI.
+
+### `hashes` property
+
+A `fileReference` object shall contain a property named `hashes` whose value is an array of `hash` objects (&sect;[#hash]),
+each of which specifies a hashed value for the file specified by the uri property (&sect;[#fileReference-uri]),
+along with the name of the algorithm used to compute the hash.
+
+## `hash` object { #hash }
+
+### General
+
+A `hash` object represents a hash value of some file or collection of files, together with the algorithm used to compute the hash.
+
+~ IsoExample
+
+```
+{
+    "value":"b13ce2678a8807ba0765ab94a0ecd394f869bc81",   # see \(&sect;[#hash-value]\)
+    "algorithm":"SHA-256"                                 # see \(&sect;[#hash-algorithm]\)
+}
+```
+~
+
+### `value` property { #hash-value }
+
+A `hash` object shall contain a property named `value` whose value is the hash value of some file or collection of files,
+computed by the algorithm named in the `algorithm` property (&sect;[#hash-algorithm]). 
+
+### `algorithm` property { #hash-algorithm }
+
+A `hash` object shall contain a property named `algorithm`, whose value is a string specifying the name
+of the algorithm used to compute the hash value specified in the `value` property (&sect;[#hash-value]).
+This must be one of the following:
+
+*	`BLAKE-256`
+*	`BLAKE-512`
+*	`ECOH`
+*	`FSB`
+*	`GOST`
+*	`Grøstl`
+*	`HAS-160`
+*	`HAVAL`
+*	`JH`
+*	`MD2`
+*	`MD4`
+*	`MD5`
+*	`MD6`
+*	`RadioGatún`
+*	`RIPEMD`
+*	`RIPEMD-128`
+*	`RIPEMD-160`
+*	`RIPEMD-320`
+*	`SHA-1`
+*	`SHA-224`
+*	`SHA-256`
+*	`SHA-384`
+*	`SHA-512`
+*	`SHA-3`
+*	`Skein`
+*	`Snefru`
+*	`Spectral Hash`
+*	`SWIFFT`
+*	`Tiger`
+*	`Whirlpool`
+
+## `issue` object { #issue }
+
+### General
+
+An `issue` object describes a single issue detected by a static analysis tool.
+
+### `ruleId` property
+
+An `issue` object shall contain a property named `ruleId` whose value is a string containing
+a stable, opaque identifier for the rule that was violated.
+
+~ IsoExample
+`"CA2101"`
+~
+
+### `fullMessage` property
+
+An `issue` object shall contain a property named `fullMessage` whose value is a string that describes the issue.
+
+The `fullMessage` property should provide sufficient details to allow an end user to resolve the issue.
+In particular, `fullMessage` must include all of the following information that is available and relevant to the issue:
+
+*	Information sufficient to identify the analysis target, and the location within the target where the issue occurred.
+
+*	The condition within the analysis target that led to the issue being reported.
+
+*	The risks or problems potentially associated with not fixing the problem.
+
+*	The full range of responses to the problem that the end user could take
+(including the definition of conditions where it might be appropriate not to fix the problem, or to conclude that the issue is a false positive).
+
+The first sentence of the `fullMessage` property should provide a useful summary of the issue,
+suitable for display in cases where UI is limited.
+Tools that construct `fullMessage` in this way need not provide a value for the `shortMessage` property.
+Tools that do not construct `fullMessage` in this way should provide a value for the `shortMessage` property,
+because otherwise, the initial portion of `fullMessage` that a viewer displays where UI space is limited
+might not be understandable.
+
+~ IsoExample
+This is an example of a `fullMessage`:
+```
+    "Deleting object members may compromise performance when subsequently accessing the object.
+    Consider setting object member 'x' to null instead, unless this object is a dictionary
+    or if runtime semantics otherwise dictate that the existence of a null member is distinct
+    from one that is not present at all. This violation can also be ignored for infrequently
+    called code paths."
+```
+~
+
+### `shortMessage` property
+
+An `issue` object may contain a property named `shortMessage` whose value is a string that describes the issue.
+The `shortMessage` property should be a single sentence that is understandable
+when displayed in user interface contexts where the available space is limited to a single line of text.
+
+~ IsoExample
+This is an example of a `shortMessage`:
+```
+    "Deleting member 'x' of variable 'y' may compromise performance on subsequent accesses
+    of 'y'."
+```
+~
+
+### `locations` property
+
+An `issue` object shall contain a property named `locations` whose value is an array,
+each of whose elements is a `location` object (&sect;[#location]) which specifies a location where the issue occurs.
+The `locations` array must contain at least one element if the issue can be associated with a location.
+In rare circumstances, it might not be possible to specify a location for an issue.
+
+~ IsoNumberedExample { @IsoNumberedExample=1}
+If a C++ analyzer detects that no file defines a main method,
+then the resulting issue cannot be associated with a file.
+~
+
+The `locations` array shall not contain more than one element unless the issue can only be corrected
+by making a change at all of the locations specified by the array elements.
+
+~ IsoNumberedExample
+In programming languages that support partial classes,
+the name of a single class may occur more than once in the source code.
+If a static analysis tool reported that the name of such a class did not conform to a specified convention,
+then the resulting log file should contain a single issue object,
+which should contain a locations array each of whose elements specifies the location in the source code
+where the class name occurs.
+~
+
+The `locations` array shall not be used to specify distinct occurrences of the same issue,
+which can be corrected independently.
+
+~ IsoNumberedExample
+Consider a static analysis tool which locates misspelled words in documentation,
+and suppose this tool scans a document in which the same word is misspelled in two distinct locations.
+Then the resulting log file should contain two distinct `issue` objects,
+each of which should contain a `locations` array containing a single `location` object
+specifying the location of one instance of the misspelled word.
+~
+
+### `toolFingerprint` property
+
+An `issue` object may contain a property named `toolFingerprint` whose value is a string
+that contributes to the process of uniquely identifying the issue.
+[Annex A](#Annex-A) explains how an issue management system can use this value.
+
+### `executionFlows` property { #issue-executionFlows }
+
+An `issue` object may contain a property named `executionFlows` whose value is an array of arrays of
+`executionFlowEntry` objects (&sect;[#executionFlowEntry]).
+For convenience, in this context we refer to an array of `executionFlowEntry` objects as an `executionFlow` object;
+hence we may say that the value of the `executionFlows` property is an array of `executionFlow` objects.
+The `executionFlows` property is intended for use by static analysis tools that perform flow analysis
+in the process of detecting issues.
+
+Each `executionFlow` object in the `executionFlows` array shall describe a single execution flow.
+An execution flow is a sequence of locations visited by the tool in the course of performing a flow analysis.
+An execution flow is in turn represented by an array of `executionFlowEntry` objects.
+This array need not include every location visited by the tool,
+but the entries that are present shall occur in the order that the tool visited them.
+
+A single issue may contain one or more execution flows, one or more call stacks (&sect;[#issue-callStacks]), or both.
+
+~ IsoNote
+The SARIF file format allows multiple execution flows within a single `issue` object
+to allow for the possibility that a static analysis tool might simulate more than one execution flow
+in the course of detecting a single issue.
+~
+
+### `stacks` property { #issue-callStacks }
+
+An `issue` object may contain a property named `stacks` whose value is an array of arrays of
+`executionFlowEntry` objects (&sect;[#executionFlowEntry]).
+For convenience, in this context we refer to an array of `executionFlowEntry` objects as a `stack` object;
+hence we may say that the value of the `stacks` property is an array of `stack` objects.
+The `stacks` property is intended for use by static analysis tools that collects call stack information 
+in the process of detecting issues.
+
+Each `stack` object in the stacks array shall describe a single call stack.
+A call stack is a sequence of nested function calls simulated by the tool in the course of performing a flow analysis.
+A stack is in turn represented by an array of `executionFlowEntry` objects.
+This array shall include every function call in the stack for which the tool has information,
+and the entries that are present shall occur in order with the innermost call first and the outermost call last.
+
+A single issue may contain one or more call stacks, one or more execution flows (&sect;[#issue-executionFlows]), or both.
+
+~ IsoNumberedNote { @IsoNumberedNote=1}
+The SARIF file format allows multiple call stacks within a single `issue` object
+to allow for the possibility that a static analysis tool might simulate more than one call stack
+in the course of detecting a single issue.
+~
+
+~ IsoNumberedNote
+It is possible that the static analysis tool will not have location information for every call in the call stack.
+This might happen, for example, if application code for which location information is available calls into operating system code
+for which location information is not available, which in turn calls back into application code.
+~
+
+### `isSuppressedInSource` property
+
+An `issue` object may contain a property named `isSuppressedInSource` whose value is one of the strings
+`"true"`, `"false"`, or `"null"`.
+
+Some programming languages offer a syntactic construct for suppressing compiler warnings.
+For tools that examine source code written in such a language, this value shall be set to `"true"`
+if the tool determines that the issue occurred at a location within the scope of an instance of such a construct
+which is intended to suppress that particular class of issue.
+It shall be set to `"false"` if the tool determines that the issue did not occur at such a location.
+It shall omitted if the tool cannot or chooses not to determine whether the issue occurs at such a location.
+
+For tools that do not examine source code written in such a language, this value shall be set to "null", or omitted entirely.
+
+~ IsoExample
+The `#pragma` warning construct in C# is such a syntactic construct.
+~
+
+### `properties` property
+
+An `issue` object may contain a property named `properties`, whose value is a JSON object
+consisting of an arbitrary set of string/value pairs.
+This allows tools to include information about the issue that is not explicitly specified in the SARIF format.
+
+The value within each string-value pair shall be a string.
+The string value may be the empty (zero-length) string.
+The value shall not be a JSON array or sub-object.
+
+## `location` object { #location }
+
+### General
+
+A `location` object specifies the location where a static analysis tool detected an issue.
+A `location` object shall specify the physical location (&sect;[#physicalLocation-info]) of the issue,
+and it may also specify the logical location (&sect;[#logicalLocation-info]) of the issue.
+
+### Physical locations and the `physicalLocation` array { #physicalLocation-info }
+
+A physical location specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
+A physical location is represented by an array of `physicalLocationComponent objects` (&sect;[#physicalLocationComponent]);
+for convenience, we refer to this array as a `physicalLocation` object.
+This allows reference to issues which occur in files nested within other files, for example, within a compressed container.
+If an issue occurs in such a nested file, the first `physicalLocationComponent` object in the array shall refer to the outermost container,
+the next element shall refer to a file nested immediately within that container, and so on,
+with the last element referring to the most deeply nested file.
+
+Physical locations are applicable to issues that occur in all kinds of programming artifacts.
+
+### Logical locations and the `logicalLocation` array { #logicalLocation-info }
+
+A logical location specifies a reference to a logical construct, for example, a class name or a function name,
+without specifying the programming artifact within which that construct occurs.
+A logical location is represented by an array of `logicalLocationComponent` objects (&sect;[#logicalLocationComponent]);
+for convenience, we refer to this array as a `logicalLocation` object.
+This allows reference to issues which occur in nested logical components, for example,
+a method nested within a class which is in turn nested within a namespace.
+If an issue occurs in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
+the outermost construct,
+the next element shall refer to a construct nested immediately within the first construct,
+and so on, with the last element referring to the most deeply nested construct.
+
+### Constraints
+
+Within any one location object, if the `analysisTarget` property (&sect;[#location-analysisTarget])
+and the `issueFile` property (&sect;[#location-issueFile]) would both refer to the same location,
+then the `analysisTarget` property shall be present and the `issueFile` property shall be absent.
+If the `analysisTarget` property and the `issueFile` property would refer to different locations,
+then the `analysisTarget` property and the `issueFile` property shall both be present.
+
+Within any one location object, the `logicalLocation` property (&sect;[#location-logicalLocation])
+and the `fullyQualifiedLogicalName` property (&sect;[#location-fullyQualifiedLogicalName])
+shall either both be present or both be absent.
+
+### `analysisTarget` property { #location-analysisTarget }
+
+A `location` object may contain a property named `analysisTarget` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
+that identifies the file that the static analysis tool was instructed to scan.
+This need not be the same as the file where the issue actually occurs. See `issueFile` (&sect;[#location-issueFile]) for more information on this point.
+
+### `issueFile` property { #location-issueFile }
+
+A `location` object may contain a property named `issueFile` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
+that identifies the file where the static analysis tool detected the issue.
+
+If the issue actually occurs at the location specified in the `analysisTarget` property,
+then the `issueFile` property shall not be present.
+If the issue occurs in a different file from the one specified in the `analysisTarget` property,
+then the `issueFile` property shall be present.
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+Suppose a static analysis tool for C++ source code is instructed to scan the source file _a.cpp_,
+which includes the header file _b.h_,
+and suppose the tool detects an issue in _b.h_.
+In this case, the tool should report the `analysisTarget` as _a.cpp_,
+and it should report the `issueFile` as _b.h_.
+~
+
+~ IsoNumberedExample
+Suppose a static analysis tool for object code detects an issue in the binary file _c.dll_,
+and suppose the tool has available symbol information which maps that location within the binary
+to a specific line in a source file _d.cpp_.
+In this case, the tool should report the `analysisTarget` as _c.dll_,
+and it should report the `issueFile` as _d.cpp_.
+~
+
+### `logicalLocation` property { #location-logicalLocation }
+
+A `location` object may contain a property named `logicalLocation` whose value is a `logicalLocation` object (&sect;[#logicalLocation-info])
+which specifies the logical location where the static analysis tool detected the issue.
+
+### `fullyQualifiedLogicalName` property { #location-fullyQualifiedLogicalName }
+
+A `location` object may contain a property named `fullyQualifiedLogicalName` whose value is a string
+which summarizes the information in the `logicalLocationComponent` array (&sect;[#logicalLocationComponent])
+in a format consistent with the programming language in which the programming constructs specified by that array were expressed.
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+C: `create_process`
+~
+~ IsoNumberedExample
+C++: `Namespace::Class::Method(int, double) const &&`
+~
+~ IsoNumberedExample
+C#: `Namespace1.Namespace2.Class.Method(System.String, int[])`
+~
+
+~ IsoNote
+The intent of this property is to allow an issue log viewer to display the logical location
+in a way that is easily understood by an end user.
+~
+
+### `properties` property
+
+A `location` object may contain a property named `properties`, whose value is a JSON object
+consisting of an arbitrary set of string/value pairs.
+This allows tools to include information about the location that is not explicitly specified in the SARIF format.
+
+The value within each string/value pair shall be a string.
+The string value may be the empty (zero-length) string.
+The value shall not be a JSON array or sub-object.
+
+## `physicalLocationComponent` object { #physicalLocationComponent }
+
+### General
+
+A `physicalLocationComponent` object is an element of a `physicalLocation` object (&sect;[#physicalLocation-info]).
+
+### `uri` property
+
+A `physicalLocationComponent` object shall contain a property named `uri` with a string value that represents
+the location of the file as a valid URI.
+If `uri` represents a file stored in a version control system (VCS),
+the value must preserve relevant details that permit the target file to be retrieved from the VCS.
+The value may be a relative URI that elides root information details
+(such as hard drive letter and an arbitrarily named root directory associated with a source code enlistment)
+from the path.
+
+~ IsoNote
+The URI of a file may contain information that represents unwanted information disclosure,
+particularly in cases where a tool is analyzing loose files outside of source control.
+For example, a file path might contain the account name of a developer.
+~ 
+
+### `mimeType` property
+
+A `physicalLocationComponent` object should contain a property named `mimeType` with a string value that specifies
+the MIME content-type (RFC 2045) of the file.
+
+### `region` property
+
+A `physicalLocationComponent` object may have a property named `region` whose value is a `region` object (&sect;[#region]),
+that represents the region within a file where the issue was detected.
+It should be present only on the last element of the physical location array in which the `physicalLocationComponent` occurs.
+This is because all the other elements of the array represent layers of packaging;
+only the last element represents the actual file within which the issue occurs.
+
+## `region` object { #region }
+
+### General
+
+A `region` object represents a region, that is, a contiguous portion of a file.
+The region can occur in a text file or a binary file. 
+All the properties in a `region` object shall be represented by integers,
+that is, by JSON number values with no sign, no fractional part, and no exponent part.
+
+The line number of the first line in a text file is defined to be line 1.
+The column number of the first column on each line in a text file is defined to be column 1.
+
+The offset of the first byte in a binary file is defined to be 0.
+
+### Regions in text files
+
+When the `physicalLocationComponent` object (&sect;[#physicalLocationComponent]) in which a `region` object occurs
+represents a text file,
+the `region` object represents a span that consists of a contiguous range of one or more characters within that file.
+In that case, the `byteOffset` property (&sect;[#region-byteOffset]) shall not be present.
+
+The start of a region in a text file shall be represented in one of the following ways:
+
+*	By a combination of the `startLine` (&sect;[#region-startLine]) and `startColumn` (&sect;[#region-startColumn]) properties.
+If `startColumn` is not specified, the region is assumed to start at column 1.
+
+*	By means of the `charOffset` property (&sect;[#region-charOffset]),
+which denotes the offset in characters from the start of the file.
+
+The end of a region in a text file need not be specified.
+If it is not specified, the length of the region is assumed to be 0.
+If it is specified, it shall be represented as follows:
+
+*	If the start of the region was specified by the `startLine` (&sect;[#region-startLine]) and `startColumn` (&sect;[#region-startColumn]) properties,
+the end of the region shall be specified by either the `length` property (&sect;[#region-length]),
+or by a combination of the `endLine` (&sect;[#region-endLine]) and `endColumn` (&sect;[#region-endColumn]) properties.
+If `length` is specified, it shall represent a count of characters. If `endLine` is specified and `endColumn` is not specified,
+`endColumn` shall be assumed to be 1.
+
+*	If the start of the region was specified by the `charOffset` property (&sect;[#region-charOffset]),
+the end of the region shall be specified by the `length` property, which denotes a count of characters.
+
+### Regions in binary files
+
+When the `physicalLocationComponent` object (&sect;[#physicalLocationComponent]) in which a region object occurs
+represents a binary file,
+the `region` object represents a region that consists of a contiguous range of one or more bytes within that file.
+In that case, the `startLine` (&sect;[#region-startLine]), `startColumn` (&sect;[#region-startColumn]),
+`endLine` (&sect;[#region-endLine]), `endColumn` (&sect;[#region-endColumn]), and `charOffset` (&sect;[#region-charOffset])
+properties shall not be present.
+
+The start of a region in a binary file shall be represented by the `byteOffset` property (&sect;[#region-byteOffset]),
+which denotes the offset in bytes from the start of the file.
+
+The end of a region in a binary file need not be specified.
+If it is not specified, the length of the region is assumed to be 0.
+If it is specified, it shall be represented by the `length` property (&sect;[#region-length]),
+which in this case denotes a count of bytes.
+
+### `startLine` property { #region-startLine }
+
+When a `region` object represents a region in a text file, it may contain a property named `startLine`,
+which shall have an integer value equal to the line number of the line containing the first character in the region.
+
+The line number of the first line in a file shall have the value `1`.
+
+When a `region` object represents a region in a binary file, the `startLine` property shall not be present.
+
+### `startColumn` property { #region-startColumn }
+
+When a `region` object represents a region in a text file, it may contain a property named `startColumn`,
+which shall have an integer value equal to the column number of the first character in the region.
+
+The column number of the first character in a line shall have the value `1`.
+
+When a `region` object represents a region in a binary file, the `startColumn` property shall not be present.
+
+### `endLine` property { #region-endLine }
+
+When a `region` object represents a region in a text file, and the first and last characters occur on different lines,
+and the `length` property (&sect;[#region-length]) is not present,
+the `region` object shall contain a property named `endLine`, whose value shall be the line number of the line containing
+the last character in the region. If the `length` property is present, the `endColumn` property shall not be present.
+
+When a region object represents a region in a text file, and the first and last characters in the region occur on the same line,
+the `endLine` property shall not be present.
+
+When a `region` object represents a region in a binary file, the `endLine` property shall not be present.
+
+### `endColumn` property { #region-endColumn }
+
+When a `region` object represents a region in a text file, it may contain a property named `endColumn`.
+If the region has a length of 0, then `endColumn` shall not be present.
+If the region has a length greater than 0, then `endColumn` shall be present
+(even if its value is the same as the value of `startColumn`,
+which could happen if the first and last characters in the range occurred on different lines),
+and its value shall be the column number of the last character of the region.
+
+When a `region` object represents a region in a binary file, the `endColumn` property shall not be present.
+
+### `charOffset` property { #region-charOffset }
+
+When a `region` object represents a region in a text file, it may contain a property named `charOffset`,
+which shall have an integer value equal to the offset (measured in characters) of the first character in the region
+from the beginning of the file.
+
+The offset of the first character in a file shall have the value 0.
+
+When a `region` object represents a region in a binary file, the `charOffset` property shall not be present.
+
+### `byteOffset` property { #region-byteOffset}
+
+When a `region` object represents a region in a binary file, it shall contain a property named `byteOffset`,
+which shall have an integer value equal to the byte offset of the first character in the region
+from the beginning of the file.
+
+The offset of the first byte in a file shall have the value 0.
+
+When a `region` object represents a region in a text file, the `byteOffset` property shall not be present.
+
+### `length` property { #region-length }
+
+A `region` object may have a property called `length`, whose value is an integer.
+
+When the `region` object represents a region in a text file, the value of the `length` property shall be
+the number of characters in the region.
+
+When the `region` object represents a region in a binary file, the value of the `length` property shall be
+the number of bytes in the region.
+
+If the length of the region (measured in characters for a text file, or bytes for a binary file) is 0,
+the `length` property shall not be present.
+
+## `logicalLocationComponent` object { #logicalLocationComponent }
+
+### General
+
+A `logicalLocationComponent` object is an element of a `logicalLocation` object (&sect;[#logicalLocation-info])
+
+### `name` property
+
+A `logicalLocationComponent` object shall contain a property called `name`, whose value shall be a string that identifies
+the construct in which the issue occurred.
+For example, this property might contain the name of a class or a method.
+
+The name property need not be suitable for display.
+
+Example: A C++ analysis tool might emit the `name` property of a function as the "decorated" function name,
+which encodes the function signature in a manner that is compiler-dependent and not easily readable.
+
+### `locationKind` property
+
+A `logicalLocationComponent` object should contain a property called `locationKind`, whose value shall be one of the following strings,
+if any of those strings accurately describes the construct identified by this object:
+
+*	`method`
+*	`module`
+*	`namespace`
+*	`package`
+*	`resource`
+*	`type`
+
+If none of those strings accurately describes the construct, `locationKind` may contain any value specified by the analysis tool.
+
+## `executionFlowEntry` object { #executionFlowEntry }
+
+### General
+
+An `executionFlowEntry` object is an element of an `executionFlow` object (&sect;[#issue-executionFlows])
+or a `stack` object (&sect;[#issue-callStacks]).
+
+### `physicalLocations` property
+
+An `executionFlowEntry` object may contain a property named `physicalLocations` whose value is an array of `physicalLocation` objects
+(&sect;[#physicalLocation-info]).
+Each `physicalLocation` object represents one physical view of the code to which the `executionFlowEntry` refers.
+For example, one `physicalLocation` object might refer to a location in source code;
+another might refer to the corresponding location in assembly language code.
+
+### `message` property
+
+An `executionFlowEntry` object may contain a property named `message` whose value is a string that describes
+the significance of this entry within the overall execution flow.
+For example, if the `executionFlowEntry` refers to an `if` statement, the `message` property might contain the string "take true branch".

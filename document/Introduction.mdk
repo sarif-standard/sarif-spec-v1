@@ -1,0 +1,31 @@
+# Introduction { - }
+
+Software developers use a variety of static analysis tools to assess the quality of their programs.
+These tools can detect issues related to program qualities such as correctness, security,
+performance, conformance to contractual or legal requirements, conformance to stylistic standards,
+understandability, and maintainability.
+To form an overall picture of program quality, developers must often aggregate the results
+produced by all of these tools.
+This aggregation is more difficult if each tool produces output in a different format. 
+
+This document defines a standard output format for static analysis tools.
+The goals of the format are:
+
+* Comprehensively capture the range of data produced by commonly used static analysis tools.
+
+* Be a useful format for static analysis tools to emit directly,
+and also an effective interchange format into which the output of any static analysis tool can be converted.
+
+* Reduce the cost and complexity of aggregating the results of various static analysis tools into common workflows. 
+
+* Capture information that is useful for assessing a project’s compliance with corporate policy
+or conformance to certification standards. 
+
+* Adopt a widely used serialization format that can be parsed by readily available tools. 
+
+* Represent issues that occur in all kinds of programming artifacts, including source code and object code. 
+
+* Represent the logical construct within which an issue is detected, such as a function, class, or namespace. 
+
+* Represent the physical location where an issue is detected, including issues that are detected in nested files
+(such as a source file within a compressed container).

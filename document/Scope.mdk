@@ -1,0 +1,5 @@
+# Scope { @h1=1 }
+
+This document defines a format for the output of static analysis tools.
+The format is referred to as the "Static Analysis Results Interchange Format,"
+and is abbreviated as SARIF.

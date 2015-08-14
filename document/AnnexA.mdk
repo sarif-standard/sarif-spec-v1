@@ -1,0 +1,42 @@
+# Annex A (informative) Use of fingerprints by issue management systems { - #Annex-A }
+
+On large software projects, a single run of a set of static analysis tools can produce hundreds of thousands of issues or more.
+To deal with such a large number of issues, some software development teams adopt a strategy whereby they first
+prevent the introduction of new issues into their code, and then work to reduce the set of existing issues.
+
+To prevent the introduction of new issues, it is necessary first to record the set of issues present in a designated run.
+We refer to this set as a baseline.
+It is then necessary to compare the issues detected in a subsequent run with the baseline.
+
+To determine whether an issue detected in a subsequent run is the same as an issue that occurs in the baseline,
+there must be a way to use information contained in the issue to construct a stable identifier for the issue.
+We refer to this identifier as a fingerprint.
+
+An issue management system can construct a fingerprint by using information contained in the SARIF file such as
+
+*	the name of the tool that detected the issue.
+*	the rule id.
+*	the file system path to the analysis target.
+
+There are situations where information that would be helpful in uniquely identifying an issue is not easily detectable
+by the issue management system.
+For example, consider a tool which checks documentation for words that are culturally or politically sensitive.
+The word would most likely occur only in the `fullMessage` property, for example:
+`"The word xxx should not be used in documentation."`
+
+The SARIF format provides the `toolFingerprint` property to allow static analysis tools to provide additional information
+which an issue management system can incorporate into the fingerprint that it constructs for each issue.
+In this example, the tool might set the value of `toolFingerprint` to the prohibited word.
+
+Some information contained in the issue is not useful in constructing a fingerprint.
+For example, suppose the fingerprint were to include the line number where the issue was detected,
+and suppose that after the baseline was constructed,
+a developer inserted additional lines of code above the issue location.
+Then in the next run, the issue would occur on a different line, the computed fingerprint would change,
+and the issue management system would erroneously report it as a new issue.
+
+It is difficult to devise an algorithm that constructs a truly stable fingerprint for an issue.
+Fortunately, for practical purposes, the fingerprint need not be absolutely stable;
+it need only be stable enough to reduce the number of issues that are erroneously reported as "new"
+to a low enough level that the development team can manage the erroneously reported issues without too much effort.
+

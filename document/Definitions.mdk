@@ -1,0 +1,88 @@
+# Terms and definitions
+
+For the purposes of this document, the following terms and definitions apply:
+
+file
+  ~ sequence of bytes accessible _via_ a URI
+  ~ Example: a physical file in a file system, a specific version of a file in a version control system.
+
+(programming) artifact
+  ~ file, produced manually by a person or automatically by a program, which results from the activity of programming
+  ~ Example: Source code, object code, program configuration data, documentation.
+
+issue
+  ~ condition present in a programming artifact which has the potential to detract from the quality of the program
+  ~ Example: A security vulnerability, a deviation from conformance to contractual or legal requirements, a deviation from conformance to stylistic standards.
+
+(static analysis) tool
+  ~ program that examines programming artifacts in order to detect and report potential issues, without executing the program
+  ~ Example: Lint
+
+analysis target
+  ~ programming artifact analyzed by a static analysis tool
+
+rule
+  ~ specific criterion for correctness verified by a static analysis tool
+  ~ NOTE 1: Many static analysis tools associate a "rule id" with each issue they report, but some do not.
+  ~ NOTE 2: Some rules verify generally accepted criteria for correctness; others verify conventions in use in a particular team or organization.
+  ~ Example: "Variables must be initialized before use", "Class names must begin with an uppercase letter".
+
+stable value
+  ~ value which, once established, never changes over time
+
+rule id
+  ~ stable value which a static analysis tool associates with a rule
+  ~ NOTE: A rule id is more likely to remain stable if it is a symbolic or numeric value, as opposed to a descriptive string.
+
+log file
+  ~ output file produced by a static analysis tool, which enumerates the issues detected by the tool
+
+run
+  ~ 1. invocation of a specified set of static analysis tools on a specified version of a specified set of analysis targets, with a specified set of runtime parameters
+  ~ 2. set of issues produced by such an invocation.
+
+triage
+  ~ process of deciding whether an issue reported by a static analysis tool should be corrected
+
+(end) user
+  ~ person who uses the information in a log file to diagnose, triage, or resolve issues detected by a static analysis tool
+
+false positive
+  ~ issue which an end user decides does not actually represent an undesirable condition in the analysis target
+
+(issue log) viewer
+  ~ software program the reads a log file, displays a list of the issues it contains, and allows an end user to view each issue in the context of the programming artifact in which it occurs
+
+issue management system
+  ~ software system that consumes the log files produced by static analysis tools, produces reports that enable software development teams to assess the quality of their software artifacts at a point in time and to observe trends in the quality over time, and performs functions such as filing bugs and displaying information about individual issues
+  ~ NOTE: An issue management system can interact with an issue log viewer to display information about individual defects.
+
+fingerprint
+  ~ stable value that can be used by an issue management system to uniquely identify an issue over time, even if the programming artifact in which it occurs is modified
+
+baseline
+  ~ set of issues produced by a single run of a set of static analysis tools on a set of programming artifacts
+  ~ NOTE: An issue management system can compare the results of a subsequent run to a baseline to determine whether new issues have been introduced.
+
+flow analysis
+  ~ process used by some static analysis tools to detect issues by simulating the flow of execution through a portion of the program without actually executing the program
+
+execution flow
+  ~ sequence of program locations considered by a static analysis tool in the process of performing a flow analysis
+
+call stack
+  ~ sequence of nested function calls considered by a static analysis tool in the course of detecting an issue
+
+camelCase name
+  ~ name that begins with a lowercase letter, and in which each subsequent word begins with an uppercase letter
+  ~ Example: `camelCase`, `version`, `fullName`.
+
+region
+  ~ contiguous portion of a file
+
+physical location
+  ~ location specified by reference to a programming artifact together with a range of bytes or characters within that artifact
+
+logical location
+  ~ location specified by reference to a programmatic construct, without specifying the programming artifact within which that construct occurs
+  ~ Example: A class name, a method name, a namespace.
