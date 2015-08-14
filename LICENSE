@@ -1,0 +1,37 @@
+We are posting early drafts of our Static Analysis Results Interchange Format
+(SARIF) specification for review, comments, and input. **Since your input might
+be subject to intellectual property rights, some basic obligations apply:** 
+
+In general, we want to ensure that we can use all input (through this site or
+otherwise) freely in the development of the specification, so it’s essential
+that those who contribute at this stage agree not to claim that the
+specification infringes their copyrights, or that an implementation of the
+specification infringes their patent rights. We also want to ensure that this
+draft is the definitive version, and that copies or modified versions aren’t
+being circulated elsewhere. 
+
+Specifically:
+
+* If you provide input that is subject to copyright, you must own (or have
+  sufficient rights) to make the contribution, and you and your employer agree
+  that we may use the contribution freely worldwide (copy, modify, transform,
+  create derivative works, redistribute, etc.) without restrictions or
+  obligations (no attribution, accounting, royalties, and so on). If your
+  contribution is owned by someone else and you’re making the contribution
+  under license, please identify the owner.
+
+* If you provide input that would infringe any patent claims if implemented in
+  the specification, you and your employer and its affiliates agree that
+  implementers of the specification will not be subject to claims of patent
+  infringement for claims owned or controlled by them; this applies only to
+  elements that are set forth in detail in the specification (e.g., not to
+  normative references or enabling technologies), and only if there is no
+  non-infringing alternative; it also applies to future versions so long as the
+  substantive nature of the infringement is unchanged.
+   
+* Except for the purpose of providing input to us regarding the draft, the
+  draft specification may not be copied, modified, or redistributed.
+ 
+Since we are relying on your input and want to ensure that the project is not
+hobbled by legal claims, these commitments are permanent and may not be
+retracted.
