@@ -665,7 +665,7 @@ The offset of the first byte in a binary file is defined to be 0.
 
 When the `physicalLocationComponent` object (&sect;[#physicalLocationComponent]) in which a `region` object occurs
 represents a text file,
-the `region` object represents a span that consists of a contiguous range of one or more characters within that file.
+the `region` object represents a span that consists of a contiguous range of zero or more characters within that file.
 In that case, the `byteOffset` property (&sect;[#region-byteOffset]) shall not be present.
 
 The start of a region in a text file shall be represented in one of the following ways:
@@ -691,9 +691,9 @@ the end of the region shall be specified by the `length` property, which denotes
 
 ### Regions in binary files
 
-When the `physicalLocationComponent` object (&sect;[#physicalLocationComponent]) in which a region object occurs
+When the `physicalLocationComponent` object (&sect;[#physicalLocationComponent]) in which a `region` object occurs
 represents a binary file,
-the `region` object represents a region that consists of a contiguous range of one or more bytes within that file.
+the `region` object represents a region that consists of a contiguous range of zero or more bytes within that file.
 In that case, the `startLine` (&sect;[#region-startLine]), `startColumn` (&sect;[#region-startColumn]),
 `endLine` (&sect;[#region-endLine]), `endColumn` (&sect;[#region-endColumn]), and `charOffset` (&sect;[#region-charOffset])
 properties shall not be present.
