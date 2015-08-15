@@ -546,7 +546,7 @@ shall either both be present or both be absent.
 
 ### `analysisTarget` property { #location-analysisTarget }
 
-A `location` object may contain a property named `analysisTarget` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
+A `location` object must contain a property named `analysisTarget` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
 that identifies the file that the static analysis tool was instructed to scan.
 This need not be the same as the file where the issue actually occurs. See `issueFile` (&sect;[#location-issueFile]) for more information on this point.
 
