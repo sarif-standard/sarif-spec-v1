@@ -386,7 +386,7 @@ The `locations` array must contain at least one element if the issue can be asso
 In rare circumstances, it might not be possible to specify a location for an issue.
 
 ~ IsoNumberedExample { @IsoNumberedExample=1}
-If a C++ analyzer detects that no file defines a main method,
+If a C++ analyzer detects that no file defines a `main` method,
 then the resulting issue cannot be associated with a file.
 ~
 
@@ -794,8 +794,10 @@ For example, this property might contain the name of a class or a method.
 
 The name property need not be suitable for display.
 
-Example: A C++ analysis tool might emit the `name` property of a function as the "decorated" function name,
+~ IsoExample
+A C++ analysis tool might emit the `name` property of a function as the "decorated" function name,
 which encodes the function signature in a manner that is compiler-dependent and not easily readable.
+~
 
 ### `locationKind` property
 
