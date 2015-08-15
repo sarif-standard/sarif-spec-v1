@@ -1,0 +1,4 @@
+# Madoko creates the HTML file with LF line endings instead of CRLF. Treat it
+# as a binary file so that, if you have core.autocrlf=true, Git doesn't warn
+# you that it will replace LF with CRLF when you check it out.
+*.html       binary
