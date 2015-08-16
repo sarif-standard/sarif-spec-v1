@@ -7,13 +7,26 @@ Please read the LICENSE file in the repo root directory, which explains the cond
 
 ## Document source format
 
-This document is written in [Madoko](https://www.madoko.net/), a superset of [Markdown](http://daringfireball.net/projects/markdown/) capable of producing high-quality technical documents, complete with numbering and cross-referencing (and mathematics, too, although we don't use that). This will make diffing changes between versions much easier than if the draft were written in a binary format such as .doc, and easier than if it were written in a more verbose text format such as HTML.
+This document is written in [Madoko](https://www.madoko.net/),
+a superset of [Markdown](http://daringfireball.net/projects/markdown/)
+capable of producing high-quality technical documents,
+complete with numbering and cross-referencing
+(and mathematics, too, although we don't use that).
+This will make diffing changes between versions much easier than if the draft were written in
+a binary format such as .doc,
+and easier than if it were written in a more verbose text format such as HTML.
 
-Before you edit the document, please consult the [Madoko reference](http://research.microsoft.com/en-us/um/people/daan/madoko/doc/reference.html).
+Before you edit the document, please consult the
+[Madoko reference](http://research.microsoft.com/en-us/um/people/daan/madoko/doc/reference.html).
 
 ## Generated HTML
 
-Madoko is capable of generating output in HTML and PDF formats. In addition to the Madoko source files, the generated HTML is also checked in to the repo. If you modify the source files, please regenerate and commit the HTML, as follows:
+Madoko is capable of generating output in HTML and PDF formats.
+In addition to the Madoko source files, the generated HTML is also checked in to the repo.
+If you modify the source files, you must regenerate and commit the HTML.
+**Never edit the HTML file directly.**
+
+To regenerate the HTML file:
 
 1. Madoko runs under nodejs, so install [nodejs](http://nodejs.org/) on your system, and then add it to your PATH.
 
@@ -32,4 +45,5 @@ Madoko is capable of generating output in HTML and PDF formats. In addition to t
 
 ## ISO format
 
-ISO supplies a Microsoft Word template for their specifications. Before we submit SARIF to ISO, we will transfer the content to their template. 
+ISO supplies a Microsoft Word template for their specifications.
+Before we submit SARIF to ISO, we will transfer the content to their template. 
