@@ -6,5 +6,11 @@ ISO/IEC 14882, _Information technology - Programming languages - C++_
 
 ISO/IEC 23270, _Information technology - Programming languages - C#_
 
+RFC 2045, _Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies_.
+Available from &lt;<https://tools.ietf.org/html/rfc2045>&gt;
+
+RFC 3629, _UTF-8, a transformation format of ISO 10646_.
+Available from &lt;<https://tools.ietf.org/html/rfc3629>&gt;
+
 Semantic Versioning 2.0.0 \[viewed 2015-06-02\]. Available from &lt;<http://semver.org>&gt;
 
