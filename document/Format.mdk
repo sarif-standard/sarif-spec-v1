@@ -852,7 +852,25 @@ A `fix` object represents a proposed fix for the issue represented by the `issue
 It specifies a set of files to modify.
 For each file, it specifies which bytes to remove, and provides new bytes to be inserted.
 
-TODO: Provide code example
+~IsoExample
+
+````
+    {                                                     # an issue object (see \(&sect;[#issue]\))
+        "fix":
+        {
+            "description":                                # see \(&sect;[#fix-description]\)
+                "Private member names begin with '_'",
+            "fileChanges":                                # see \(&sect;[#fix-fileChanges]\)
+            [
+                {                                         # a fileChange object (see \(&sect;[#fileChange]\))
+                    ...
+                }
+            ]
+        }
+    }
+````
+
+~
 
 ### `description` property { #fix-description }
 
@@ -866,7 +884,7 @@ The purpose of the `description` property is to enable an issue log viewer to pr
 `"Combine declaration and initialization of variable x"`
 ~
 
-### `fileChanges` property
+### `fileChanges` property { #fix-fileChanges }
 
 A `fix` object shall contain a property named `fileChanges` whose value is a JSON array of
 `fileChange` objects (&sect;[#fileChange]).
@@ -881,6 +899,31 @@ A `fix` object that does not change any files is not meaningful.
 ### General { #fileChange-General }
 
 A `fileChange` object represents a change to a single file.
+
+~IsoExample
+
+````
+    {                                      # a fix object (see \(&sect;[#fix]\))
+        "fileChanges":                     # see \(&sect;[#fix-fileChanges]\)
+        [
+            {                              # a fileChange object
+                "uri": "a.h",              # see \(&sect;[#fileChange-uri]\)
+                "replacements":            # see \(&sect;[#fileChange-replacements]\)
+                [
+                    {                      # a replacement object (see \(&sect;[#replacement]\))
+                        ...
+                    },
+                    {                      # another replacement object.
+                        ...
+                    }
+                ]
+            }
+        ]
+    }
+
+````
+
+~
 
 ### `uri` property { #fileChange-uri }
 
@@ -904,20 +947,63 @@ A `fileChange` object that does not modify any bytes in the file is not meaningf
 ### General { #replacement-General }
 
 A `replacement` object represents the replacement of a single range of bytes in a file.
-It specifies the location within the file where the replacement should be made,
+It specifies the location within the file where the replacement is to be made,
 the number of bytes to remove at that location,
-and the sequence of bytes to insert at that location
+and a sequence of bytes to insert at that location.
+
+If a `replacement` object specifies both the removal of a byte range
+by means of the `deletedLength` property (&sect;[#replacement-deletedLength])
+and the insertion of a sequence of bytes
+by means of the `insertedBytes` property (&sect;[#replacement-insertedBytes]),
+then the effect of the replacement shall be as if the removal were performed before the insertion.
+
+If a single `fileChange` object (&sect;[#fileChange]) specifies more than one `replacement`,
+then the effect of the replacements shall be as if they were performed
+in the order they appear in the `replacements` array (&sect;[#fileChange-replacements]).
+The `offset` property (&sect;[#replacement-offset]) of each `replacement` shall specify
+an offset in the unmodified file.
+
+~IsoExample
+
+Suppose a `fileChange` object contains a `fileChanges` property whose value is the following
+array of two `replacement` objects:
+
+````
+    "fileChanges":
+    [
+        {
+            "offset": 12,
+            "deletedLength": 5,
+            "insertedBytes": "ZXhhbXBsZQ=="   # The string "example"
+        },
+
+        {
+            "offset": 20,
+            "deletedLength": 3
+        }
+    ]
+````
+
+The first `replacement` object removes 5 bytes starting at offset 12; that is, it removes bytes 12&ndash;16.
+Then it inserts 7 bytes (the UTF-8-encoded string `example`, itself encoded in MIME Base64)
+at the same offset.
+
+The second `replacement` object removes 3 bytes starting at offset 20 _with respect to the
+unmodified file_. Since 5 bytes were removed and 7 bytes inserted _before_ byte 20, the
+3 bytes removed actually start at byte 22.
+
+~
 
 ### Constraints { #replacement-Constraints }
 
-In any `replacement` object, either the `length` property (&sect;[#replacement-length])
+In any `replacement` object, either the `deletedLength` property (&sect;[#replacement-deletedLength])
 shall be present and have a value greater than 0,
 or the `insertedBytes` property (&sect;[#replacement-insertedBytes])
 shall be present and have a string value whose length is greater than zero,
 or both.
 
 ~IsoNote
-A `replacement` object in which the `length` property was absent or had a value of 0,
+A `replacement` object in which the `deletedLength` property was absent or had a value of 0,
 and in which the `insertedBytes` property was absent or had a value equal to the empty string,
 would neither insert nor remove any bytes, and so would not be meaningful.
 ~
@@ -929,6 +1015,6 @@ integer specifying the offset in bytes from the beginning of the file at which b
 inserted, or both.
 An offset of 0 shall denote the first byte in the file.
 
-### `length` property { #replacement-length }
+### `deletedLength` property { #replacement-deletedLength }
 
 ### `insertedBytes` property { #replacement-insertedBytes }
