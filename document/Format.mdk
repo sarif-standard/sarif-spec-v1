@@ -868,7 +868,8 @@ The purpose of the `description` property is to enable an issue log viewer to pr
 
 ### `fileChanges` property
 
-A `fix` object shall contain a property named `fileChanges` whose value is a JSON array of `fileChange` objects (&sect;[#fileChange]).
+A `fix` object shall contain a property named `fileChanges` whose value is a JSON array of
+`fileChange` objects (&sect;[#fileChange]).
 The array must contain at least one element.
 
 ~IsoNote
@@ -881,12 +882,22 @@ A `fix` object that does not change any files is not meaningful.
 
 A `fileChange` object represents a change to a single file.
 
-### `uri` property
+### `uri` property { #fileChange-uri }
 
 A `fileChange` object shall contain a property named `uri` whose value is a string value that represents
 the location of the file as a valid URI.
 
 ### `replacements` property
+
+A `fileChange` object shall contain a property named `replacements` whose value is a JSON array of
+`replacement` objects (&sect;[#replacement]),
+each of which represents the replacement of a single range of bytes in the file specified by the
+`uri` property (&sect;[#fileChange-uri]).
+The array must contain at least one element.
+
+~IsoNote
+A `fileChange` object that does not modify any bytes in the file is not meaningful.
+~
 
 ## `replacement` object { #replacement }
 
