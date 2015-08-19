@@ -1017,6 +1017,15 @@ An offset of 0 shall denote the first byte in the file.
 
 ### `deletedLength` property { #replacement-deletedLength }
 
+A `replacement` object may contain a property named `deletedLength`, whose value is a
+non-negative integer specifying the number of bytes to delete,
+starting at the byte offset specified by
+the `offset` property (&sect;[#replacement-offset]),
+measured from the beginning of the file.
+
+If `deletedLength` is not present, or if its value is 0,
+no bytes shall be deleted.
+
 ### `insertedBytes` property { #replacement-insertedBytes }
 
 A `replacement` object may contain a property named `insertedBytes`, whose value is a string

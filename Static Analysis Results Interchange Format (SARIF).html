@@ -1660,28 +1660,37 @@ would neither insert nor remove any bytes, and so would not be meaningful.</p></
 integer specifying the offset in bytes from the beginning of the file at which bytes are to be removed,
 inserted, or both.
 An offset of 0 shall denote the first byte in the file.
-</p><h4 id="replacement-deletedlength"  data-line="28;document\Format.mdk:1018"  style="bookmark:4.17.4.&#8194;`deletedLength` property"><span data-line="28;document\Format.mdk:1018"></span><span class="heading-before"><span class="heading-label">4.17.4</span>.&#8194;</span><span data-line="28;document\Format.mdk:1018"></span><code class="code code1">deletedLength</code><span data-line="28;document\Format.mdk:1018"></span> property</h4><h4 id="replacement-insertedbytes"  data-line="28;document\Format.mdk:1020"  style="bookmark:4.17.5.&#8194;`insertedBytes` property"><span data-line="28;document\Format.mdk:1020"></span><span class="heading-before"><span class="heading-label">4.17.5</span>.&#8194;</span><span data-line="28;document\Format.mdk:1020"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:1020"></span> property</h4>
-<p data-line="28;document\Format.mdk:1022"><span data-line="28;document\Format.mdk:1022"></span>A <span data-line="28;document\Format.mdk:1022"></span><code class="code code1">replacement</code><span data-line="28;document\Format.mdk:1022"></span> object may contain a property named <span data-line="28;document\Format.mdk:1022"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:1022"></span>, whose value is a string
-that specifies the byte sequence to be inserted at the byte offset specified by
-the <span data-line="28;document\Format.mdk:1024"></span><code class="code code1">offset</code><span data-line="28;document\Format.mdk:1024"></span> property (<span data-line="28;document\Format.mdk:1024"></span>&#167;<span data-line="28;document\Format.mdk:1024"></span><a href="#replacement-offset" title="4.17.3.&#8194;offset property" class="localref" style="target-element:h3"><span class="heading-label">4.17.3</span></a><span data-line="28;document\Format.mdk:1024"></span>),
+</p><h4 id="replacement-deletedlength"  data-line="28;document\Format.mdk:1018"  style="bookmark:4.17.4.&#8194;`deletedLength` property"><span data-line="28;document\Format.mdk:1018"></span><span class="heading-before"><span class="heading-label">4.17.4</span>.&#8194;</span><span data-line="28;document\Format.mdk:1018"></span><code class="code code1">deletedLength</code><span data-line="28;document\Format.mdk:1018"></span> property</h4>
+<p data-line="28;document\Format.mdk:1020"><span data-line="28;document\Format.mdk:1020"></span>A <span data-line="28;document\Format.mdk:1020"></span><code class="code code1">replacement</code><span data-line="28;document\Format.mdk:1020"></span> object may contain a property named <span data-line="28;document\Format.mdk:1020"></span><code class="code code1">deletedLength</code><span data-line="28;document\Format.mdk:1020"></span>, whose value is a
+non-negative integer specifying the number of bytes to delete,
+starting at the byte offset specified by
+the <span data-line="28;document\Format.mdk:1023"></span><code class="code code1">offset</code><span data-line="28;document\Format.mdk:1023"></span> property (<span data-line="28;document\Format.mdk:1023"></span>&#167;<span data-line="28;document\Format.mdk:1023"></span><a href="#replacement-offset" title="4.17.3.&#8194;offset property" class="localref" style="target-element:h3"><span class="heading-label">4.17.3</span></a><span data-line="28;document\Format.mdk:1023"></span>),
 measured from the beginning of the file.
 </p>
-<p class="indent" data-line="28;document\Format.mdk:1027"><span data-line="28;document\Format.mdk:1027"></span>If <span data-line="28;document\Format.mdk:1027"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:1027"></span> is not present, or if its value is the empty string,
+<p class="indent" data-line="28;document\Format.mdk:1026"><span data-line="28;document\Format.mdk:1026"></span>If <span data-line="28;document\Format.mdk:1026"></span><code class="code code1">deletedLength</code><span data-line="28;document\Format.mdk:1026"></span> is not present, or if its value is 0,
+no bytes shall be deleted.
+</p><h4 id="replacement-insertedbytes"  data-line="28;document\Format.mdk:1029"  style="bookmark:4.17.5.&#8194;`insertedBytes` property"><span data-line="28;document\Format.mdk:1029"></span><span class="heading-before"><span class="heading-label">4.17.5</span>.&#8194;</span><span data-line="28;document\Format.mdk:1029"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:1029"></span> property</h4>
+<p data-line="28;document\Format.mdk:1031"><span data-line="28;document\Format.mdk:1031"></span>A <span data-line="28;document\Format.mdk:1031"></span><code class="code code1">replacement</code><span data-line="28;document\Format.mdk:1031"></span> object may contain a property named <span data-line="28;document\Format.mdk:1031"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:1031"></span>, whose value is a string
+that specifies the byte sequence to be inserted at the byte offset specified by
+the <span data-line="28;document\Format.mdk:1033"></span><code class="code code1">offset</code><span data-line="28;document\Format.mdk:1033"></span> property (<span data-line="28;document\Format.mdk:1033"></span>&#167;<span data-line="28;document\Format.mdk:1033"></span><a href="#replacement-offset" title="4.17.3.&#8194;offset property" class="localref" style="target-element:h3"><span class="heading-label">4.17.3</span></a><span data-line="28;document\Format.mdk:1033"></span>),
+measured from the beginning of the file.
+</p>
+<p class="indent" data-line="28;document\Format.mdk:1036"><span data-line="28;document\Format.mdk:1036"></span>If <span data-line="28;document\Format.mdk:1036"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:1036"></span> is not present, or if its value is the empty string,
 no bytes shall be inserted.
 </p>
-<p class="indent" data-line="28;document\Format.mdk:1030"><span data-line="28;document\Format.mdk:1030"></span>If the file into which the bytes are to be inserted is a binary file,
-the value of the <span data-line="28;document\Format.mdk:1031"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:1031"></span> string shall be the MIME Base64 encoding
+<p class="indent" data-line="28;document\Format.mdk:1039"><span data-line="28;document\Format.mdk:1039"></span>If the file into which the bytes are to be inserted is a binary file,
+the value of the <span data-line="28;document\Format.mdk:1040"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:1040"></span> string shall be the MIME Base64 encoding
 of the byte sequence to be inserted.
 </p>
-<p class="indent para-continue" data-line="28;document\Format.mdk:1034"><span data-line="28;document\Format.mdk:1034"></span>If the file into which the bytes are to be inserted is a text file,
+<p class="indent para-continue" data-line="28;document\Format.mdk:1043"><span data-line="28;document\Format.mdk:1043"></span>If the file into which the bytes are to be inserted is a text file,
 the characters to be inserted shall first be encoded in UTF-8.
-The value of the <span data-line="28;document\Format.mdk:1036"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:1036"></span> string shall be the MIME Base64 encoding
+The value of the <span data-line="28;document\Format.mdk:1045"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:1045"></span> string shall be the MIME Base64 encoding
 of the resulting UTF-8 byte sequence.
 </p>
-<ul class="ul list-star compact" data-line="28;document\Format.mdk:1039">
-<li class="li ul-li list-star-li compact-li" data-line="28;document\Format.mdk:1039"><span data-line="28;document\Format.mdk:1039"></span>TODO: Relationship between original file encoding, offset, and UTF-8 byte sequence.
+<ul class="ul list-star compact" data-line="28;document\Format.mdk:1048">
+<li class="li ul-li list-star-li compact-li" data-line="28;document\Format.mdk:1048"><span data-line="28;document\Format.mdk:1048"></span>TODO: Relationship between original file encoding, offset, and UTF-8 byte sequence.
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="28;document\Format.mdk:1040"><span data-line="28;document\Format.mdk:1040"></span>TODO: Explain responsibility of viewer/editor to match encoding.
+<li class="li ul-li list-star-li compact-li" data-line="28;document\Format.mdk:1049"><span data-line="28;document\Format.mdk:1049"></span>TODO: Explain responsibility of viewer/editor to match encoding.
 </li></ul>
 <h2 id="annex-a"  data-line="30;document\AnnexA.mdk:1"  style="bookmark:Annex A (informative) Use of fingerprints by issue management systems"><span data-line="30;document\AnnexA.mdk:1"></span>Annex A (informative) Use of fingerprints by issue management systems</h2>
 <p data-line="30;document\AnnexA.mdk:3"><span data-line="30;document\AnnexA.mdk:3"></span>On large software projects, a single run of a set of static analysis tools can produce hundreds of thousands of issues or more.
