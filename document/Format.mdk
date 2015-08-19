@@ -32,6 +32,23 @@ Also in these examples, a '#' character introduces a comment that extends to the
 These comments are present for explanatory purposes and are not part of the SARIF file format.
 ~
 
+## URI-valued properties
+
+Certain properties in this specification specify the URI of a file.
+The value of every such property, if present, shall be a valid URI.
+
+If the URI refers to a file stored in a version control system (VCS),
+the value must preserve relevant details that permit the target file to be retrieved from the VCS.
+If the URI refers to a file stored on a physical file system, it may be specified as a relative URI
+that omits root information details
+(such as hard drive letter and an arbitrarily named root directory associated with a source code enlistment).
+
+~ IsoNote
+An absolute URI may contain information that represents unwanted information disclosure,
+particularly in cases where a tool is analyzing files stored on a physical file system.
+For example, a file path might contain the account name of a developer.
+~
+
 ## `issueLog` object { #issueLog }
 
 ### General
@@ -248,13 +265,13 @@ A `fileReference` object represents a single file.
 
 ### `uri` property { #fileReference-uri }
 
-A `fileReference` object shall contain a property named `uri` with a string value that represents
+A `fileReference` object shall contain a property named `uri` whose value is a string that represents
 the location of the file as a valid URI.
 
 ### `hashes` property
 
 A `fileReference` object shall contain a property named `hashes` whose value is an array of `hash` objects (&sect;[#hash]),
-each of which specifies a hashed value for the file specified by the uri property (&sect;[#fileReference-uri]),
+each of which specifies a hashed value for the file specified by the `uri` property (&sect;[#fileReference-uri]),
 along with the name of the algorithm used to compute the hash.
 
 ## `hash` object { #hash }
@@ -489,6 +506,10 @@ For tools that do not examine source code written in such a language, this value
 The `#pragma` warning construct in C# is such a syntactic construct.
 ~
 
+### `fixes` property
+
+An `issue` object may contain a property names `fixes`, whose value is a JSON array of `fix` objects (&sect;[#fix]).
+
 ### `properties` property
 
 An `issue` object may contain a property named `properties`, whose value is a JSON object
@@ -620,19 +641,8 @@ A `physicalLocationComponent` object is an element of a `physicalLocation` objec
 
 ### `uri` property
 
-A `physicalLocationComponent` object shall contain a property named `uri` with a string value that represents
-the location of the file as a valid URI.
-If `uri` represents a file stored in a version control system (VCS),
-the value must preserve relevant details that permit the target file to be retrieved from the VCS.
-The value may be a relative URI that elides root information details
-(such as hard drive letter and an arbitrarily named root directory associated with a source code enlistment)
-from the path.
-
-~ IsoNote
-The URI of a file may contain information that represents unwanted information disclosure,
-particularly in cases where a tool is analyzing loose files outside of source control.
-For example, a file path might contain the account name of a developer.
-~ 
+A `physicalLocationComponent` object shall contain a property named `uri` whose value is a string that represents
+the location of the file to be modified as a valid URI.
 
 ### `mimeType` property
 
@@ -833,3 +843,57 @@ another might refer to the corresponding location in assembly language code.
 An `executionFlowEntry` object may contain a property named `message` whose value is a string that describes
 the significance of this entry within the overall execution flow.
 For example, if the `executionFlowEntry` refers to an `if` statement, the `message` property might contain the string "take true branch".
+
+## `fix` object { #fix }
+
+### General
+
+A `fix` object represents a proposed fix for the issue represented by the `issue` object (&sect;[#issue]) in which it occurs.
+It specifies a set of files to modify.
+For each file, it specifies which bytes to remove, and provides new bytes to be inserted.
+
+TODO: Provide code example
+
+### `description` property
+
+A `fix` object shall contain a property named `description` whose value is a string describing the proposed fix.
+
+~IsoNote
+The purpose of the `description` property is to enable an issue log viewer to present the proposed fix to the end user.
+~
+
+~IsoExample
+`"Combine declaration and initialization of variable x"`
+~
+
+### `fileChanges` property
+
+A `fix` object shall contain a property named `fileChanges` whose value is a JSON array of `fileChange` objects (&sect;[#fileChange]).
+The array must contain at least one element.
+
+~IsoNote
+A `fix` object that does not change any files is not meaningful.
+~
+
+## `fileChange` object { #fileChange }
+
+### General
+
+A `fileChange` object represents a change to a single file.
+
+### `uri` property
+
+A `fileChange` object shall contain a property named `uri` whose value is a string value that represents
+the location of the file as a valid URI.
+
+### `replacements` property
+
+## `replacement` object { #replacement }
+
+### General
+
+### `offset` property
+
+### `length` property
+
+### `insertedBytes` property
