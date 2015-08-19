@@ -98,3 +98,9 @@ physical location
 logical location
   ~ location specified by reference to a programmatic construct, without specifying the programming artifact within which that construct occurs
   ~ Example: A class name, a method name, a namespace.
+
+empty array
+  ~ array that contains no elements, and so has a length of 0
+
+empty string
+  ~ string that contains no characters, and so has a length of 0

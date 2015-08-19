@@ -516,8 +516,8 @@ An `issue` object may contain a property named `properties`, whose value is a JS
 consisting of an arbitrary set of string/value pairs.
 This allows tools to include information about the issue that is not explicitly specified in the SARIF format.
 
-The value within each string-value pair shall be a string.
-The string value may be the empty (zero-length) string.
+The value within each string-value pair shall be a string,
+which may be the empty string.
 The value shall not be a JSON array or sub-object.
 
 ## `location` object { #location }
@@ -630,7 +630,7 @@ consisting of an arbitrary set of string/value pairs.
 This allows tools to include information about the location that is not explicitly specified in the SARIF format.
 
 The value within each string/value pair shall be a string.
-The string value may be the empty (zero-length) string.
+The string value may be the empty string.
 The value shall not be a JSON array or sub-object.
 
 ## `physicalLocationComponent` object { #physicalLocationComponent }
@@ -918,7 +918,7 @@ or both.
 
 ~IsoNote
 A `replacement` object in which the `length` property was absent or had a value of 0,
-and in which the `insertedBytes` property was absent or had a value equal to the empty (zero-length) string,
+and in which the `insertedBytes` property was absent or had a value equal to the empty string,
 would neither insert nor remove any bytes, and so would not be meaningful.
 ~
 

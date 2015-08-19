@@ -861,6 +861,14 @@ even if the programming artifact in which it occurs is modified
 </p></dd>
 <dd class="dd" data-line="26;document\Definitions.mdk:100" style="margin-left:1.5em">
 <p data-line="26;document\Definitions.mdk:100"><span data-line="26;document\Definitions.mdk:100"></span>Example: A class name, a method name, a namespace.
+</p></dd>
+<dt class="dt dl-li loose-li" style="font-weight:bold">empty array</dt>
+<dd class="dd" data-line="26;document\Definitions.mdk:102" style="margin-left:1.5em">
+<p data-line="26;document\Definitions.mdk:102"><span data-line="26;document\Definitions.mdk:102"></span>array that contains no elements, and so has a length of 0
+</p></dd>
+<dt class="dt dl-li loose-li" style="font-weight:bold">empty string</dt>
+<dd class="dd" data-line="26;document\Definitions.mdk:105" style="margin-left:1.5em">
+<p data-line="26;document\Definitions.mdk:105"><span data-line="26;document\Definitions.mdk:105"></span>string that contains no characters, and so has a length of 0
 </p></dd></dl><h2 id="sec-file-format"  data-line="28;document\Format.mdk:1"  style="bookmark:4.&#8194;File format"><span data-line="28;document\Format.mdk:1"></span><span class="heading-before"><span class="heading-label">4</span>.&#8194;</span><span data-line="28;document\Format.mdk:1"></span>File format</h2><h3 id="fileformat-general"  data-line="28;document\Format.mdk:3"  style="bookmark:4.1.&#8194;General"><span data-line="28;document\Format.mdk:3"></span><span class="heading-before"><span class="heading-label">4.1</span>.&#8194;</span><span data-line="28;document\Format.mdk:3"></span>General</h3>
 <p data-line="28;document\Format.mdk:5"><span data-line="28;document\Format.mdk:5"></span>A SARIF log file shall contain the results of a one or more static analysis runs.
 The runs need not be produced by the same static analysis tool.
@@ -1267,7 +1275,7 @@ consisting of an arbitrary set of string/value pairs.
 This allows tools to include information about the issue that is not explicitly specified in the SARIF format.
 </p>
 <p class="indent" data-line="28;document\Format.mdk:519"><span data-line="28;document\Format.mdk:519"></span>The value within each string-value pair shall be a string.
-The string value may be the empty (zero-length) string.
+The string value may be the empty string.
 The value shall not be a JSON array or sub-object.
 </p><h3 id="location"  data-line="28;document\Format.mdk:523"  style="bookmark:4.10.&#8194;`location` object"><span data-line="28;document\Format.mdk:523"></span><span class="heading-before"><span class="heading-label">4.10</span>.&#8194;</span><span data-line="28;document\Format.mdk:523"></span><code class="code code1">location</code><span data-line="28;document\Format.mdk:523"></span> object</h3><h4 id="location-general"  data-line="28;document\Format.mdk:525"  style="bookmark:4.10.1.&#8194;General"><span data-line="28;document\Format.mdk:525"></span><span class="heading-before"><span class="heading-label">4.10.1</span>.&#8194;</span><span data-line="28;document\Format.mdk:525"></span>General</h4>
 <p data-line="28;document\Format.mdk:527"><span data-line="28;document\Format.mdk:527"></span>A <span data-line="28;document\Format.mdk:527"></span><code class="code code1">location</code><span data-line="28;document\Format.mdk:527"></span> object specifies the location where a static analysis tool detected an issue.
@@ -1350,7 +1358,7 @@ consisting of an arbitrary set of string/value pairs.
 This allows tools to include information about the location that is not explicitly specified in the SARIF format.
 </p>
 <p class="indent" data-line="28;document\Format.mdk:632"><span data-line="28;document\Format.mdk:632"></span>The value within each string/value pair shall be a string.
-The string value may be the empty (zero-length) string.
+The string value may be the empty string.
 The value shall not be a JSON array or sub-object.
 </p><h3 id="physicallocationcomponent"  data-line="28;document\Format.mdk:636"  style="bookmark:4.11.&#8194;`physicalLocationComponent` object"><span data-line="28;document\Format.mdk:636"></span><span class="heading-before"><span class="heading-label">4.11</span>.&#8194;</span><span data-line="28;document\Format.mdk:636"></span><code class="code code1">physicalLocationComponent</code><span data-line="28;document\Format.mdk:636"></span> object</h3><h4 id="physicallocationcomponent-general"  data-line="28;document\Format.mdk:638"  style="bookmark:4.11.1.&#8194;General"><span data-line="28;document\Format.mdk:638"></span><span class="heading-before"><span class="heading-label">4.11.1</span>.&#8194;</span><span data-line="28;document\Format.mdk:638"></span>General</h4>
 <p data-line="28;document\Format.mdk:640"><span data-line="28;document\Format.mdk:640"></span>A <span data-line="28;document\Format.mdk:640"></span><code class="code code1">physicalLocationComponent</code><span data-line="28;document\Format.mdk:640"></span> object is an element of a <span data-line="28;document\Format.mdk:640"></span><code class="code code1">physicalLocation</code><span data-line="28;document\Format.mdk:640"></span> object (<span data-line="28;document\Format.mdk:640"></span>&#167;<span data-line="28;document\Format.mdk:640"></span><a href="#physicallocation-info" title="4.10.2.&#8194;Physical locations and the physicalLocation array" class="localref" style="target-element:h3"><span class="heading-label">4.10.2</span></a><span data-line="28;document\Format.mdk:640"></span>).
@@ -1573,7 +1581,7 @@ or both.
 </p>
 <div class="isonote block" data-line="28;document\Format.mdk:919" style="font-size:smaller">
 <p data-line="28;document\Format.mdk:920"><span data-line="28;document\Format.mdk:920"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:920"></span>A <span data-line="28;document\Format.mdk:920"></span><code class="code code1">replacement</code><span data-line="28;document\Format.mdk:920"></span> object in which the <span data-line="28;document\Format.mdk:920"></span><code class="code code1">length</code><span data-line="28;document\Format.mdk:920"></span> property was absent or had a value of 0,
-and in which the <span data-line="28;document\Format.mdk:921"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:921"></span> property was absent or had a value equal to the empty (zero-length) string,
+and in which the <span data-line="28;document\Format.mdk:921"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:921"></span> property was absent or had a value equal to the empty string,
 would neither insert nor remove any bytes, and so would not be meaningful.</p></div><h4 id="replacement-offset"  data-line="28;document\Format.mdk:925"  style="bookmark:4.17.3.&#8194;`offset` property"><span data-line="28;document\Format.mdk:925"></span><span class="heading-before"><span class="heading-label">4.17.3</span>.&#8194;</span><span data-line="28;document\Format.mdk:925"></span><code class="code code1">offset</code><span data-line="28;document\Format.mdk:925"></span> property</h4>
 <p data-line="28;document\Format.mdk:927"><span data-line="28;document\Format.mdk:927"></span>A <span data-line="28;document\Format.mdk:927"></span><code class="code code1">replacement</code><span data-line="28;document\Format.mdk:927"></span> object shall contain a property named <span data-line="28;document\Format.mdk:927"></span><code class="code code1">offset</code><span data-line="28;document\Format.mdk:927"></span>, whose value shall be a non-negative
 integer specifying the offset in bytes from the beginning of the file at which bytes are to be removed,
