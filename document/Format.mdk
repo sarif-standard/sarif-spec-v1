@@ -38,7 +38,7 @@ Certain properties in this specification specify the URI of a file.
 The value of every such property, if present, shall be a valid URI.
 
 If the URI refers to a file stored in a version control system (VCS),
-the value must preserve relevant details that permit the target file to be retrieved from the VCS.
+the value shall preserve relevant details that permit the target file to be retrieved from the VCS.
 If the URI refers to a file stored on a physical file system, it may be specified as a relative URI
 that omits root information details
 (such as hard drive letter and an arbitrarily named root directory associated with a source code enlistment).
@@ -299,7 +299,7 @@ computed by the algorithm named in the `algorithm` property (&sect;[#hash-algori
 
 A `hash` object shall contain a property named `algorithm`, whose value is a string specifying the name
 of the algorithm used to compute the hash value specified in the `value` property (&sect;[#hash-value]).
-This must be one of the following:
+This shall be one of the following:
 
 *	`BLAKE-256`
 *	`BLAKE-512`
@@ -352,7 +352,7 @@ a stable, opaque identifier for the rule that was violated.
 An `issue` object shall contain a property named `fullMessage` whose value is a string that describes the issue.
 
 The `fullMessage` property should provide sufficient details to allow an end user to resolve the issue.
-In particular, `fullMessage` must include all of the following information that is available and relevant to the issue:
+In particular, `fullMessage` shall include all of the following information that is available and relevant to the issue:
 
 *	Information sufficient to identify the analysis target, and the location within the target where the issue occurred.
 
@@ -399,7 +399,7 @@ This is an example of a `shortMessage`:
 
 An `issue` object shall contain a property named `locations` whose value is an array,
 each of whose elements is a `location` object (&sect;[#location]) which specifies a location where the issue occurs.
-The `locations` array must contain at least one element if the issue can be associated with a location.
+The `locations` array shall contain at least one element if the issue can be associated with a location.
 In rare circumstances, it might not be possible to specify a location for an issue.
 
 ~ IsoNumberedExample { @IsoNumberedExample=1}
@@ -567,7 +567,7 @@ shall either both be present or both be absent.
 
 ### `analysisTarget` property { #location-analysisTarget }
 
-A `location` object must contain a property named `analysisTarget` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
+A `location` object shall contain a property named `analysisTarget` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
 that identifies the file that the static analysis tool was instructed to scan.
 This need not be the same as the file where the issue actually occurs. See `issueFile` (&sect;[#location-issueFile]) for more information on this point.
 
@@ -629,8 +629,8 @@ A `location` object may contain a property named `properties`, whose value is a 
 consisting of an arbitrary set of string/value pairs.
 This allows tools to include information about the location that is not explicitly specified in the SARIF format.
 
-The value within each string/value pair shall be a string.
-The string value may be the empty string.
+The value within each string/value pair shall be a string,
+which may be the empty string.
 The value shall not be a JSON array or sub-object.
 
 ## `physicalLocationComponent` object { #physicalLocationComponent }
@@ -870,7 +870,7 @@ The purpose of the `description` property is to enable an issue log viewer to pr
 
 A `fix` object shall contain a property named `fileChanges` whose value is a JSON array of
 `fileChange` objects (&sect;[#fileChange]).
-The array must contain at least one element.
+The array shall contain at least one element.
 
 ~IsoNote
 A `fix` object that does not change any files is not meaningful.
@@ -893,7 +893,7 @@ A `fileChange` object shall contain a property named `replacements` whose value 
 `replacement` objects (&sect;[#replacement]),
 each of which represents the replacement of a single range of bytes in the file specified by the
 `uri` property (&sect;[#fileChange-uri]).
-The array must contain at least one element.
+The array shall contain at least one element.
 
 ~IsoNote
 A `fileChange` object that does not modify any bytes in the file is not meaningful.
