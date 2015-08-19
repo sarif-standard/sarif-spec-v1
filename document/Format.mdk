@@ -903,8 +903,32 @@ A `fileChange` object that does not modify any bytes in the file is not meaningf
 
 ### General
 
+A `replacement` object represents the replacement of a single range of bytes in a file.
+It specifies the location within the file where the replacement should be made,
+the number of bytes to remove at that location,
+and the sequence of bytes to insert at that location
+
+### Constraints
+
+In any `replacement` object, either the `length` property (&sect;[#replacement-length])
+shall be present and have a value greater than 0,
+or the `insertedBytes` property (&sect;[#replacement-insertedBytes])
+shall be present and have a string value whose length is greater than zero,
+or both.
+
+~IsoNote
+A `replacement` object in which the `length` property was absent or had a value of 0,
+and in which the `insertedBytes` property was absent or had a value equal to the empty (zero-length) string,
+would neither insert nor remove any bytes, and so would not be meaningful.
+~
+
 ### `offset` property
 
-### `length` property
+A `replacement` object shall contain a property named `offset`, whose value shall be a non-negative
+integer specifying the offset in bytes from the beginning of the file at which bytes are to be removed,
+inserted, or both.
+An offset of 0 shall denote the first byte in the file.
 
-### `insertedBytes` property
+### `length` property { #replacement-length }
+
+### `insertedBytes` property { #replacement-insertedBytes }
