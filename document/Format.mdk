@@ -1018,3 +1018,23 @@ An offset of 0 shall denote the first byte in the file.
 ### `deletedLength` property { #replacement-deletedLength }
 
 ### `insertedBytes` property { #replacement-insertedBytes }
+
+A `replacement` object may contain a property named `insertedBytes`, whose value is a string
+that specifies the byte sequence to be inserted at the byte offset specified by
+the `offset` property (&sect;[#replacement-offset]),
+measured from the beginning of the file.
+
+If `insertedBytes` is not present, or if its value is the empty string,
+no bytes shall be inserted.
+
+If the file into which the bytes are to be inserted is a binary file,
+the value of the `insertedBytes` string shall be the MIME Base64 encoding
+of the byte sequence to be inserted.
+
+If the file into which the bytes are to be inserted is a text file,
+the characters to be inserted shall first be encoded in UTF-8.
+The value of the `insertedBytes` string shall be the MIME Base64 encoding
+of the resulting UTF-8 byte sequence.
+
+* TODO: Relationship between original file encoding, offset, and UTF-8 byte sequence.
+* TODO: Explain responsibility of viewer/editor to match encoding.
