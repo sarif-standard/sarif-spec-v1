@@ -1,0 +1,2 @@
+# Ignore the directory containing generated HTML and PDF output
+out/
