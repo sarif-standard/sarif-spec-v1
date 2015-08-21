@@ -881,13 +881,13 @@ We refer to the object represented by this top-level value as the <span data-lin
 </p>
 <p class="indent" data-line="28;document\Format.mdk:14"><span data-line="28;document\Format.mdk:14"></span>Every JSON property name in the SARIF format shall be a camelCase name.
 </p>
-<div class="isonumberednote block" data-line="28;document\Format.mdk:16" style="font-size:smaller">
+<div class="isonumberednote block" data-line="28;document\Format.mdk:16" style="font-size:small">
 <p data-line="28;document\Format.mdk:17"><span data-line="28;document\Format.mdk:17"></span><span class="example-before">NOTE&#160;<span class="example-label">1</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:17"></span>A single run of a static analysis tool that supports the SARIF format produces a SARIF log file
 containing the results of that one run.
 Other programs, such as build systems or issue management systems, can consolidate the contents
 of multiple single-run log files into a single SARIF log file that contains the results from all of those runs.
 This allows the aggregated results to be conveniently stored in a file or transported over a network.</p></div>
-<div class="isonumberednote block" data-line="28;document\Format.mdk:24" style="font-size:smaller">
+<div class="isonumberednote block" data-line="28;document\Format.mdk:24" style="font-size:small">
 <p data-line="28;document\Format.mdk:25"><span data-line="28;document\Format.mdk:25"></span><span class="example-before">NOTE&#160;<span class="example-label">2</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:25"></span>The remainder of this document contains several partial examples of the SARIF format.
 The examples are formatted for clarity, as permitted by the JSON standard, which allows <span data-line="28;document\Format.mdk:26"></span>&#8220;insignificant whitespace&#8221;<span data-line="28;document\Format.mdk:26"></span>
 before or after any token;
@@ -905,13 +905,13 @@ If the URI refers to a file stored on a physical file system, it may be specifie
 that omits root information details
 (such as hard drive letter and an arbitrarily named root directory associated with a source code enlistment).
 </p>
-<div class="isonote block" data-line="28;document\Format.mdk:46" style="font-size:smaller">
+<div class="isonote block" data-line="28;document\Format.mdk:46" style="font-size:small">
 <p data-line="28;document\Format.mdk:47"><span data-line="28;document\Format.mdk:47"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:47"></span>An absolute URI may contain information that represents unwanted information disclosure,
 particularly in cases where a tool is analyzing files stored on a physical file system.
 For example, a file path might contain the account name of a developer.</p></div><h3 id="issuelog"  data-line="28;document\Format.mdk:52"  style="bookmark:4.3.&#8194;`issueLog` object"><span data-line="28;document\Format.mdk:52"></span><span class="heading-before"><span class="heading-label">4.3</span>.&#8194;</span><span data-line="28;document\Format.mdk:52"></span><code class="code code1">issueLog</code><span data-line="28;document\Format.mdk:52"></span> object</h3><h4 id="issuelog-general"  data-line="28;document\Format.mdk:54"  style="bookmark:4.3.1.&#8194;General"><span data-line="28;document\Format.mdk:54"></span><span class="heading-before"><span class="heading-label">4.3.1</span>.&#8194;</span><span data-line="28;document\Format.mdk:54"></span>General</h4>
 <p data-line="28;document\Format.mdk:56"><span data-line="28;document\Format.mdk:56"></span>An <span data-line="28;document\Format.mdk:56"></span><code class="code code1">issueLog</code><span data-line="28;document\Format.mdk:56"></span> object specifies the version of the file format and contains the results of one or more runs.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:58" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:58" style="font-size:small">
 <p data-line="28;document\Format.mdk:59"><span data-line="28;document\Format.mdk:59"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:59"></span>
 </p>
 <pre class="para-block pre-fenced pre-fenced3" data-line="28;document\Format.mdk:60" data-line-code="28;document\Format.mdk:61"><code data-line="28;document\Format.mdk:61">{
@@ -932,7 +932,7 @@ For example, a file path might contain the account name of a developer.</p></div
 <p class="indent" data-line="28;document\Format.mdk:81"><span data-line="28;document\Format.mdk:81"></span>Although the order in which the string/value pairs appear in a JSON object value is not semantically significant,
 the <span data-line="28;document\Format.mdk:82"></span><code class="code code1">version</code><span data-line="28;document\Format.mdk:82"></span> property should appear first.
 </p>
-<div class="isonote block" data-line="28;document\Format.mdk:84" style="font-size:smaller">
+<div class="isonote block" data-line="28;document\Format.mdk:84" style="font-size:small">
 <p data-line="28;document\Format.mdk:85"><span data-line="28;document\Format.mdk:85"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:85"></span>This will make it easier for parsers to handle multiple versions of the SARIF format,
 if new versions are defined in the future.</p></div><h4 id="issuelog-runlogs"  data-line="28;document\Format.mdk:89"  style="bookmark:4.3.3.&#8194;`runLogs` property"><span data-line="28;document\Format.mdk:89"></span><span class="heading-before"><span class="heading-label">4.3.3</span>.&#8194;</span><span data-line="28;document\Format.mdk:89"></span><code class="code code1">runLogs</code><span data-line="28;document\Format.mdk:89"></span> property</h4>
 <p data-line="28;document\Format.mdk:91"><span data-line="28;document\Format.mdk:91"></span>An <span data-line="28;document\Format.mdk:91"></span><code class="code code1">issueLog</code><span data-line="28;document\Format.mdk:91"></span> object shall contain a property named <span data-line="28;document\Format.mdk:91"></span><code class="code code1">runLogs</code><span data-line="28;document\Format.mdk:91"></span> whose value is an array
@@ -941,7 +941,7 @@ containing one or more runLog objects (<span data-line="28;document\Format.mdk:9
 <p data-line="28;document\Format.mdk:98"><span data-line="28;document\Format.mdk:98"></span>A <span data-line="28;document\Format.mdk:98"></span><code class="code code1">runLog</code><span data-line="28;document\Format.mdk:98"></span> object describes a single run of a static analysis tool,
 and enumerates the issues detected by that run.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:101" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:101" style="font-size:small">
 <p data-line="28;document\Format.mdk:102"><span data-line="28;document\Format.mdk:102"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:102"></span>
 </p>
 <pre class="para-block pre-fenced pre-fenced3" data-line="28;document\Format.mdk:103" data-line-code="28;document\Format.mdk:104"><code data-line="28;document\Format.mdk:104">{
@@ -975,11 +975,11 @@ each of which represents a single issue detected in the course of a run.
 </p><h3 id="toolinfo"  data-line="28;document\Format.mdk:142"  style="bookmark:4.5.&#8194;`toolInfo` object"><span data-line="28;document\Format.mdk:142"></span><span class="heading-before"><span class="heading-label">4.5</span>.&#8194;</span><span data-line="28;document\Format.mdk:142"></span><code class="code code1">toolInfo</code><span data-line="28;document\Format.mdk:142"></span> object</h3><h4 id="toolinfo-general"  data-line="28;document\Format.mdk:144"  style="bookmark:4.5.1.&#8194;General"><span data-line="28;document\Format.mdk:144"></span><span class="heading-before"><span class="heading-label">4.5.1</span>.&#8194;</span><span data-line="28;document\Format.mdk:144"></span>General</h4>
 <p data-line="28;document\Format.mdk:146"><span data-line="28;document\Format.mdk:146"></span>A <span data-line="28;document\Format.mdk:146"></span><code class="code code1">toolInfo</code><span data-line="28;document\Format.mdk:146"></span> object contains information describing the static analysis tool that was run.
 </p>
-<div class="isonote block" data-line="28;document\Format.mdk:148" style="font-size:smaller">
+<div class="isonote block" data-line="28;document\Format.mdk:148" style="font-size:small">
 <p data-line="28;document\Format.mdk:149"><span data-line="28;document\Format.mdk:149"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:149"></span>If another tool post-processes the log file (for example, by removing certain issues,
 or by adding information that was not known to the static analysis tool),
 the post-processing tool should not alter any part of the <span data-line="28;document\Format.mdk:151"></span><code class="code code1">toolInfo</code><span data-line="28;document\Format.mdk:151"></span> object.</p></div>
-<div class="isoexample block" data-line="28;document\Format.mdk:154" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:154" style="font-size:small">
 <p data-line="28;document\Format.mdk:155"><span data-line="28;document\Format.mdk:155"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:155"></span>
 </p>
 <pre class="para-block pre-fenced pre-fenced3" data-line="28;document\Format.mdk:156" data-line-code="28;document\Format.mdk:157"><code data-line="28;document\Format.mdk:157">{
@@ -990,38 +990,38 @@ the post-processing tool should not alter any part of the <span data-line="28;do
 }</code></pre></div><h4 id="toolinfo-name"  data-line="28;document\Format.mdk:166"  style="bookmark:4.5.2.&#8194;`name` property"><span data-line="28;document\Format.mdk:166"></span><span class="heading-before"><span class="heading-label">4.5.2</span>.&#8194;</span><span data-line="28;document\Format.mdk:166"></span><code class="code code1">name</code><span data-line="28;document\Format.mdk:166"></span> property</h4>
 <p data-line="28;document\Format.mdk:168"><span data-line="28;document\Format.mdk:168"></span>A <span data-line="28;document\Format.mdk:168"></span><code class="code code1">toolInfo</code><span data-line="28;document\Format.mdk:168"></span> object shall contain a property named <span data-line="28;document\Format.mdk:168"></span><code class="code code1">name</code><span data-line="28;document\Format.mdk:168"></span> whose value is a string containing the name of the tool that produced the log file.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:170" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:170" style="font-size:small">
 <p data-line="28;document\Format.mdk:171"><span data-line="28;document\Format.mdk:171"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:171"></span><code class="code code1">&quot;CodeScanner&quot;</code></p></div><h4 id="toolinfo-fullname"  data-line="28;document\Format.mdk:174"  style="bookmark:4.5.3.&#8194;`fullName` property"><span data-line="28;document\Format.mdk:174"></span><span class="heading-before"><span class="heading-label">4.5.3</span>.&#8194;</span><span data-line="28;document\Format.mdk:174"></span><code class="code code1">fullName</code><span data-line="28;document\Format.mdk:174"></span> property</h4>
 <p data-line="28;document\Format.mdk:176"><span data-line="28;document\Format.mdk:176"></span>A <span data-line="28;document\Format.mdk:176"></span><code class="code code1">toolInfo</code><span data-line="28;document\Format.mdk:176"></span> object may contain a property named <span data-line="28;document\Format.mdk:176"></span><code class="code code1">fullName</code><span data-line="28;document\Format.mdk:176"></span> whose value is a string containing the name of the tool
 along with its version and any other useful identifying information, such as its locale.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:179" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:179" style="font-size:small">
 <p data-line="28;document\Format.mdk:180"><span data-line="28;document\Format.mdk:180"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:180"></span><code class="code code1">&quot;CodeScanner 2.0, Developer Preview (en-US)&quot;</code></p></div><h4 id="toolinfo-version"  data-line="28;document\Format.mdk:183"  style="bookmark:4.5.4.&#8194;`version` property"><span data-line="28;document\Format.mdk:183"></span><span class="heading-before"><span class="heading-label">4.5.4</span>.&#8194;</span><span data-line="28;document\Format.mdk:183"></span><code class="code code1">version</code><span data-line="28;document\Format.mdk:183"></span> property</h4>
 <p data-line="28;document\Format.mdk:185"><span data-line="28;document\Format.mdk:185"></span>A <span data-line="28;document\Format.mdk:185"></span><code class="code code1">toolInfo</code><span data-line="28;document\Format.mdk:185"></span> object should contain a property named <span data-line="28;document\Format.mdk:185"></span><code class="code code1">version</code><span data-line="28;document\Format.mdk:185"></span> whose value is a string containing the tool version.
 If present, the string should be in the format specified by Semantic Versioning 2.0.0.
 </p>
-<div class="isonote block" data-line="28;document\Format.mdk:188" style="font-size:smaller">
+<div class="isonote block" data-line="28;document\Format.mdk:188" style="font-size:small">
 <p data-line="28;document\Format.mdk:189"><span data-line="28;document\Format.mdk:189"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:189"></span>Semantic versions have the property of being sortable in chronological order of release.</p></div>
-<div class="isoexample block" data-line="28;document\Format.mdk:192" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:192" style="font-size:small">
 <p data-line="28;document\Format.mdk:193"><span data-line="28;document\Format.mdk:193"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:193"></span><code class="code code1">&quot;1.0.0-beta&quot;</code></p></div><h4 id="toolinfo-fileversion"  data-line="28;document\Format.mdk:196"  style="bookmark:4.5.5.&#8194;`fileVersion` property"><span data-line="28;document\Format.mdk:196"></span><span class="heading-before"><span class="heading-label">4.5.5</span>.&#8194;</span><span data-line="28;document\Format.mdk:196"></span><code class="code code1">fileVersion</code><span data-line="28;document\Format.mdk:196"></span> property</h4>
 <p data-line="28;document\Format.mdk:198"><span data-line="28;document\Format.mdk:198"></span>If the operating system on which the tool runs provides a value for the file version of the tool<span data-line="28;document\Format.mdk:198"></span>&#39;<span data-line="28;document\Format.mdk:198"></span>s primary executable file,
 then the <span data-line="28;document\Format.mdk:199"></span><code class="code code1">toolInfo</code><span data-line="28;document\Format.mdk:199"></span> object may contain a property named <span data-line="28;document\Format.mdk:199"></span><code class="code code1">fileVersion</code><span data-line="28;document\Format.mdk:199"></span> whose value is
 a string representation of that file version.
 If the operating system does not provide such a value, the <span data-line="28;document\Format.mdk:201"></span><code class="code code1">fileVersion</code><span data-line="28;document\Format.mdk:201"></span> property shall not be present.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:203" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:203" style="font-size:small">
 <p data-line="28;document\Format.mdk:204"><span data-line="28;document\Format.mdk:204"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:204"></span>On the Windows platform, this information is available in the <span data-line="28;document\Format.mdk:204"></span><code class="code code1">FILEVERSION</code><span data-line="28;document\Format.mdk:204"></span> member of the <span data-line="28;document\Format.mdk:204"></span><code class="code code1">VERSIONINFO</code><span data-line="28;document\Format.mdk:204"></span> structure.</p></div><h3 id="runinfo"  data-line="28;document\Format.mdk:207"  style="bookmark:4.6.&#8194;`runInfo` object"><span data-line="28;document\Format.mdk:207"></span><span class="heading-before"><span class="heading-label">4.6</span>.&#8194;</span><span data-line="28;document\Format.mdk:207"></span><code class="code code1">runInfo</code><span data-line="28;document\Format.mdk:207"></span> object</h3><h4 id="runinfo-general"  data-line="28;document\Format.mdk:209"  style="bookmark:4.6.1.&#8194;General"><span data-line="28;document\Format.mdk:209"></span><span class="heading-before"><span class="heading-label">4.6.1</span>.&#8194;</span><span data-line="28;document\Format.mdk:209"></span>General</h4>
 <p data-line="28;document\Format.mdk:211"><span data-line="28;document\Format.mdk:211"></span>A <span data-line="28;document\Format.mdk:211"></span><code class="code code1">runInfo</code><span data-line="28;document\Format.mdk:211"></span> object describes the invocation of the static analysis tool that produced the issues specified
 in the containing runLog object (<span data-line="28;document\Format.mdk:212"></span>&#167;<span data-line="28;document\Format.mdk:212"></span><a href="#runlog" title="4.4.&#8194;runLog object" class="localref" style="target-element:h2"><span class="heading-label">4.4</span></a><span data-line="28;document\Format.mdk:212"></span>).
 </p>
-<div class="isonote block" data-line="28;document\Format.mdk:214" style="font-size:smaller">
+<div class="isonote block" data-line="28;document\Format.mdk:214" style="font-size:small">
 <p data-line="28;document\Format.mdk:215"><span data-line="28;document\Format.mdk:215"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:215"></span>The information in the <span data-line="28;document\Format.mdk:215"></span><code class="code code1">runInfo</code><span data-line="28;document\Format.mdk:215"></span> object makes it possible to precisely repeat a run of a static analysis tool,
 and to verify that the issues reported in the log file were generated by an appropriate invocation of the tool.</p></div><h4 id="runinfo-commandlinearguments"  data-line="28;document\Format.mdk:219"  style="bookmark:4.6.2.&#8194;`commandLineArguments` property"><span data-line="28;document\Format.mdk:219"></span><span class="heading-before"><span class="heading-label">4.6.2</span>.&#8194;</span><span data-line="28;document\Format.mdk:219"></span><code class="code code1">commandLineArguments</code><span data-line="28;document\Format.mdk:219"></span> property</h4>
 <p data-line="28;document\Format.mdk:221"><span data-line="28;document\Format.mdk:221"></span>A <span data-line="28;document\Format.mdk:221"></span><code class="code code1">runInfo</code><span data-line="28;document\Format.mdk:221"></span> object shall contain a property named <span data-line="28;document\Format.mdk:221"></span><code class="code code1">commandLineArguments</code><span data-line="28;document\Format.mdk:221"></span> whose value is a string
 containing the command line arguments with which the tool was invoked.
 This string shall not include the file name or path to the executable itself.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:225" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:225" style="font-size:small">
 <p data-line="28;document\Format.mdk:226"><span data-line="28;document\Format.mdk:226"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:226"></span>Suppose a tool is invoked with the command line
 </p>
 <pre class="para-block pre-fenced pre-fenced3" data-line="28;document\Format.mdk:228" data-line-code="28;document\Format.mdk:229"><code data-line="28;document\Format.mdk:229">    C:\Tools\CodeScanner\CodeScanner.exe /input C:\Code\*.cc</code></pre>
@@ -1032,16 +1032,16 @@ representing the location of a single analysis target scanned during the run.
 This array shall contain one entry for each analysis target that was scanned,
 even if the analysis targets were not individually specified on the command line.
 </p>
-<div class="isonumberednote block" data-line="28;document\Format.mdk:243" style="font-size:smaller">
+<div class="isonumberednote block" data-line="28;document\Format.mdk:243" style="font-size:small">
 <p data-line="28;document\Format.mdk:244"><span data-line="28;document\Format.mdk:244"></span><span class="example-before">NOTE&#160;<span class="example-label">1</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:244"></span>The command line with which the tool was invoked might specify its input files
 by means of a wild card such as <span data-line="28;document\Format.mdk:245"></span>*<span data-line="28;document\Format.mdk:245"></span>.cc, or it might specify them implicitly,
 for example, by scanning the files in the current directory.</p></div>
 <p data-line="28;document\Format.mdk:249"><span data-line="28;document\Format.mdk:249"></span>The <span data-line="28;document\Format.mdk:249"></span><code class="code code1">analysisTargets</code><span data-line="28;document\Format.mdk:249"></span> array shall be empty if no analysis targets were scanned in the course of the run.
 </p>
-<div class="isonumberednote block" data-line="28;document\Format.mdk:251" style="font-size:smaller">
+<div class="isonumberednote block" data-line="28;document\Format.mdk:251" style="font-size:small">
 <p data-line="28;document\Format.mdk:252"><span data-line="28;document\Format.mdk:252"></span><span class="example-before">NOTE&#160;<span class="example-label">2</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:252"></span>This could happen if the command line specified a wildcard such as <span data-line="28;document\Format.mdk:252"></span>*<span data-line="28;document\Format.mdk:252"></span>.cc for the input files,
 and no files matched the wildcard.</p></div>
-<div class="isoexample block" data-line="28;document\Format.mdk:256" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:256" style="font-size:small">
 <p data-line="28;document\Format.mdk:257"><span data-line="28;document\Format.mdk:257"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:257"></span><code class="code code1">[ &quot;C:\Code\a.cc&quot;, &quot;C:\Code\b.cc&quot;, &quot;C:\Code\c.cc&quot; ]</code></p></div><h3 id="filereference"  data-line="28;document\Format.mdk:260"  style="bookmark:4.7.&#8194;`fileReference` object"><span data-line="28;document\Format.mdk:260"></span><span class="heading-before"><span class="heading-label">4.7</span>.&#8194;</span><span data-line="28;document\Format.mdk:260"></span><code class="code code1">fileReference</code><span data-line="28;document\Format.mdk:260"></span> object</h3><h4 id="filereference-general"  data-line="28;document\Format.mdk:262"  style="bookmark:4.7.1.&#8194;General"><span data-line="28;document\Format.mdk:262"></span><span class="heading-before"><span class="heading-label">4.7.1</span>.&#8194;</span><span data-line="28;document\Format.mdk:262"></span>General</h4>
 <p data-line="28;document\Format.mdk:264"><span data-line="28;document\Format.mdk:264"></span>A <span data-line="28;document\Format.mdk:264"></span><code class="code code1">fileReference</code><span data-line="28;document\Format.mdk:264"></span> object represents a single file.
 </p><h4 id="filereference-uri"  data-line="28;document\Format.mdk:266"  style="bookmark:4.7.2.&#8194;`uri` property"><span data-line="28;document\Format.mdk:266"></span><span class="heading-before"><span class="heading-label">4.7.2</span>.&#8194;</span><span data-line="28;document\Format.mdk:266"></span><code class="code code1">uri</code><span data-line="28;document\Format.mdk:266"></span> property</h4>
@@ -1054,7 +1054,7 @@ along with the name of the algorithm used to compute the hash.
 </p><h3 id="hash"  data-line="28;document\Format.mdk:277"  style="bookmark:4.8.&#8194;`hash` object"><span data-line="28;document\Format.mdk:277"></span><span class="heading-before"><span class="heading-label">4.8</span>.&#8194;</span><span data-line="28;document\Format.mdk:277"></span><code class="code code1">hash</code><span data-line="28;document\Format.mdk:277"></span> object</h3><h4 id="hash-general"  data-line="28;document\Format.mdk:279"  style="bookmark:4.8.1.&#8194;General"><span data-line="28;document\Format.mdk:279"></span><span class="heading-before"><span class="heading-label">4.8.1</span>.&#8194;</span><span data-line="28;document\Format.mdk:279"></span>General</h4>
 <p data-line="28;document\Format.mdk:281"><span data-line="28;document\Format.mdk:281"></span>A <span data-line="28;document\Format.mdk:281"></span><code class="code code1">hash</code><span data-line="28;document\Format.mdk:281"></span> object represents a hash value of some file or collection of files, together with the algorithm used to compute the hash.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:283" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:283" style="font-size:small">
 <p data-line="28;document\Format.mdk:284"><span data-line="28;document\Format.mdk:284"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:284"></span>
 </p>
 <pre class="para-block pre-fenced pre-fenced3" data-line="28;document\Format.mdk:285" data-line-code="28;document\Format.mdk:286"><code data-line="28;document\Format.mdk:286">{
@@ -1135,7 +1135,7 @@ This shall be one of the following:
 <p data-line="28;document\Format.mdk:343"><span data-line="28;document\Format.mdk:343"></span>An <span data-line="28;document\Format.mdk:343"></span><code class="code code1">issue</code><span data-line="28;document\Format.mdk:343"></span> object shall contain a property named <span data-line="28;document\Format.mdk:343"></span><code class="code code1">ruleId</code><span data-line="28;document\Format.mdk:343"></span> whose value is a string containing
 a stable, opaque identifier for the rule that was violated.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:346" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:346" style="font-size:small">
 <p data-line="28;document\Format.mdk:347"><span data-line="28;document\Format.mdk:347"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:347"></span><code class="code code1">&quot;CA2101&quot;</code></p></div><h4 id="issue-fullmessage"  data-line="28;document\Format.mdk:350"  style="bookmark:4.9.3.&#8194;`fullMessage` property"><span data-line="28;document\Format.mdk:350"></span><span class="heading-before"><span class="heading-label">4.9.3</span>.&#8194;</span><span data-line="28;document\Format.mdk:350"></span><code class="code code1">fullMessage</code><span data-line="28;document\Format.mdk:350"></span> property</h4>
 <p data-line="28;document\Format.mdk:352"><span data-line="28;document\Format.mdk:352"></span>An <span data-line="28;document\Format.mdk:352"></span><code class="code code1">issue</code><span data-line="28;document\Format.mdk:352"></span> object shall contain a property named <span data-line="28;document\Format.mdk:352"></span><code class="code code1">fullMessage</code><span data-line="28;document\Format.mdk:352"></span> whose value is a string that describes the issue.
 </p>
@@ -1164,7 +1164,7 @@ Tools that do not construct <span data-line="28;document\Format.mdk:369"></span>
 because otherwise, the initial portion of <span data-line="28;document\Format.mdk:370"></span><code class="code code1">fullMessage</code><span data-line="28;document\Format.mdk:370"></span> that a viewer displays where UI space is limited
 might not be understandable.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:373" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:373" style="font-size:small">
 <p data-line="28;document\Format.mdk:374"><span data-line="28;document\Format.mdk:374"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:374"></span>This is an example of a <span data-line="28;document\Format.mdk:374"></span><code class="code code1">fullMessage</code><span data-line="28;document\Format.mdk:374"></span>:
 </p>
 <pre class="para-block pre-fenced pre-fenced3" data-line="28;document\Format.mdk:375" data-line-code="28;document\Format.mdk:376"><code data-line="28;document\Format.mdk:376">    &quot;Deleting object members may compromise performance when subsequently accessing the object.
@@ -1176,7 +1176,7 @@ might not be understandable.
 The <span data-line="28;document\Format.mdk:387"></span><code class="code code1">shortMessage</code><span data-line="28;document\Format.mdk:387"></span> property should be a single sentence that is understandable
 when displayed in user interface contexts where the available space is limited to a single line of text.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:390" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:390" style="font-size:small">
 <p data-line="28;document\Format.mdk:391"><span data-line="28;document\Format.mdk:391"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:391"></span>This is an example of a <span data-line="28;document\Format.mdk:391"></span><code class="code code1">shortMessage</code><span data-line="28;document\Format.mdk:391"></span>:
 </p>
 <pre class="para-block pre-fenced pre-fenced3" data-line="28;document\Format.mdk:392" data-line-code="28;document\Format.mdk:393"><code data-line="28;document\Format.mdk:393">    &quot;Deleting member &#39;x&#39; of variable &#39;y&#39; may compromise performance on subsequent accesses
@@ -1186,13 +1186,13 @@ each of whose elements is a <span data-line="28;document\Format.mdk:401"></span>
 The <span data-line="28;document\Format.mdk:402"></span><code class="code code1">locations</code><span data-line="28;document\Format.mdk:402"></span> array shall contain at least one element if the issue can be associated with a location.
 In rare circumstances, it might not be possible to specify a location for an issue.
 </p>
-<div class="isonumberedexample block" data-line="28;document\Format.mdk:405" style="font-size:smaller">
+<div class="isonumberedexample block" data-line="28;document\Format.mdk:405" style="font-size:small">
 <p data-line="28;document\Format.mdk:406"><span data-line="28;document\Format.mdk:406"></span><span class="example-before">EXAMPLE&#160;<span class="example-label">1</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:406"></span>If a C++ analyzer detects that no file defines a <span data-line="28;document\Format.mdk:406"></span><code class="code code1">main</code><span data-line="28;document\Format.mdk:406"></span> method,
 then the resulting issue cannot be associated with a file.</p></div>
 <p data-line="28;document\Format.mdk:410"><span data-line="28;document\Format.mdk:410"></span>The <span data-line="28;document\Format.mdk:410"></span><code class="code code1">locations</code><span data-line="28;document\Format.mdk:410"></span> array shall not contain more than one element unless the issue can only be corrected
 by making a change at all of the locations specified by the array elements.
 </p>
-<div class="isonumberedexample block" data-line="28;document\Format.mdk:413" style="font-size:smaller">
+<div class="isonumberedexample block" data-line="28;document\Format.mdk:413" style="font-size:small">
 <p data-line="28;document\Format.mdk:414"><span data-line="28;document\Format.mdk:414"></span><span class="example-before">EXAMPLE&#160;<span class="example-label">2</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:414"></span>In programming languages that support partial classes,
 the name of a single class may occur more than once in the source code.
 If a static analysis tool reported that the name of such a class did not conform to a specified convention,
@@ -1202,7 +1202,7 @@ where the class name occurs.</p></div>
 <p data-line="28;document\Format.mdk:422"><span data-line="28;document\Format.mdk:422"></span>The <span data-line="28;document\Format.mdk:422"></span><code class="code code1">locations</code><span data-line="28;document\Format.mdk:422"></span> array shall not be used to specify distinct occurrences of the same issue,
 which can be corrected independently.
 </p>
-<div class="isonumberedexample block" data-line="28;document\Format.mdk:425" style="font-size:smaller">
+<div class="isonumberedexample block" data-line="28;document\Format.mdk:425" style="font-size:small">
 <p data-line="28;document\Format.mdk:426"><span data-line="28;document\Format.mdk:426"></span><span class="example-before">EXAMPLE&#160;<span class="example-label">3</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:426"></span>Consider a static analysis tool which locates misspelled words in documentation,
 and suppose this tool scans a document in which the same word is misspelled in two distinct locations.
 Then the resulting log file should contain two distinct <span data-line="28;document\Format.mdk:428"></span><code class="code code1">issue</code><span data-line="28;document\Format.mdk:428"></span> objects,
@@ -1227,7 +1227,7 @@ but the entries that are present shall occur in the order that the tool visited 
 </p>
 <p class="indent" data-line="28;document\Format.mdk:454"><span data-line="28;document\Format.mdk:454"></span>A single issue may contain one or more execution flows, one or more call stacks (<span data-line="28;document\Format.mdk:454"></span>&#167;<span data-line="28;document\Format.mdk:454"></span><a href="#issue-callstacks" title="4.9.8.&#8194;stacks property" class="localref" style="target-element:h3"><span class="heading-label">4.9.8</span></a><span data-line="28;document\Format.mdk:454"></span>), or both.
 </p>
-<div class="isonote block" data-line="28;document\Format.mdk:456" style="font-size:smaller">
+<div class="isonote block" data-line="28;document\Format.mdk:456" style="font-size:small">
 <p data-line="28;document\Format.mdk:457"><span data-line="28;document\Format.mdk:457"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:457"></span>The SARIF file format allows multiple execution flows within a single <span data-line="28;document\Format.mdk:457"></span><code class="code code1">issue</code><span data-line="28;document\Format.mdk:457"></span> object
 to allow for the possibility that a static analysis tool might simulate more than one execution flow
 in the course of detecting a single issue.</p></div><h4 id="issue-callstacks"  data-line="28;document\Format.mdk:462"  style="bookmark:4.9.8.&#8194;`stacks` property"><span data-line="28;document\Format.mdk:462"></span><span class="heading-before"><span class="heading-label">4.9.8</span>.&#8194;</span><span data-line="28;document\Format.mdk:462"></span><code class="code code1">stacks</code><span data-line="28;document\Format.mdk:462"></span> property</h4>
@@ -1246,11 +1246,11 @@ and the entries that are present shall occur in order with the innermost call fi
 </p>
 <p class="indent" data-line="28;document\Format.mdk:477"><span data-line="28;document\Format.mdk:477"></span>A single issue may contain one or more call stacks, one or more execution flows (<span data-line="28;document\Format.mdk:477"></span>&#167;<span data-line="28;document\Format.mdk:477"></span><a href="#issue-executionflows" title="4.9.7.&#8194;executionFlows property" class="localref" style="target-element:h3"><span class="heading-label">4.9.7</span></a><span data-line="28;document\Format.mdk:477"></span>), or both.
 </p>
-<div class="isonumberednote block" data-line="28;document\Format.mdk:479" style="font-size:smaller">
+<div class="isonumberednote block" data-line="28;document\Format.mdk:479" style="font-size:small">
 <p data-line="28;document\Format.mdk:480"><span data-line="28;document\Format.mdk:480"></span><span class="example-before">NOTE&#160;<span class="example-label">1</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:480"></span>The SARIF file format allows multiple call stacks within a single <span data-line="28;document\Format.mdk:480"></span><code class="code code1">issue</code><span data-line="28;document\Format.mdk:480"></span> object
 to allow for the possibility that a static analysis tool might simulate more than one call stack
 in the course of detecting a single issue.</p></div>
-<div class="isonumberednote block" data-line="28;document\Format.mdk:485" style="font-size:smaller">
+<div class="isonumberednote block" data-line="28;document\Format.mdk:485" style="font-size:small">
 <p data-line="28;document\Format.mdk:486"><span data-line="28;document\Format.mdk:486"></span><span class="example-before">NOTE&#160;<span class="example-label">2</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:486"></span>It is possible that the static analysis tool will not have location information for every call in the call stack.
 This might happen, for example, if application code for which location information is available calls into operating system code
 for which location information is not available, which in turn calls back into application code.</p></div><h4 id="issue-issuppressedinsource"  data-line="28;document\Format.mdk:491"  style="bookmark:4.9.9.&#8194;`isSuppressedInSource` property"><span data-line="28;document\Format.mdk:491"></span><span class="heading-before"><span class="heading-label">4.9.9</span>.&#8194;</span><span data-line="28;document\Format.mdk:491"></span><code class="code code1">isSuppressedInSource</code><span data-line="28;document\Format.mdk:491"></span> property</h4>
@@ -1266,7 +1266,7 @@ It shall omitted if the tool cannot or chooses not to determine whether the issu
 </p>
 <p class="indent" data-line="28;document\Format.mdk:503"><span data-line="28;document\Format.mdk:503"></span>For tools that do not examine source code written in such a language, this value shall be set to <span data-line="28;document\Format.mdk:503"></span>&#8220;null&#8221;<span data-line="28;document\Format.mdk:503"></span>, or omitted entirely.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:505" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:505" style="font-size:small">
 <p data-line="28;document\Format.mdk:506"><span data-line="28;document\Format.mdk:506"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:506"></span>The <span data-line="28;document\Format.mdk:506"></span><code class="code code1">#pragma</code><span data-line="28;document\Format.mdk:506"></span> warning construct in C<span data-line="28;document\Format.mdk:506"></span>#<span data-line="28;document\Format.mdk:506"></span> is such a syntactic construct.</p></div><h4 id="issue-fixes"  data-line="28;document\Format.mdk:509"  style="bookmark:4.9.10.&#8194;`fixes` property"><span data-line="28;document\Format.mdk:509"></span><span class="heading-before"><span class="heading-label">4.9.10</span>.&#8194;</span><span data-line="28;document\Format.mdk:509"></span><code class="code code1">fixes</code><span data-line="28;document\Format.mdk:509"></span> property</h4>
 <p data-line="28;document\Format.mdk:511"><span data-line="28;document\Format.mdk:511"></span>An <span data-line="28;document\Format.mdk:511"></span><code class="code code1">issue</code><span data-line="28;document\Format.mdk:511"></span> object may contain a property names <span data-line="28;document\Format.mdk:511"></span><code class="code code1">fixes</code><span data-line="28;document\Format.mdk:511"></span>, whose value is a JSON array of <span data-line="28;document\Format.mdk:511"></span><code class="code code1">fix</code><span data-line="28;document\Format.mdk:511"></span> objects (<span data-line="28;document\Format.mdk:511"></span>&#167;<span data-line="28;document\Format.mdk:511"></span><a href="#fix" title="4.15.&#8194;fix object" class="localref" style="target-element:h2"><span class="heading-label">4.15</span></a><span data-line="28;document\Format.mdk:511"></span>).
 </p><h4 id="issue-properties"  data-line="28;document\Format.mdk:513"  style="bookmark:4.9.11.&#8194;`properties` property"><span data-line="28;document\Format.mdk:513"></span><span class="heading-before"><span class="heading-label">4.9.11</span>.&#8194;</span><span data-line="28;document\Format.mdk:513"></span><code class="code code1">properties</code><span data-line="28;document\Format.mdk:513"></span> property</h4>
@@ -1325,13 +1325,13 @@ then the <span data-line="28;document\Format.mdk:580"></span><code class="code c
 If the issue occurs in a different file from the one specified in the <span data-line="28;document\Format.mdk:581"></span><code class="code code1">analysisTarget</code><span data-line="28;document\Format.mdk:581"></span> property,
 then the <span data-line="28;document\Format.mdk:582"></span><code class="code code1">issueFile</code><span data-line="28;document\Format.mdk:582"></span> property shall be present.
 </p>
-<div class="isonumberedexample block" data-line="28;document\Format.mdk:584" style="font-size:smaller">
+<div class="isonumberedexample block" data-line="28;document\Format.mdk:584" style="font-size:small">
 <p data-line="28;document\Format.mdk:585"><span data-line="28;document\Format.mdk:585"></span><span class="example-before">EXAMPLE&#160;<span class="example-label">1</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:585"></span>Suppose a static analysis tool for C++ source code is instructed to scan the source file <span data-line="28;document\Format.mdk:585"></span><em>a.cpp</em><span data-line="28;document\Format.mdk:585"></span>,
 which includes the header file <span data-line="28;document\Format.mdk:586"></span><em>b.h</em><span data-line="28;document\Format.mdk:586"></span>,
 and suppose the tool detects an issue in <span data-line="28;document\Format.mdk:587"></span><em>b.h</em><span data-line="28;document\Format.mdk:587"></span>.
 In this case, the tool should report the <span data-line="28;document\Format.mdk:588"></span><code class="code code1">analysisTarget</code><span data-line="28;document\Format.mdk:588"></span> as <span data-line="28;document\Format.mdk:588"></span><em>a.cpp</em><span data-line="28;document\Format.mdk:588"></span>,
 and it should report the <span data-line="28;document\Format.mdk:589"></span><code class="code code1">issueFile</code><span data-line="28;document\Format.mdk:589"></span> as <span data-line="28;document\Format.mdk:589"></span><em>b.h</em><span data-line="28;document\Format.mdk:589"></span>.</p></div>
-<div class="isonumberedexample block" data-line="28;document\Format.mdk:592" style="font-size:smaller">
+<div class="isonumberedexample block" data-line="28;document\Format.mdk:592" style="font-size:small">
 <p data-line="28;document\Format.mdk:593"><span data-line="28;document\Format.mdk:593"></span><span class="example-before">EXAMPLE&#160;<span class="example-label">2</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:593"></span>Suppose a static analysis tool for object code detects an issue in the binary file <span data-line="28;document\Format.mdk:593"></span><em>c.dll</em><span data-line="28;document\Format.mdk:593"></span>,
 and suppose the tool has available symbol information which maps that location within the binary
 to a specific line in a source file <span data-line="28;document\Format.mdk:595"></span><em>d.cpp</em><span data-line="28;document\Format.mdk:595"></span>.
@@ -1344,13 +1344,13 @@ which specifies the logical location where the static analysis tool detected the
 which summarizes the information in the <span data-line="28;document\Format.mdk:608"></span><code class="code code1">logicalLocationComponent</code><span data-line="28;document\Format.mdk:608"></span> array (<span data-line="28;document\Format.mdk:608"></span>&#167;<span data-line="28;document\Format.mdk:608"></span><a href="#logicallocationcomponent" title="4.13.&#8194;logicalLocationComponent object" class="localref" style="target-element:h2"><span class="heading-label">4.13</span></a><span data-line="28;document\Format.mdk:608"></span>)
 in a format consistent with the programming language in which the programming constructs specified by that array were expressed.
 </p>
-<div class="isonumberedexample block" data-line="28;document\Format.mdk:611" style="font-size:smaller">
+<div class="isonumberedexample block" data-line="28;document\Format.mdk:611" style="font-size:small">
 <p data-line="28;document\Format.mdk:612"><span data-line="28;document\Format.mdk:612"></span><span class="example-before">EXAMPLE&#160;<span class="example-label">1</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:612"></span>C: <span data-line="28;document\Format.mdk:612"></span><code class="code code1">create_process</code></p></div>
-<div class="isonumberedexample block" data-line="28;document\Format.mdk:614" style="font-size:smaller">
+<div class="isonumberedexample block" data-line="28;document\Format.mdk:614" style="font-size:small">
 <p data-line="28;document\Format.mdk:615"><span data-line="28;document\Format.mdk:615"></span><span class="example-before">EXAMPLE&#160;<span class="example-label">2</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:615"></span>C++: <span data-line="28;document\Format.mdk:615"></span><code class="code code1">Namespace::Class::Method(int, double) const &amp;&amp;</code></p></div>
-<div class="isonumberedexample block" data-line="28;document\Format.mdk:617" style="font-size:smaller">
+<div class="isonumberedexample block" data-line="28;document\Format.mdk:617" style="font-size:small">
 <p data-line="28;document\Format.mdk:618"><span data-line="28;document\Format.mdk:618"></span><span class="example-before">EXAMPLE&#160;<span class="example-label">3</span>&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:618"></span>C<span data-line="28;document\Format.mdk:618"></span>#<span data-line="28;document\Format.mdk:618"></span>: <span data-line="28;document\Format.mdk:618"></span><code class="code code1">Namespace1.Namespace2.Class.Method(System.String, int[])</code></p></div>
-<div class="isonote block" data-line="28;document\Format.mdk:621" style="font-size:smaller">
+<div class="isonote block" data-line="28;document\Format.mdk:621" style="font-size:small">
 <p data-line="28;document\Format.mdk:622"><span data-line="28;document\Format.mdk:622"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:622"></span>The intent of this property is to allow an issue log viewer to display the logical location
 in a way that is easily understood by an end user.</p></div><h4 id="location-properties"  data-line="28;document\Format.mdk:626"  style="bookmark:4.10.9.&#8194;`properties` property"><span data-line="28;document\Format.mdk:626"></span><span class="heading-before"><span class="heading-label">4.10.9</span>.&#8194;</span><span data-line="28;document\Format.mdk:626"></span><code class="code code1">properties</code><span data-line="28;document\Format.mdk:626"></span> property</h4>
 <p data-line="28;document\Format.mdk:628"><span data-line="28;document\Format.mdk:628"></span>A <span data-line="28;document\Format.mdk:628"></span><code class="code code1">location</code><span data-line="28;document\Format.mdk:628"></span> object may contain a property named <span data-line="28;document\Format.mdk:628"></span><code class="code code1">properties</code><span data-line="28;document\Format.mdk:628"></span>, whose value is a JSON object
@@ -1502,7 +1502,7 @@ For example, this property might contain the name of a class or a method.
 </p>
 <p class="indent" data-line="28;document\Format.mdk:805"><span data-line="28;document\Format.mdk:805"></span>The name property need not be suitable for display.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:807" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:807" style="font-size:small">
 <p data-line="28;document\Format.mdk:808"><span data-line="28;document\Format.mdk:808"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:808"></span>A C++ analysis tool might emit the <span data-line="28;document\Format.mdk:808"></span><code class="code code1">name</code><span data-line="28;document\Format.mdk:808"></span> property of a function as the <span data-line="28;document\Format.mdk:808"></span>&#8220;decorated&#8221;<span data-line="28;document\Format.mdk:808"></span> function name,
 which encodes the function signature in a manner that is compiler-dependent and not easily readable.</p></div><h4 id="logicallocationcomponent-locationkind"  data-line="28;document\Format.mdk:812"  style="bookmark:4.13.3.&#8194;`locationKind` property"><span data-line="28;document\Format.mdk:812"></span><span class="heading-before"><span class="heading-label">4.13.3</span>.&#8194;</span><span data-line="28;document\Format.mdk:812"></span><code class="code code1">locationKind</code><span data-line="28;document\Format.mdk:812"></span> property</h4>
 <p class="para-continue" data-line="28;document\Format.mdk:814"><span data-line="28;document\Format.mdk:814"></span>A <span data-line="28;document\Format.mdk:814"></span><code class="code code1">logicalLocationComponent</code><span data-line="28;document\Format.mdk:814"></span> object should contain a property called <span data-line="28;document\Format.mdk:814"></span><code class="code code1">locationKind</code><span data-line="28;document\Format.mdk:814"></span>, whose value shall be one of the following strings,
@@ -1541,7 +1541,7 @@ For example, if the <span data-line="28;document\Format.mdk:845"></span><code cl
 It specifies a set of files to modify.
 For each file, it specifies which bytes to remove, and provides new bytes to be inserted.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:855" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:855" style="font-size:small">
 <p data-line="28;document\Format.mdk:856"><span data-line="28;document\Format.mdk:856"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:856"></span>
 </p>
 <pre class="para-block pre-fenced pre-fenced4" data-line="28;document\Format.mdk:857" data-line-code="28;document\Format.mdk:858"><code data-line="28;document\Format.mdk:858">    {                                                     # an issue object (see <span class="code-escaped">&#167;<a href="#issue" title="4.9.&#8194;issue object" class="localref" style="target-element:h2"><span class="heading-label">4.9</span></a></span>)
@@ -1559,19 +1559,19 @@ For each file, it specifies which bytes to remove, and provides new bytes to be 
     }</code></pre></div><h4 id="fix-description"  data-line="28;document\Format.mdk:875"  style="bookmark:4.15.2.&#8194;`description` property"><span data-line="28;document\Format.mdk:875"></span><span class="heading-before"><span class="heading-label">4.15.2</span>.&#8194;</span><span data-line="28;document\Format.mdk:875"></span><code class="code code1">description</code><span data-line="28;document\Format.mdk:875"></span> property</h4>
 <p data-line="28;document\Format.mdk:877"><span data-line="28;document\Format.mdk:877"></span>A <span data-line="28;document\Format.mdk:877"></span><code class="code code1">fix</code><span data-line="28;document\Format.mdk:877"></span> object shall contain a property named <span data-line="28;document\Format.mdk:877"></span><code class="code code1">description</code><span data-line="28;document\Format.mdk:877"></span> whose value is a string describing the proposed fix.
 </p>
-<div class="isonote block" data-line="28;document\Format.mdk:879" style="font-size:smaller">
+<div class="isonote block" data-line="28;document\Format.mdk:879" style="font-size:small">
 <p data-line="28;document\Format.mdk:880"><span data-line="28;document\Format.mdk:880"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:880"></span>The purpose of the <span data-line="28;document\Format.mdk:880"></span><code class="code code1">description</code><span data-line="28;document\Format.mdk:880"></span> property is to enable an issue log viewer to present the proposed fix to the end user.</p></div>
-<div class="isoexample block" data-line="28;document\Format.mdk:883" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:883" style="font-size:small">
 <p data-line="28;document\Format.mdk:884"><span data-line="28;document\Format.mdk:884"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:884"></span><code class="code code1">&quot;Combine declaration and initialization of variable x&quot;</code></p></div><h4 id="fix-filechanges"  data-line="28;document\Format.mdk:887"  style="bookmark:4.15.3.&#8194;`fileChanges` property"><span data-line="28;document\Format.mdk:887"></span><span class="heading-before"><span class="heading-label">4.15.3</span>.&#8194;</span><span data-line="28;document\Format.mdk:887"></span><code class="code code1">fileChanges</code><span data-line="28;document\Format.mdk:887"></span> property</h4>
 <p data-line="28;document\Format.mdk:889"><span data-line="28;document\Format.mdk:889"></span>A <span data-line="28;document\Format.mdk:889"></span><code class="code code1">fix</code><span data-line="28;document\Format.mdk:889"></span> object shall contain a property named <span data-line="28;document\Format.mdk:889"></span><code class="code code1">fileChanges</code><span data-line="28;document\Format.mdk:889"></span> whose value is a JSON array of
 <span data-line="28;document\Format.mdk:890"></span><code class="code code1">fileChange</code><span data-line="28;document\Format.mdk:890"></span> objects (<span data-line="28;document\Format.mdk:890"></span>&#167;<span data-line="28;document\Format.mdk:890"></span><a href="#filechange" title="4.16.&#8194;fileChange object" class="localref" style="target-element:h2"><span class="heading-label">4.16</span></a><span data-line="28;document\Format.mdk:890"></span>).
 The array shall contain at least one element.
 </p>
-<div class="isonote block" data-line="28;document\Format.mdk:893" style="font-size:smaller">
+<div class="isonote block" data-line="28;document\Format.mdk:893" style="font-size:small">
 <p data-line="28;document\Format.mdk:894"><span data-line="28;document\Format.mdk:894"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:894"></span>A <span data-line="28;document\Format.mdk:894"></span><code class="code code1">fix</code><span data-line="28;document\Format.mdk:894"></span> object that does not change any files is not meaningful.</p></div><h3 id="filechange"  data-line="28;document\Format.mdk:897"  style="bookmark:4.16.&#8194;`fileChange` object"><span data-line="28;document\Format.mdk:897"></span><span class="heading-before"><span class="heading-label">4.16</span>.&#8194;</span><span data-line="28;document\Format.mdk:897"></span><code class="code code1">fileChange</code><span data-line="28;document\Format.mdk:897"></span> object</h3><h4 id="filechange-general"  data-line="28;document\Format.mdk:899"  style="bookmark:4.16.1.&#8194;General"><span data-line="28;document\Format.mdk:899"></span><span class="heading-before"><span class="heading-label">4.16.1</span>.&#8194;</span><span data-line="28;document\Format.mdk:899"></span>General</h4>
 <p data-line="28;document\Format.mdk:901"><span data-line="28;document\Format.mdk:901"></span>A <span data-line="28;document\Format.mdk:901"></span><code class="code code1">fileChange</code><span data-line="28;document\Format.mdk:901"></span> object represents a change to a single file.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:903" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:903" style="font-size:small">
 <p data-line="28;document\Format.mdk:904"><span data-line="28;document\Format.mdk:904"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:904"></span>
 </p>
 <pre class="para-block pre-fenced pre-fenced4" data-line="28;document\Format.mdk:905" data-line-code="28;document\Format.mdk:906"><code data-line="28;document\Format.mdk:906">    {                                      # a fix object (see <span class="code-escaped">&#167;<a href="#fix" title="4.15.&#8194;fix object" class="localref" style="target-element:h2"><span class="heading-label">4.15</span></a></span>)
@@ -1601,7 +1601,7 @@ each of which represents the replacement of a single range of bytes in the file 
 <span data-line="28;document\Format.mdk:938"></span><code class="code code1">uri</code><span data-line="28;document\Format.mdk:938"></span> property (<span data-line="28;document\Format.mdk:938"></span>&#167;<span data-line="28;document\Format.mdk:938"></span><a href="#filechange-uri" title="4.16.2.&#8194;uri property" class="localref" style="target-element:h3"><span class="heading-label">4.16.2</span></a><span data-line="28;document\Format.mdk:938"></span>).
 The array shall contain at least one element.
 </p>
-<div class="isonote block" data-line="28;document\Format.mdk:941" style="font-size:smaller">
+<div class="isonote block" data-line="28;document\Format.mdk:941" style="font-size:small">
 <p data-line="28;document\Format.mdk:942"><span data-line="28;document\Format.mdk:942"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:942"></span>A <span data-line="28;document\Format.mdk:942"></span><code class="code code1">fileChange</code><span data-line="28;document\Format.mdk:942"></span> object that does not modify any bytes in the file is not meaningful.</p></div><h3 id="replacement"  data-line="28;document\Format.mdk:945"  style="bookmark:4.17.&#8194;`replacement` object"><span data-line="28;document\Format.mdk:945"></span><span class="heading-before"><span class="heading-label">4.17</span>.&#8194;</span><span data-line="28;document\Format.mdk:945"></span><code class="code code1">replacement</code><span data-line="28;document\Format.mdk:945"></span> object</h3><h4 id="replacement-general"  data-line="28;document\Format.mdk:947"  style="bookmark:4.17.1.&#8194;General"><span data-line="28;document\Format.mdk:947"></span><span class="heading-before"><span class="heading-label">4.17.1</span>.&#8194;</span><span data-line="28;document\Format.mdk:947"></span>General</h4>
 <p data-line="28;document\Format.mdk:949"><span data-line="28;document\Format.mdk:949"></span>A <span data-line="28;document\Format.mdk:949"></span><code class="code code1">replacement</code><span data-line="28;document\Format.mdk:949"></span> object represents the replacement of a single range of bytes in a file.
 It specifies the location within the file where the replacement is to be made,
@@ -1620,7 +1620,7 @@ in the order they appear in the <span data-line="28;document\Format.mdk:962"></s
 The <span data-line="28;document\Format.mdk:963"></span><code class="code code1">offset</code><span data-line="28;document\Format.mdk:963"></span> property (<span data-line="28;document\Format.mdk:963"></span>&#167;<span data-line="28;document\Format.mdk:963"></span><a href="#replacement-offset" title="4.17.3.&#8194;offset property" class="localref" style="target-element:h3"><span class="heading-label">4.17.3</span></a><span data-line="28;document\Format.mdk:963"></span>) of each <span data-line="28;document\Format.mdk:963"></span><code class="code code1">replacement</code><span data-line="28;document\Format.mdk:963"></span> shall specify
 an offset in the unmodified file.
 </p>
-<div class="isoexample block" data-line="28;document\Format.mdk:966" style="font-size:smaller">
+<div class="isoexample block" data-line="28;document\Format.mdk:966" style="font-size:small">
 <p data-line="28;document\Format.mdk:967"><span data-line="28;document\Format.mdk:967"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:967"></span>
 Suppose a <span data-line="28;document\Format.mdk:968"></span><code class="code code1">fileChange</code><span data-line="28;document\Format.mdk:968"></span> object contains a <span data-line="28;document\Format.mdk:968"></span><code class="code code1">fileChanges</code><span data-line="28;document\Format.mdk:968"></span> property whose value is the following
 array of two <span data-line="28;document\Format.mdk:969"></span><code class="code code1">replacement</code><span data-line="28;document\Format.mdk:969"></span> objects:
@@ -1652,7 +1652,7 @@ or the <span data-line="28;document\Format.mdk:1001"></span><code class="code co
 shall be present and have a string value whose length is greater than zero,
 or both.
 </p>
-<div class="isonote block" data-line="28;document\Format.mdk:1005" style="font-size:smaller">
+<div class="isonote block" data-line="28;document\Format.mdk:1005" style="font-size:small">
 <p data-line="28;document\Format.mdk:1006"><span data-line="28;document\Format.mdk:1006"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="28;document\Format.mdk:1006"></span>A <span data-line="28;document\Format.mdk:1006"></span><code class="code code1">replacement</code><span data-line="28;document\Format.mdk:1006"></span> object in which the <span data-line="28;document\Format.mdk:1006"></span><code class="code code1">deletedLength</code><span data-line="28;document\Format.mdk:1006"></span> property was absent or had a value of 0,
 and in which the <span data-line="28;document\Format.mdk:1007"></span><code class="code code1">insertedBytes</code><span data-line="28;document\Format.mdk:1007"></span> property was absent or had a value equal to the empty string,
 would neither insert nor remove any bytes, and so would not be meaningful.</p></div><h4 id="replacement-offset"  data-line="28;document\Format.mdk:1011"  style="bookmark:4.17.3.&#8194;`offset` property"><span data-line="28;document\Format.mdk:1011"></span><span class="heading-before"><span class="heading-label">4.17.3</span>.&#8194;</span><span data-line="28;document\Format.mdk:1011"></span><code class="code code1">offset</code><span data-line="28;document\Format.mdk:1011"></span> property</h4>

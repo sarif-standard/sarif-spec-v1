@@ -1,11 +1,11 @@
-Title         : Static Analysis Results Interchange Format
+﻿Title         : Static Analysis Results Interchange Format
 Heading Base  : 2
 Logo          : false
 
-~IsoNote: .block before='[NOTE&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=smaller
-~IsoNumberedNote: .block label='[@IsoNumberedNote]{.Example-label}' before='[NOTE\ &label;&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=smaller
-~IsoExample: .block before='[EXAMPLE&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=smaller
-~IsoNumberedExample: .block label='[@IsoNumberedExample]{.Example-label}' before='[EXAMPLE\ &label;&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=smaller
+~IsoNote: .block before='[NOTE&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=small
+~IsoNumberedNote: .block label='[@IsoNumberedNote]{.Example-label}' before='[NOTE\ &label;&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=small
+~IsoExample: .block before='[EXAMPLE&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=small
+~IsoNumberedExample: .block label='[@IsoNumberedExample]{.Example-label}' before='[EXAMPLE\ &label;&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=small
 
 [TITLE]
 
