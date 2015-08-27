@@ -34,7 +34,7 @@ To view the generated HTML document:
 
 1. Open the file "Static Analysis Results Interchange Format (SARIF).html".
 
-### Regenerating the HTML file
+### Regenerating the HTML
 
 To regenerate the HTML document:
 
