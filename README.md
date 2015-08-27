@@ -26,7 +26,17 @@ In addition to the Madoko source files, the generated HTML is also checked in to
 If you modify the source files, you must regenerate and commit the HTML.
 **Never edit the HTML file directly.**
 
-To regenerate the HTML file:
+### Viewing the HTML
+
+To view the generated HTML document:
+
+1. Clone this repo.
+
+1. Open the file "Static Analysis Results Interchange Format (SARIF).html".
+
+### Regenerating the HTML file
+
+To regenerate the HTML document:
 
 1. Madoko runs under nodejs, so install [nodejs](http://nodejs.org/) on your system, and then add it to your PATH.
 
