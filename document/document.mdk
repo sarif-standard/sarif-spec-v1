@@ -25,7 +25,15 @@ Copyright © 2015 Microsoft Corporation. All rights reserved.
 
 [INCLUDE=Definitions]
 
-[INCLUDE=Format]
+[INCLUDE=Organization]
+
+[INCLUDE=CoreFormat]
+
+[INCLUDE=IssueManagementProfile]
+
+[INCLUDE=PolicyComplianceProfile]
+
+[INCLUDE=RuleMetadataProfile]
 
 [INCLUDE=AnnexA]
 
