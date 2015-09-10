@@ -1,1 +1,165 @@
 # Rule Metadata Profile { #rule-metadata-profile }
+
+## General
+
+It is sometimes useful for an issue management system to provide information to the end user
+about the rules that were violated by the issues in a log file.
+For example, the user might want to know whether the issue is a potential security risk,
+or where to find additional documentation for the issue.
+We refer to this information as rule metadata.
+
+It is possible for an issue management system to have built-in knowledge of
+the metadata for the rules defined by a set of well-known static analysis tools.
+It is also possible for the system to provide a means for end users to upload
+metadata for rules defined by specialized tools used in their organizations.
+But some tools enable end users to define their own rules by means of a plug-in
+mechanism.
+In this case, it is useful if the metadata for these rules can be included
+in the log file itself.
+
+The Rule Metadata Profile defines additional optional elements of the SARIF format
+that are intended for use in this scenario.
+
+## `runLog` object { #rule-metadata-profile-runLog }
+
+### General { #rule-metadata-profile-runLog-general }
+
+The Rule Metadata Profile defines one additional property in the `runLog` object (&sect;[#runLog]).
+
+### `ruleInfo` property { #ruleInfo }
+
+A `runLog` object (&sect;[#runLog]) may contain a property named `ruleInfo`
+whose value is an array of `ruleDescriptor` (&sect;[#ruleDescriptor]) objects.
+
+## `ruleDescriptor` object { #ruleDescriptor }
+
+### General { #ruleDescriptor-General }
+
+A `ruleDescriptor` object describes a discrete, potentially configurable,
+unit of analysis as implemented by an individual tool.
+
+### `id` property { #ruleDescriptor-id }
+
+A `ruleDescriptor` object shall contain a property named `id` whose value is a string containing
+a stable, opaque identifier for the rule.
+
+~ IsoExample
+`"CA2101"`
+~
+
+### `name` property { #ruleDescriptor-name }
+
+A `ruleDescriptor` object may contain a property named `name` whose value is a string containing
+a readable rule identifier. A rule name is suitable for use as a key to other data or to
+otherwise identify a rule (e.g., within an in-source suppression) but is not guaranteed to
+be stable. In cases where the readable rule `name` contains implementation details that are
+invalidated over time, for example, a tool might alter a rule's readable name (while leaving
+the stable `id` property unchanged).
+
+~ IsoExample
+`"SpecifyMarshalingForPInvokeStringArguments"`
+~
+
+### `abstract` property { #ruleDescriptor-abstract }
+
+A `ruleDescriptor` object may contain a property named `abstract` whose value is a string containing
+a concise description of the rule. The `abstract` property should be a single sentence that is understandable
+when displayed in user interface contexts where the available space is limited to a single line of text.
+
+~ IsoExample
+`"Specify marshaling for P/Invoke string arguments"`
+~
+
+### `description` property { #ruleDescriptor-description}
+
+An `ruleDescriptor` object should contain a property named `description` whose value is a string that describes the rule.
+
+The `description` property should, as far as possible, provide details sufficient to enable resolution of issues. 
+
+The first sentence of the `description` property should provide a concise description of the rule,
+suitable for display in cases where UI is limited.
+Tools that construct `description` in this way need not provide a value for the `abstract` property.
+Tools that do not construct `abstract` in this way should provide a value for the `abstract` property,
+because otherwise, the initial portion of `description` that a viewer displays where UI space is limited
+might not be understandable.
+
+### `options` property { #ruleDescriptor-options }
+
+A `ruleDescriptor` object may contain a property named `options`, whose value is a JSON object
+consisting of an arbitrary set of string/value pairs.
+When present, the `options` objects shall describe the set of configurable options supported by the rule.
+
+The value within each string-value pair shall be a string, which may be the empty string.
+The value shall not be a JSON array or sub-object.
+
+### `formatSpecifiers` property { #ruleDescriptor-formatSpecifiers }
+
+A `ruleDescriptor` object may contain a property named `formatSpecifiers`, whose value is a JSON object
+consisting of an arbitrary set of string/value pairs.
+When present, the `formatSpecifiers` object shall describe a set of message formatting strings
+that have or may be returned by the tool.
+The string name of each format string shall be an identifier that uniquely identifies each member.
+The value within each string-value pair shall be a string that can be passed as a control parameter to
+string formatting API (_e.g._, `printf`) in order to construct a formatted message in combination with
+an arbitrary number of additional data parameters.
+
+The `formatSpecifiers` property contents may be limited to values that are associated with issues
+written to the issue log.
+In this use, the relevant issue objects must provide a `formattedMessage` (&sect;[#formattedMessage]) object
+that refers to an associated messageFormatString. In another use, the `formatSpecifiers` property 
+contents may be used to document all possible message format strings that can be returned by a rule.
+
+~ IsoExample
+
+````
+{
+    "objectCreation" : "{0} creates a new instance of {1} which is never used.
+	                    Pass the instance as an argument to another method, assign the instance to a variable,
+						or remove the object creation if it is unnecessary.",  
+    "stringReturnValue" : "{0} calls {1} but does not use the new string instance that the method returns.
+	                       Pass the instance as an argument to another method, assign the instance to a variable,
+						  or remove the call if it is unnecessary."        
+}
+````
+~
+
+### `properties` property { #ruleDescriptor-properties }
+
+A `ruleDescriptor` object may contain a property named `properties`, whose value is a JSON object
+consisting of an arbitrary set of string/value pairs.
+This allows tools to include information about the rule that is not explicitly specified in the SARIF format.
+
+The value within each string-value pair shall be a string, which may be the empty string.
+The value shall not be a JSON array or sub-object.
+
+## `issue` object { #rule-metadata-profile-issue }
+
+### General { #rule-metadata-profile-issue-general }
+
+The Rule Metadata Profile defines one additional property in the `issue` object (&sect;[#issue]).
+
+### `formattedMessage` property { #issue-formattedMessage }
+
+An `issue` object (&sect;[#issue]) may contain a `formattedMessage` property whose value is
+a `formattedMessage` object (&sect;[#formattedMessage]) that can be used to construct
+a fully formatted message that describes the issue.
+
+If the `formattedMessage` property is present on an `issue`, the `fullMessage` property (&sect;[#issue-fullMessage])
+shall not be present.
+If the `fullMessage` property is present on an `issue`, the `formattedMessage` property
+shall not be present.
+
+## `formattedMessage` object { #formattedMessage }
+
+### General { #formattedMessage-General }
+
+A `formattedMessage` object contains information that can be used to construct a fully formatted message that describes an issue.
+
+### `specifierId` property { #formattedMessage-id }
+A `formattedMessage` object must contain a property named `specifierId`, whose value is a string that identifies a format specifier that
+exists in the ruleInfo object associated with this issue, as identified by the issue `ruleId` property (&sect;[#issue-ruleId]).
+
+### `arguments` property { #formattedMessage-arguments }
+A `formattedMessage` object may contain a property named `arguments`,
+whose value is an array of string values that will be used, in combination with a format specifier,
+to construct an issue message.
