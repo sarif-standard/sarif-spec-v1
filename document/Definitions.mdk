@@ -104,3 +104,10 @@ empty array
 
 empty string
   ~ string that contains no characters, and so has a length of 0
+
+core format
+  ~ the set of SARIF elements that are intended to be useful in a variety of scenarios where static analysis results
+    are produced or consumed
+
+profile
+  ~ a set of SARIF elements that are intended to be useful in a specific static analysis usage scenario

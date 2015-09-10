@@ -16,6 +16,9 @@ The goals of the format are:
 * Be a useful format for static analysis tools to emit directly,
 and also an effective interchange format into which the output of any static analysis tool can be converted.
 
+* Be suitable for use in a variety of scenarios related to static analysis issue management, and be
+extensible for use in new scenarios.
+
 * Reduce the cost and complexity of aggregating the results of various static analysis tools into common workflows. 
 
 * Capture information that is useful for assessing a project’s compliance with corporate policy
