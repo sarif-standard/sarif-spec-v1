@@ -7,29 +7,18 @@ The runs need not be produced by the same static analysis tool.
 
 A SARIF log file shall conform to the requirements of the JSON format.
 The top-level value in the log file shall conform to the JSON object grammar;
-that is, it shall consist of a comma-separated sequence of string/value pairs, enclosed in curly brackets,
+that is, it shall consist of a comma-separated sequence of name/value pairs, enclosed in curly brackets,
 as described in the JSON specification.
 We refer to the object represented by this top-level value as the `issueLog` object (&sect;[#issueLog]).
 
 Every JSON property name in the SARIF format shall be a camelCase name.
 
-~ IsoNumberedNote { @IsoNumberedNote=1}
+~ IsoNote
 A single run of a static analysis tool that supports the SARIF format produces a SARIF log file
 containing the results of that one run.
 Other programs, such as build systems or issue management systems, can consolidate the contents
 of multiple single-run log files into a single SARIF log file that contains the results from all of those runs.
 This allows the aggregated results to be conveniently stored in a file or transported over a network.
-~
-
-~ IsoNumberedNote
-The remainder of this document contains several partial examples of the SARIF format.
-The examples are formatted for clarity, as permitted by the JSON standard, which allows "insignificant whitespace"
-before or after any token;
-implementations need not follow the whitespace convention used in these examples.
-In these examples, an ellipsis (&hellip;) is used to indicate that portions of the log file text
-required by this specification have been omitted for brevity.
-Also in these examples, a '#' character introduces a comment that extends to the end of the line.
-These comments are present for explanatory purposes and are not part of the SARIF file format.
 ~
 
 ## URI-valued properties
@@ -78,7 +67,7 @@ An `issueLog` object specifies the version of the file format and contains the r
 
 An `issueLog` object shall contain a property named `version` whose value is the string `"1.0"`.
 
-Although the order in which the string/value pairs appear in a JSON object value is not semantically significant,
+Although the order in which the name/value pairs appear in a JSON object value is not semantically significant,
 the `version` property should appear first.
 
 ~ IsoNote
@@ -513,10 +502,10 @@ An `issue` object may contain a property names `fixes`, whose value is a JSON ar
 ### `properties` property { #issue-properties }
 
 An `issue` object may contain a property named `properties`, whose value is a JSON object
-consisting of an arbitrary set of string/value pairs.
+consisting of a set of name/value pairs with arbitrary names.
 This allows tools to include information about the issue that is not explicitly specified in the SARIF format.
 
-The value within each string-value pair shall be a string,
+The value within each name/value pair shall be a string,
 which may be the empty string.
 The value shall not be a JSON array or sub-object.
 
@@ -626,10 +615,10 @@ in a way that is easily understood by an end user.
 ### `properties` property { #location-properties }
 
 A `location` object may contain a property named `properties`, whose value is a JSON object
-consisting of an arbitrary set of string/value pairs.
+consisting of a set of name/value pairs with arbitrary names.
 This allows tools to include information about the location that is not explicitly specified in the SARIF format.
 
-The value within each string/value pair shall be a string,
+The value within each name/value pair shall be a string,
 which may be the empty string.
 The value shall not be a JSON array or sub-object.
 

@@ -40,6 +40,10 @@ rule id
   ~ NOTE: A rule id is more likely to remain stable if it is a symbolic or numeric value, as opposed to a descriptive string.
   ~ Example: `CA2001`
 
+rule metadata
+  ~ Information that describes a rule
+  ~ Example: Category (for example, "Style" or "Security"), documentation URL 
+
 log file
   ~ output file produced by a static analysis tool, which enumerates the issues detected by the tool
 
