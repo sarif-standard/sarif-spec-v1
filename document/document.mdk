@@ -25,6 +25,8 @@ Copyright © 2015 Microsoft Corporation. All rights reserved.
 
 [INCLUDE=Definitions]
 
+[INCLUDE=Conventions]
+
 [INCLUDE=Organization]
 
 [INCLUDE=CoreFormat]

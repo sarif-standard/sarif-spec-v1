@@ -1,0 +1,28 @@
+# Conventions
+
+## General
+
+The following conventions are used within this document.
+
+## Format examples
+
+This document contains several partial examples of the SARIF format.
+The examples are formatted for clarity, as permitted by the JSON standard, which allows "insignificant whitespace"
+before or after any token;
+implementations need not follow the whitespace convention used in these examples.
+In these examples, an ellipsis (&hellip;) is used to indicate that portions of the log file text
+required by this specification have been omitted for brevity.
+A '#' character introduces a comment that extends to the end of the line.
+These comments are present for explanatory purposes and are not part of the SARIF file format.
+When a JSON string is too long to fit on a line, it is broken into multiple
+lines. This is not part of the SARIF format, since JSON strings cannot contain control
+characters such as newlines.
+
+## Property notation
+
+A JSON object consists of a set of name/value pairs.
+The value may itself be an object, allowing arbitrary nesting.
+When necessary for clarity or to avoid ambiguity, we use the "dot" notation to refer to nested values.
+For example, the `physicalLocationComponent` object defines a property `region` whose value is a `region` object,
+which in turn contains a `length` property.
+For clarity, we can refer to the `length` property as `physicalLocationComponent.region.length`.

@@ -35,8 +35,13 @@ whose value is an array of `ruleDescriptor` (&sect;[#ruleDescriptor]) objects.
 
 ### General { #ruleDescriptor-General }
 
-A `ruleDescriptor` object describes a discrete, potentially configurable,
-unit of analysis as implemented by an individual tool.
+A `ruleDescriptor` object contains information that describes a rule.
+
+### Constraints
+
+Either the `shortDescription` property (&sect;[#ruleDescriptor-shortDescription])
+or the `fullDescription` property (&sect;[#ruleDescriptor-fullDescription])
+or both must be present.
 
 ### `id` property { #ruleDescriptor-id }
 
@@ -50,64 +55,72 @@ a stable, opaque identifier for the rule.
 ### `name` property { #ruleDescriptor-name }
 
 A `ruleDescriptor` object may contain a property named `name` whose value is a string containing
-a readable rule identifier. A rule name is suitable for use as a key to other data or to
-otherwise identify a rule (e.g., within an in-source suppression) but is not guaranteed to
-be stable. In cases where the readable rule `name` contains implementation details that are
-invalidated over time, for example, a tool might alter a rule's readable name (while leaving
+a rule identifier that is understandable to an end user.
+If `name` contains implementation details that change over time,
+a tool author might alter a rule's `name` (while leaving
 the stable `id` property unchanged).
+
+~IsoNote
+A rule `name` is suitable in contexts where a readable identifier is preferable and where the
+lack of stability is not a concern.
+~
 
 ~ IsoExample
 `"SpecifyMarshalingForPInvokeStringArguments"`
 ~
 
-### `abstract` property { #ruleDescriptor-abstract }
+### `shortDescription` property { #ruleDescriptor-shortDescription }
 
-A `ruleDescriptor` object may contain a property named `abstract` whose value is a string containing
-a concise description of the rule. The `abstract` property should be a single sentence that is understandable
+A `ruleDescriptor` object may contain a property named `shortDescription` whose value is a string containing
+a concise description of the rule. The `shortDescription` property should be a single sentence that is understandable
 when displayed in user interface contexts where the available space is limited to a single line of text.
 
 ~ IsoExample
 `"Specify marshaling for P/Invoke string arguments"`
 ~
 
-### `description` property { #ruleDescriptor-description}
+### `fullDescription` property { #ruleDescriptor-fullDescription}
 
-An `ruleDescriptor` object should contain a property named `description` whose value is a string that describes the rule.
+An `ruleDescriptor` object should contain a property named `fullDescription` whose value is a string that describes the rule.
 
-The `description` property should, as far as possible, provide details sufficient to enable resolution of issues. 
+The `fullDescription` property should, as far as possible, provide details sufficient to enable resolution of issues. 
 
-The first sentence of the `description` property should provide a concise description of the rule,
-suitable for display in cases where UI is limited.
-Tools that construct `description` in this way need not provide a value for the `abstract` property.
-Tools that do not construct `abstract` in this way should provide a value for the `abstract` property,
-because otherwise, the initial portion of `description` that a viewer displays where UI space is limited
+The first sentence of the `fullDescription` property should provide a concise description of the rule,
+suitable for display in cases where available space is limited.
+Tools that construct `fullDescription` in this way need not provide a value for the `shortDescription` property.
+Tools that do not construct `fullDescription` in this way should provide a value for the `shortDescription` property,
+because otherwise, the initial portion of `fullDescription` that a viewer displays where available space is limited
 might not be understandable.
 
 ### `options` property { #ruleDescriptor-options }
 
 A `ruleDescriptor` object may contain a property named `options`, whose value is a JSON object
-consisting of an arbitrary set of string/value pairs.
-When present, the `options` objects shall describe the set of configurable options supported by the rule.
+consisting of a set of name/value pairs with arbitrary names.
+The `options` objects shall describe the set of configurable options supported by the rule.
 
-The value within each string-value pair shall be a string, which may be the empty string.
+The value within each name/value pair shall be a string, which may be the empty string.
 The value shall not be a JSON array or sub-object.
 
 ### `formatSpecifiers` property { #ruleDescriptor-formatSpecifiers }
 
 A `ruleDescriptor` object may contain a property named `formatSpecifiers`, whose value is a JSON object
-consisting of an arbitrary set of string/value pairs.
-When present, the `formatSpecifiers` object shall describe a set of message formatting strings
-that have or may be returned by the tool.
-The string name of each format string shall be an identifier that uniquely identifies each member.
-The value within each string-value pair shall be a string that can be passed as a control parameter to
-string formatting API (_e.g._, `printf`) in order to construct a formatted message in combination with
-an arbitrary number of additional data parameters.
+consisting of a set of name/value pairs with arbitrary names.
 
-The `formatSpecifiers` property contents may be limited to values that are associated with issues
-written to the issue log.
-In this use, the relevant issue objects must provide a `formattedMessage` (&sect;[#formattedMessage]) object
-that refers to an associated messageFormatString. In another use, the `formatSpecifiers` property 
-contents may be used to document all possible message format strings that can be returned by a rule.
+The value within each name/value pair shall be a string that can be passed to a
+string formatting function (_e.g._, the C language `printf` function) to construct a formatted message in combination with
+an arbitrary number of additional function arguments.
+
+The set of names appearing in the `formatSpecifiers` property shall contain at least the set of strings
+which occur as values of the `issue.formattedMessage.specifierId` property in the issue log.
+The `formatSpecifiers` property may contain additional name/value pairs whose names do not appear
+as the value of the `issue.formattedMessage.specifierId` property for any issue in the issue log.
+
+~IsoNote
+Additional name/value pairs are permitted in the `formatSpecifiers` property
+for the convenience of tool vendors, who might find it easier to emit the entire set of messages
+supported by a rule, rather than restricting it to those messages that happen to appear in the
+issue log.
+~
 
 ~ IsoExample
 
@@ -126,10 +139,10 @@ contents may be used to document all possible message format strings that can be
 ### `properties` property { #ruleDescriptor-properties }
 
 A `ruleDescriptor` object may contain a property named `properties`, whose value is a JSON object
-consisting of an arbitrary set of string/value pairs.
+consisting of a set of name/value pairs with arbitrary names.
 This allows tools to include information about the rule that is not explicitly specified in the SARIF format.
 
-The value within each string-value pair shall be a string, which may be the empty string.
+The value within each name/value pair shall be a string, which may be the empty string.
 The value shall not be a JSON array or sub-object.
 
 ## `issue` object { #rule-metadata-profile-issue }
@@ -156,8 +169,10 @@ shall not be present.
 A `formattedMessage` object contains information that can be used to construct a fully formatted message that describes an issue.
 
 ### `specifierId` property { #formattedMessage-id }
-A `formattedMessage` object must contain a property named `specifierId`, whose value is a string that identifies a format specifier that
-exists in the ruleInfo object associated with this issue, as identified by the issue `ruleId` property (&sect;[#issue-ruleId]).
+A `formattedMessage` object must contain a property named `specifierId`, whose value is a string that identifies the format string
+used to format the message that describes this issue.
+The value of `specifierId` must correspond to one of the names in the set of name/value pairs contained in the `formatSpecifiers` property (&sect;[#ruleDescriptor-formatSpecifiers])
+of the `ruleInfo` object (&sect;[#ruleDescriptor]) whose `id` property (&sect;[#ruleDescriptor-id]) matches the `ruleId` property (&sect;[#issue-ruleId]) of this issue.
 
 ### `arguments` property { #formattedMessage-arguments }
 A `formattedMessage` object may contain a property named `arguments`,
