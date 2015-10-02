@@ -833,6 +833,16 @@ An `executionFlowEntry` object may contain a property named `message` whose valu
 the significance of this entry within the overall execution flow.
 For example, if the `executionFlowEntry` refers to an `if` statement, the `message` property might contain the string "take true branch".
 
+### `properties` property { #executionFlowEntry-properties }
+
+An `executionFlowEntry` object may contain a property named `properties`, whose value is a JSON object
+consisting of a set of name/value pairs with arbitrary names.
+This allows tools to include information about the entry that is not explicitly specified in the SARIF format.
+
+The value within each name/value pair shall be a string,
+which may be the empty string.
+The value shall not be a JSON array or sub-object.
+
 ## `fix` object { #fix }
 
 ### General { #fix-General }
