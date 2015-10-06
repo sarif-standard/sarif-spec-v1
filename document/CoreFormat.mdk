@@ -48,7 +48,7 @@ An `issueLog` object specifies the version of the file format and contains the r
 
 ```
 {
-    "version" : "1.0",  # see \(&sect;[#issueLog-version]\)
+    "version" : "0.1",  # see \(&sect;[#issueLog-version]\)
     "runLogs" :         # see \(&sect;[#issueLog-runLogs]\)
     [
         {
@@ -65,7 +65,7 @@ An `issueLog` object specifies the version of the file format and contains the r
 
 ### `version` property { #issueLog-version }
 
-An `issueLog` object shall contain a property named `version` whose value is the string `"1.0"`.
+An `issueLog` object shall contain a property named `version` whose value is the string `"0.1"`.
 
 Although the order in which the name/value pairs appear in a JSON object value is not semantically significant,
 the `version` property should appear first.
