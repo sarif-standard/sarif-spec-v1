@@ -243,7 +243,7 @@ and no files matched the wildcard.
 ~
 
 ~ IsoExample
-`[ "C:\Code\a.cc", "C:\Code\b.cc", "C:\Code\c.cc" ]`
+`[ "file://C:/Code/a.cc", "file://C:/Code/b.cc", "file://C:/Code/c.cc" ]`
 ~
 
 ## `fileReference` object { #fileReference }
