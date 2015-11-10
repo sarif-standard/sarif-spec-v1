@@ -223,7 +223,7 @@ Then the value of the `commandLineArguments` property should be `"/input C:\Code
 
 ### `analysisTargets` property { #runInfo-analysisTargets }
 
-A `runInfo` object shall contain a property named `analysisTargets` whose value is an array,
+A `runInfo` object may contain a property named `analysisTargets` whose value is an array,
 each of whose elements is a `fileReference` object (&sect;[#fileReference])
 representing the location of a single analysis target scanned during the run.
 This array shall contain one entry for each analysis target that was scanned,
@@ -243,7 +243,30 @@ and no files matched the wildcard.
 ~
 
 ~ IsoExample
-`[ "file://C:/Code/a.cc", "file://C:/Code/b.cc", "file://C:/Code/c.cc" ]`
+
+```
+[
+    {
+        "uri": "file://C:/Code/a.cc",
+        "hashes": [
+            {
+                "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
+                "algorithm": "SHA-256"
+            }
+        ]
+    },
+
+    {
+        "uri": "file://C:/Code/b.cc",
+        "hashes": [
+            {
+                "value": "ffc654abaa74903dae1d2ff532078ec0a9d5f674",
+                "algorithm": "SHA-256"
+            }
+        ]
+    }
+]
+```
 ~
 
 ## `fileReference` object { #fileReference }
@@ -259,9 +282,11 @@ the location of the file as a valid URI.
 
 ### `hashes` property { #fileReference-hashes }
 
-A `fileReference` object shall contain a property named `hashes` whose value is an array of `hash` objects (&sect;[#hash]),
+A `fileReference` object may contain a property named `hashes` whose value is an array of `hash` objects (&sect;[#hash]),
 each of which specifies a hashed value for the file specified by the `uri` property (&sect;[#fileReference-uri]),
 along with the name of the algorithm used to compute the hash.
+
+If present, the array specified by `hashes` shall not be empty.
 
 ## `hash` object { #hash }
 
