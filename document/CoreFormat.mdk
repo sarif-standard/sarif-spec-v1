@@ -1,4 +1,4 @@
-# Core format { #core-format }
+﻿# Core format { #core-format }
 
 ## General { #fileFormat-General }
 
@@ -505,7 +505,7 @@ for which location information is not available, which in turn calls back into a
 ### `isSuppressedInSource` property { #issue-isSuppressedInSource }
 
 An `issue` object may contain a property named `isSuppressedInSource` whose value is one of the strings
-`"true"`, `"false"`, or `"null"`.
+`"true"` or `"false"`.
 
 Some programming languages offer a syntactic construct for suppressing compiler warnings.
 For tools that examine source code written in such a language, this value shall be set to `"true"`
@@ -514,7 +514,7 @@ which is intended to suppress that particular class of issue.
 It shall be set to `"false"` if the tool determines that the issue did not occur at such a location.
 It shall omitted if the tool cannot or chooses not to determine whether the issue occurs at such a location.
 
-For tools that do not examine source code written in such a language, this value shall be set to "null", or omitted entirely.
+For tools that do not examine source code written in such a language, this value shall be omitted.
 
 ~ IsoExample
 The `#pragma` warning construct in C# is such a syntactic construct.
