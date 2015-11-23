@@ -1,4 +1,4 @@
-﻿# Core format { #core-format }
+# Core format { #core-format }
 
 ## General { #fileFormat-General }
 
@@ -453,15 +453,15 @@ that contributes to the process of uniquely identifying the issue.
 ### `executionFlows` property { #issue-executionFlows }
 
 An `issue` object may contain a property named `executionFlows` whose value is an array of arrays of
-`executionFlowEntry` objects (&sect;[#executionFlowEntry]).
-For convenience, in this context we refer to an array of `executionFlowEntry` objects as an `executionFlow` object;
+`annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
+For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as an `executionFlow` object;
 hence we may say that the value of the `executionFlows` property is an array of `executionFlow` objects.
 The `executionFlows` property is intended for use by static analysis tools that perform flow analysis
 in the process of detecting issues.
 
 Each `executionFlow` object in the `executionFlows` array shall describe a single execution flow.
 An execution flow is a sequence of locations visited by the tool in the course of performing a flow analysis.
-An execution flow is in turn represented by an array of `executionFlowEntry` objects.
+An execution flow is in turn represented by an array of `annotatedCodeLocation` objects.
 This array need not include every location visited by the tool,
 but the entries that are present shall occur in the order that the tool visited them.
 
@@ -476,15 +476,15 @@ in the course of detecting a single issue.
 ### `stacks` property { #issue-callStacks }
 
 An `issue` object may contain a property named `stacks` whose value is an array of arrays of
-`executionFlowEntry` objects (&sect;[#executionFlowEntry]).
-For convenience, in this context we refer to an array of `executionFlowEntry` objects as a `stack` object;
+`annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
+For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as a `stack` object;
 hence we may say that the value of the `stacks` property is an array of `stack` objects.
 The `stacks` property is intended for use by static analysis tools that collects call stack information 
 in the process of detecting issues.
 
 Each `stack` object in the stacks array shall describe a single call stack.
 A call stack is a sequence of nested function calls simulated by the tool in the course of performing a flow analysis.
-A stack is in turn represented by an array of `executionFlowEntry` objects.
+A stack is in turn represented by an array of `annotatedCodeLocation` objects.
 This array shall include every function call in the stack for which the tool has information,
 and the entries that are present shall occur in order with the innermost call first and the outermost call last.
 
@@ -837,30 +837,30 @@ if any of those strings accurately describes the construct identified by this ob
 
 If none of those strings accurately describes the construct, `locationKind` may contain any value specified by the analysis tool.
 
-## `executionFlowEntry` object { #executionFlowEntry }
+## `annotatedCodeLocation` object { #annotatedCodeLocation }
 
-### General { #executionFlowEntry-General }
+### General { #annotatedCodeLocation-General }
 
-An `executionFlowEntry` object is an element of an `executionFlow` object (&sect;[#issue-executionFlows])
+An `annotatedCodeLocation` object is an element of an `executionFlow` object (&sect;[#issue-executionFlows])
 or a `stack` object (&sect;[#issue-callStacks]).
 
-### `physicalLocations` property { #executionFlowEntry-physicalLocations }
+### `physicalLocations` property { #annotatedCodeLocation-physicalLocations }
 
-An `executionFlowEntry` object may contain a property named `physicalLocations` whose value is an array of `physicalLocation` objects
+An `annotatedCodeLocation` object must contain a property named `physicalLocations` whose value is an array of `physicalLocation` objects
 (&sect;[#physicalLocation-info]).
-Each `physicalLocation` object represents one physical view of the code to which the `executionFlowEntry` refers.
+Each `physicalLocation` object represents one physical view of the code to which the `annotatedCodeLocation` refers.
 For example, one `physicalLocation` object might refer to a location in source code;
 another might refer to the corresponding location in assembly language code.
 
-### `message` property { #executionFlowEntry-message }
+### `message` property { #annotatedCodeLocation-message }
 
-An `executionFlowEntry` object may contain a property named `message` whose value is a string that describes
+An `annotatedCodeLocation` object may contain a property named `message` whose value is a string that describes
 the significance of this entry within the overall execution flow.
-For example, if the `executionFlowEntry` refers to an `if` statement, the `message` property might contain the string "take true branch".
+For example, if the `annotatedCodeLocation` refers to an `if` statement, the `message` property might contain the string "take true branch".
 
-### `properties` property { #executionFlowEntry-properties }
+### `properties` property { #annotatedCodeLocation-properties }
 
-An `executionFlowEntry` object may contain a property named `properties`, whose value is a JSON object
+An `annotatedCodeLocation` object may contain a property named `properties`, whose value is a JSON object
 consisting of a set of name/value pairs with arbitrary names.
 This allows tools to include information about the entry that is not explicitly specified in the SARIF format.
 
