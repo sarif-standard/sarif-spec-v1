@@ -123,10 +123,14 @@ A `runLog` object shall contain a property named `runInfo` whose value is a `run
 
 ### `issues` property { #runLog-issues }
 
-A `runLog` object shall contain a property named `issues` whose value is an array containing zero or more `issue` objects (&sect;[#issue]),
+A `runLog` object shall contain a property named `issues` whose value is an array of zero or more `issue` objects (&sect;[#issue]),
 each of which represents a single issue detected in the course of a run.
 
 The `issues` array shall be empty if the run that produced the `runLog` object did not detect any issues.
+
+### `notes` property { #runLog-notes }
+
+A `runLog` object may contain a property named `notes` whose value is an array of zero or more `note` objects (&sect;[#note]).
 
 ## `toolInfo` object { #toolInfo }
 
@@ -355,11 +359,51 @@ An `issue` object describes a single issue detected by a static analysis tool.
 ### `ruleId` property { #issue-ruleId }
 
 An `issue` object shall contain a property named `ruleId` whose value is a string containing
-a stable, opaque identifier for the rule that was violated.
+the stable, opaque identifier for the rule that was violated.
 
 ~ IsoExample
 `"CA2101"`
 ~
+
+### `kind` property { #issue-kind }
+
+An `issue` object may contain a property named `kind` whose value is one of a fixed set of strings
+that specify what kind of issue this is.
+
+If present, the `kind` property shall have one of the following values, with the specified meanings:
+
+* `warning`: The rule specified by the `ruleId` property (&sect;[#issue-ruleId]) was evaluated and a violation was found.
+
+* `error`: The rule specified by the `ruleId` property was evaluated and a serious violation was found.
+
+* `pending`: The rule specified by the `ruleId` property was evaluated, but whether the result of the evaluation
+constitutes a violation cannot be determined without further evaluation, either by a person or by an automated tool.
+
+~ IsoNote
+In some cases, team policy or corporate policy might determine if an analysis result constitutes a violation.
+~
+
+* `internalError`: The tool encountered an internal error that prevented it from performing a complete analysis.
+
+    If the error occurred in the course of evaluating a specific rule, the `ruleId` property should specify that rule.
+
+    If the error did not occur in the course of evaluating a specific rule, the `ruleId` property should be set
+    to a value distinct from all other rules.
+
+~ IsoNote
+Depending on the nature of the error, the tool might or might not be able to continue running.
+In all cases, the presence of an `issue` object whose `kind` property is set to `internalError` indicates
+that the run failed, because it could could not successfully run all specified rules on all specified
+analysis targets.
+
+If a tool encounters an error in the course of evaluating a rule, the tool might report the error, disable the rule,
+and continue to execute the remaining rules.
+
+If a tool encounters an error outside of the evaluation of a rule, the tool might report
+the error to the log and halt. (The tool might also just exit, either normally or abnormally.)
+~
+
+If this property is not present, it shall be considered equivalent to the value `warning`.
 
 ### `fullMessage` property { #issue-fullMessage }
 
@@ -522,7 +566,11 @@ The `#pragma` warning construct in C# is such a syntactic construct.
 
 ### `fixes` property { #issue-fixes }
 
-An `issue` object may contain a property names `fixes`, whose value is a JSON array of `fix` objects (&sect;[#fix]).
+An `issue` object may contain a property named `fixes`, whose value is a JSON array of zero or more `fix` objects (&sect;[#fix]).
+
+### `notes` property { #issue-notes }
+
+An `issue` object may contain a property named `notes`, whose value is a JSON array of zero or more `note` objects (&sect;[#note]).
 
 ### `properties` property { #issue-properties }
 
@@ -1071,3 +1119,47 @@ of the resulting UTF-8 byte sequence.
 
 * TODO: Relationship between original file encoding, offset, and UTF-8 byte sequence.
 * TODO: Explain responsibility of viewer/editor to match encoding.
+
+## `note` object { #note }
+
+A `note` object provides additional information about an individual `issue` (&sect;[#issue])
+or about a `runLog` (&sect;[#runLog]) as a whole.
+
+### `message` property { #note-message }
+
+A `note` object shall contain a property named `message` whose value is a string containing
+the text content of the note.
+
+### `ruleId` property { #note-ruleId }
+
+If the `note` object belongs to a `runLog` (&sect;[#runLog]) and if it pertains to a specific rule,
+then the `note` object shall contain a property named `ruleId` whose value is a string
+containing the stable, opaque identifier for the rule to which the `note` pertains.
+
+If the `note` object belongs to an `issue` (&sect;[#issue]) or if it does not pertain to a specific rule,
+then the `ruleId` property shall not be present.
+
+~ IsoNote
+If the `note` object belongs to an `issue`, then the `issue` itself specifies the `ruleId`.
+~
+
+### `kind` property { #note-kind }
+
+A `note` object may contain a property named `kind`, whose value is one of the following strings
+with the specified meanings:
+
+* `message`: This value indicates that the `note` is a simple message with no additional semantic meaning.
+
+* `passed`: When present on a `note` belonging to a `runLog` (&sect;[#runLog]), this value indicates that
+the `note` means that the rule specified by the `note`'s `ruleId` (&sect;[#note-ruleId]) was run for all analysis targets,
+and it did not detect any issues.
+
+    This value is not valid on a `note` that belongs to an `issue` (&sect;[#issue]).
+    
+* `notApplicable`: When present on a `note` that belongs to an `issue`, this value specifies that the `note`
+means that the rule specified by the `issue`'s `ruleId` (&sect;[#issue-ruleId]) is not applicable to
+the file specified by the `analysisTarget` (&sect;[#location-analysisTarget]).
+
+    This value not valid on a note that belongs to a `runLog`. 
+
+If this property is not present, it shall be considered equivalent to the value `message`. 
