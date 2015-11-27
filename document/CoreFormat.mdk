@@ -823,9 +823,9 @@ A C++ analysis tool might emit the `name` property of a function as the "decorat
 which encodes the function signature in a manner that is compiler-dependent and not easily readable.
 ~
 
-### `locationKind` property { #logicalLocationComponent-locationKind }
+### `kind` property { #logicalLocationComponent-kind }
 
-A `logicalLocationComponent` object should contain a property called `locationKind`, whose value shall be one of the following strings,
+A `logicalLocationComponent` object should contain a property called `kind`, whose value shall be one of the following strings,
 if any of those strings accurately describes the construct identified by this object:
 
 *	`method`
@@ -835,7 +835,7 @@ if any of those strings accurately describes the construct identified by this ob
 *	`resource`
 *	`type`
 
-If none of those strings accurately describes the construct, `locationKind` may contain any value specified by the analysis tool.
+If none of those strings accurately describes the construct, `kind` may contain any value specified by the analysis tool.
 
 ## `annotatedCodeLocation` object { #annotatedCodeLocation }
 
