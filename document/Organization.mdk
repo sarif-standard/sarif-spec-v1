@@ -8,12 +8,12 @@ Any system that produces or consumes SARIF log files must support at least the r
 Static analysis tools should produce log files that conform to the core format. 
 
 A profile defines information that is useful in a specific static analysis usage scenario.
-For example, an issue management system might augment the information defined in the core format with additional
-elements that hold the triage status of an issue, or comments provided by end users.
+For example, a result management system might augment the information defined in the core format with additional
+elements that hold the triage status of a result, or comments provided by end users.
 
 This document defines the core format (&sect;[#core-format]),
 along with three profiles:
-issue management (&sect;[#issue-management-profile]),
+result management (&sect;[#result-management-profile]),
 policy compliance (&sect;[#policy-compliance-profile]),
 and rule metadata (&sect;[#rule-metadata-profile]).
 Additional profiles might be defined in the future.

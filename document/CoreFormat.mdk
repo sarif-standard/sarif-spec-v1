@@ -9,14 +9,14 @@ A SARIF log file shall conform to the requirements of the JSON format.
 The top-level value in the log file shall conform to the JSON object grammar;
 that is, it shall consist of a comma-separated sequence of name/value pairs, enclosed in curly brackets,
 as described in the JSON specification.
-We refer to the object represented by this top-level value as the `issueLog` object (&sect;[#issueLog]).
+We refer to the object represented by this top-level value as the `resultLog` object (&sect;[#resultLog]).
 
 Every JSON property name in the SARIF format shall be a camelCase name.
 
 ~ IsoNote
 A single run of a static analysis tool that supports the SARIF format produces a SARIF log file
 containing the results of that one run.
-Other programs, such as build systems or issue management systems, can consolidate the contents
+Other programs, such as build systems or result management systems, can consolidate the contents
 of multiple single-run log files into a single SARIF log file that contains the results from all of those runs.
 This allows the aggregated results to be conveniently stored in a file or transported over a network.
 ~
@@ -38,18 +38,18 @@ particularly in cases where a tool is analyzing files stored on a physical file 
 For example, a file path might contain the account name of a developer.
 ~
 
-## `issueLog` object { #issueLog }
+## `resultLog` object { #resultLog }
 
-### General { #issueLog-General }
+### General { #resultLog-General }
 
-An `issueLog` object specifies the version of the file format and contains the results of one or more runs.
+An `resultLog` object specifies the version of the file format and contains the results from one or more runs.
 
 ~ IsoExample
 
 ```
 {
-    "version" : "0.1",  # see \(&sect;[#issueLog-version]\)
-    "runLogs" :         # see \(&sect;[#issueLog-runLogs]\)
+    "version" : "0.1",  # see \(&sect;[#resultLog-version]\)
+    "runLogs" :         # see \(&sect;[#resultLog-runLogs]\)
     [
         {
             ...         # a runLog object (see \(&sect;[#runLog]\))
@@ -63,9 +63,9 @@ An `issueLog` object specifies the version of the file format and contains the r
 ```
 ~
 
-### `version` property { #issueLog-version }
+### `version` property { #resultLog-version }
 
-An `issueLog` object shall contain a property named `version` whose value is the string `"0.1"`.
+An `resultLog` object shall contain a property named `version` whose value is the string `"0.4"`.
 
 Although the order in which the name/value pairs appear in a JSON object value is not semantically significant,
 the `version` property should appear first.
@@ -75,9 +75,9 @@ This will make it easier for parsers to handle multiple versions of the SARIF fo
 if new versions are defined in the future.
 ~
 
-### `runLogs` property { #issueLog-runLogs }
+### `runLogs` property { #resultLog-runLogs }
 
-An `issueLog` object shall contain a property named `runLogs` whose value is an array
+An `resultLog` object shall contain a property named `runLogs` whose value is an array
 containing one or more runLog objects (&sect;[#runLog]).
 
 ## `runLog` object { #runLog }
@@ -85,7 +85,7 @@ containing one or more runLog objects (&sect;[#runLog]).
 ### General { #runLog-General }
 
 A `runLog` object describes a single run of a static analysis tool,
-and enumerates the issues detected by that run.
+and enumerates the results produced by that run.
 
 ~ IsoExample
 
@@ -99,14 +99,14 @@ and enumerates the issues detected by that run.
     {
         ...        # a runInfo object (see \(&sect;[#runInfo]\))
     },
-    "issues":      # see \(&sect;[#runLog-issues]\)
+    "results":      # see \(&sect;[#runLog-results]\)
     [
         {
-            ...    # an issue object (see \(&sect;[#issue]\))
+            ...    # a result object (see \(&sect;[#result]\))
         },
         ...
         {
-            ...    # another issue object
+            ...    # another result object
         }
     ]
 }
@@ -121,12 +121,12 @@ A `runLog` object shall contain a property named `toolInfo` whose value is a `to
 
 A `runLog` object shall contain a property named `runInfo` whose value is a `runInfo` object (&sect;[#runInfo]).
 
-### `issues` property { #runLog-issues }
+### `results` property { #runLog-results }
 
-A `runLog` object shall contain a property named `issues` whose value is an array containing zero or more `issue` objects (&sect;[#issue]),
-each of which represents a single issue detected in the course of a run.
+A `runLog` object shall contain a property named `results` whose value is an array containing zero or more `result` objects (&sect;[#result]),
+each of which represents a single result produced in the course of a run.
 
-The `issues` array shall be empty if the run that produced the `runLog` object did not detect any issues.
+The `results` array shall be empty if the run that produced the `runLog` object did not produce any results.
 
 ## `toolInfo` object { #toolInfo }
 
@@ -135,7 +135,7 @@ The `issues` array shall be empty if the run that produced the `runLog` object d
 A `toolInfo` object contains information describing the static analysis tool that was run.
 
 ~ IsoNote
-If another tool post-processes the log file (for example, by removing certain issues,
+If another tool post-processes the log file (for example, by removing certain results,
 or by adding information that was not known to the static analysis tool),
 the post-processing tool should not alter any part of the `toolInfo` object.
 ~
@@ -197,19 +197,19 @@ On the Windows platform, this information is available in the `FILEVERSION` memb
 
 ### General { #runInfo-General }
 
-A `runInfo` object describes the invocation of the static analysis tool that produced the issues specified
-in the containing runLog object (&sect;[#runLog]).
+A `runInfo` object describes the invocation of the static analysis tool that produced the results specified
+in the containing `runLog` object (&sect;[#runLog]).
 
 ~ IsoNote
 The information in the `runInfo` object makes it possible to precisely repeat a run of a static analysis tool,
-and to verify that the issues reported in the log file were generated by an appropriate invocation of the tool.
+and to verify that the results reported in the log file were generated by an appropriate invocation of the tool.
 ~
 
 ### `invocationInfo` property { #runInfo-invocationInfo }
 
 A `runInfo` object may contain a property named `invocationInfo` whose value is a string
 containing the runtime parameters with which the tool was invoked.
-For command-line tools, this string may consist of the completely specified command-line used to invoke the tool.
+For command line tools, this string may consist of the completely specified command line used to invoke the tool.
 
 ~ IsoExample
 Suppose a tool is invoked with the command line
@@ -220,7 +220,11 @@ Suppose a tool is invoked with the command line
 
 Then the value of the `invocationInfo` property should be `"C:\Tools\CodeScanner\CodeScanner.exe /input C:\Code\*.cc"`. In 
 circumstances where the fully qualified path to the tool provides undesirable information disclosure, this information
-may be omitted.
+may be omitted, for example:
+
+```
+    /input C:\Code\*.cc
+```
 ~
 
 ### `analysisTargets` property { #runInfo-analysisTargets }
@@ -348,38 +352,38 @@ This shall be one of the following:
 *	`Tiger`
 *	`Whirlpool`
 
-## `issue` object { #issue }
+## `result` object { #result }
 
-### General { #issue-General }
+### General { #result-General }
 
-An `issue` object describes a single issue detected by a static analysis tool.
+A `result` object describes a single result produced by a static analysis tool.
 
-### `ruleId` property { #issue-ruleId }
+### `ruleId` property { #result-ruleId }
 
-An `issue` object shall contain a property named `ruleId` whose value is a string containing
-a stable, opaque identifier for the rule that was violated.
+A `result` object shall contain a property named `ruleId` whose value is a string containing
+a stable, opaque identifier for the rule that was evaluated to produce the result.
 
 ~ IsoExample
 `"CA2101"`
 ~
 
-### `fullMessage` property { #issue-fullMessage }
+### `fullMessage` property { #result-fullMessage }
 
-An `issue` object shall contain a property named `fullMessage` whose value is a string that describes the issue.
+A `result` object shall contain a property named `fullMessage` whose value is a string that describes the result.
 
-The `fullMessage` property should provide sufficient details to allow an end user to resolve the issue.
-In particular, `fullMessage` shall include all of the following information that is available and relevant to the issue:
+The `fullMessage` property should provide sufficient details to allow an end user to resolve any problem that the result might indicate.
+In particular, `fullMessage` shall include all of the following information that is available and relevant to the result:
 
-*	Information sufficient to identify the analysis target, and the location within the target where the issue occurred.
+*	Information sufficient to identify the analysis target, and the location within the target where the problem occurred.
 
-*	The condition within the analysis target that led to the issue being reported.
+*	The condition within the analysis target that led to the problem being reported.
 
-*	The risks or problems potentially associated with not fixing the problem.
+*	The risks potentially associated with not fixing the problem.
 
 *	The full range of responses to the problem that the end user could take
-(including the definition of conditions where it might be appropriate not to fix the problem, or to conclude that the issue is a false positive).
+(including the definition of conditions where it might be appropriate not to fix the problem, or to conclude that the result is a false positive).
 
-The first sentence of the `fullMessage` property should provide a useful summary of the issue,
+The first sentence of the `fullMessage` property should provide a useful summary of the result,
 suitable for display in cases where UI is limited.
 Tools that construct `fullMessage` in this way need not provide a value for the `shortMessage` property.
 Tools that do not construct `fullMessage` in this way should provide a value for the `shortMessage` property,
@@ -399,7 +403,7 @@ This is an example of a `fullMessage`:
 
 ### `shortMessage` property
 
-An `issue` object may contain a property named `shortMessage` whose value is a string that describes the issue.
+A `result` object may contain a property named `shortMessage` whose value is a string that describes the result.
 The `shortMessage` property should be a single sentence that is understandable
 when displayed in user interface contexts where the available space is limited to a single line of text.
 
@@ -411,55 +415,55 @@ This is an example of a `shortMessage`:
 ```
 ~
 
-### `locations` property { #issue-locations }
+### `locations` property { #result-locations }
 
-An `issue` object shall contain a property named `locations` whose value is an array,
-each of whose elements is a `location` object (&sect;[#location]) which specifies a location where the issue occurs.
-The `locations` array shall contain at least one element if the issue can be associated with a location.
-In rare circumstances, it might not be possible to specify a location for an issue.
+A `result` object shall contain a property named `locations` whose value is an array,
+each of whose elements is a `location` object (&sect;[#location]) which specifies a location where the result occurred.
+The `locations` array shall contain at least one element if the result can be associated with a location.
+In rare circumstances, it might not be possible to specify a location for a result.
 
 ~ IsoNumberedExample { @IsoNumberedExample=1}
 If a C++ analyzer detects that no file defines a `main` method,
-then the resulting issue cannot be associated with a file.
+then the result cannot be associated with a file.
 ~
 
-The `locations` array shall not contain more than one element unless the issue can only be corrected
+The `locations` array shall not contain more than one element unless the problem indicated by the result, if any, can only be corrected
 by making a change at all of the locations specified by the array elements.
 
 ~ IsoNumberedExample
 In programming languages that support partial classes,
 the name of a single class may occur more than once in the source code.
 If a static analysis tool reported that the name of such a class did not conform to a specified convention,
-then the resulting log file should contain a single issue object,
+then the resulting log file should contain a single result object,
 which should contain a locations array each of whose elements specifies the location in the source code
 where the class name occurs.
 ~
 
-The `locations` array shall not be used to specify distinct occurrences of the same issue,
+The `locations` array shall not be used to specify distinct occurrences of the same result,
 which can be corrected independently.
 
 ~ IsoNumberedExample
 Consider a static analysis tool which locates misspelled words in documentation,
 and suppose this tool scans a document in which the same word is misspelled in two distinct locations.
-Then the resulting log file should contain two distinct `issue` objects,
+Then the resulting log file should contain two distinct `result` objects,
 each of which should contain a `locations` array containing a single `location` object
 specifying the location of one instance of the misspelled word.
 ~
 
-### `toolFingerprint` property { #issue-toolFingerprint }
+### `toolFingerprint` property { #result-toolFingerprint }
 
-An `issue` object may contain a property named `toolFingerprint` whose value is a string
-that contributes to the process of uniquely identifying the issue.
-[Annex A](#Annex-A) explains how an issue management system can use this value.
+A `result` object may contain a property named `toolFingerprint` whose value is a string
+that contributes to the process of uniquely identifying the result.
+[Annex A](#Annex-A) explains how a result management system can use this value.
 
-### `executionFlows` property { #issue-executionFlows }
+### `executionFlows` property { #result-executionFlows }
 
-An `issue` object may contain a property named `executionFlows` whose value is an array of arrays of
+A `result` object may contain a property named `executionFlows` whose value is an array of arrays of
 `annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
 For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as an `executionFlow` object;
 hence we may say that the value of the `executionFlows` property is an array of `executionFlow` objects.
 The `executionFlows` property is intended for use by static analysis tools that perform flow analysis
-in the process of detecting issues.
+in the process of producing results.
 
 Each `executionFlow` object in the `executionFlows` array shall describe a single execution flow.
 An execution flow is a sequence of locations visited by the tool in the course of performing a flow analysis.
@@ -467,22 +471,22 @@ An execution flow is in turn represented by an array of `annotatedCodeLocation` 
 This array need not include every location visited by the tool,
 but the entries that are present shall occur in the order that the tool visited them.
 
-A single issue may contain one or more execution flows, one or more call stacks (&sect;[#issue-callStacks]), or both.
+A single result may contain one or more execution flows, one or more call stacks (&sect;[#result-callStacks]), or both.
 
 ~ IsoNote
-The SARIF file format allows multiple execution flows within a single `issue` object
+The SARIF file format allows multiple execution flows within a single `result` object
 to allow for the possibility that a static analysis tool might simulate more than one execution flow
-in the course of detecting a single issue.
+in the course of producing a single result.
 ~
 
-### `stacks` property { #issue-callStacks }
+### `stacks` property { #result-callStacks }
 
-An `issue` object may contain a property named `stacks` whose value is an array of arrays of
+A `result` object may contain a property named `stacks` whose value is an array of arrays of
 `annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
 For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as a `stack` object;
 hence we may say that the value of the `stacks` property is an array of `stack` objects.
 The `stacks` property is intended for use by static analysis tools that collects call stack information 
-in the process of detecting issues.
+in the process of producing results.
 
 Each `stack` object in the stacks array shall describe a single call stack.
 A call stack is a sequence of nested function calls simulated by the tool in the course of performing a flow analysis.
@@ -490,12 +494,12 @@ A stack is in turn represented by an array of `annotatedCodeLocation` objects.
 This array shall include every function call in the stack for which the tool has information,
 and the entries that are present shall occur in order with the innermost call first and the outermost call last.
 
-A single issue may contain one or more call stacks, one or more execution flows (&sect;[#issue-executionFlows]), or both.
+A single result may contain one or more call stacks, one or more execution flows (&sect;[#result-executionFlows]), or both.
 
 ~ IsoNumberedNote { @IsoNumberedNote=1}
-The SARIF file format allows multiple call stacks within a single `issue` object
+The SARIF file format allows multiple call stacks within a single `result` object
 to allow for the possibility that a static analysis tool might simulate more than one call stack
-in the course of detecting a single issue.
+in the course of producing a single result.
 ~
 
 ~ IsoNumberedNote
@@ -504,17 +508,17 @@ This might happen, for example, if application code for which location informati
 for which location information is not available, which in turn calls back into application code.
 ~
 
-### `isSuppressedInSource` property { #issue-isSuppressedInSource }
+### `isSuppressedInSource` property { #result-isSuppressedInSource }
 
-An `issue` object may contain a property named `isSuppressedInSource` whose value is one of the strings
+A `result` object may contain a property named `isSuppressedInSource` whose value is one of the strings
 `"true"` or `"false"`.
 
 Some programming languages offer a syntactic construct for suppressing compiler warnings.
 For tools that examine source code written in such a language, this value shall be set to `"true"`
-if the tool determines that the issue occurred at a location within the scope of an instance of such a construct
-which is intended to suppress that particular class of issue.
-It shall be set to `"false"` if the tool determines that the issue did not occur at such a location.
-It shall omitted if the tool cannot or chooses not to determine whether the issue occurs at such a location.
+if the tool determines that the result occurred at a location within the scope of an instance of such a construct
+which is intended to suppress that particular class of result.
+It shall be set to `"false"` if the tool determines that the result did not occur at such a location.
+It shall omitted if the tool cannot or chooses not to determine whether the result occurred at such a location.
 
 For tools that do not examine source code written in such a language, this value shall be omitted.
 
@@ -522,15 +526,15 @@ For tools that do not examine source code written in such a language, this value
 The `#pragma` warning construct in C# is such a syntactic construct.
 ~
 
-### `fixes` property { #issue-fixes }
+### `fixes` property { #result-fixes }
 
-An `issue` object may contain a property names `fixes`, whose value is a JSON array of `fix` objects (&sect;[#fix]).
+A `result` object may contain a property names `fixes`, whose value is a JSON array of `fix` objects (&sect;[#fix]).
 
-### `properties` property { #issue-properties }
+### `properties` property { #result-properties }
 
-An `issue` object may contain a property named `properties`, whose value is a JSON object
+A `result` object may contain a property named `properties`, whose value is a JSON object
 consisting of a set of name/value pairs with arbitrary names.
-This allows tools to include information about the issue that is not explicitly specified in the SARIF format.
+This allows tools to include information about the result that is not explicitly specified in the SARIF format.
 
 The value within each name/value pair shall be a string,
 which may be the empty string.
@@ -540,21 +544,21 @@ The value shall not be a JSON array or sub-object.
 
 ### General { #location-General }
 
-A `location` object specifies the location where a static analysis tool detected an issue.
-A `location` object shall specify the physical location (&sect;[#physicalLocation-info]) of the issue,
-and it may also specify the logical location (&sect;[#logicalLocation-info]) of the issue.
+A `location` object specifies the location where a static analysis tool produced a result.
+A `location` object shall specify the physical location (&sect;[#physicalLocation-info]) of the result,
+and it may also specify the logical location (&sect;[#logicalLocation-info]) of the result.
 
 ### Physical locations and the `physicalLocation` array { #physicalLocation-info }
 
 A physical location specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
 A physical location is represented by an array of `physicalLocationComponent objects` (&sect;[#physicalLocationComponent]);
 for convenience, we refer to this array as a `physicalLocation` object.
-This allows reference to issues which occur in files nested within other files, for example, within a compressed container.
-If an issue occurs in such a nested file, the first `physicalLocationComponent` object in the array shall refer to the outermost container,
+This allows reference to results which occur in files nested within other files, for example, within a compressed container.
+If the result occurred in such a nested file, the first `physicalLocationComponent` object in the array shall refer to the outermost container,
 the next element shall refer to a file nested immediately within that container, and so on,
 with the last element referring to the most deeply nested file.
 
-Physical locations are applicable to issues that occur in all kinds of programming artifacts.
+Physical locations are applicable to results that occur in all kinds of programming artifacts.
 
 ### Logical locations and the `logicalLocation` array { #logicalLocation-info }
 
@@ -562,9 +566,9 @@ A logical location specifies a reference to a logical construct, for example, a 
 without specifying the programming artifact within which that construct occurs.
 A logical location is represented by an array of `logicalLocationComponent` objects (&sect;[#logicalLocationComponent]);
 for convenience, we refer to this array as a `logicalLocation` object.
-This allows reference to issues which occur in nested logical components, for example,
+This allows reference to results which occur in nested logical components, for example,
 a method nested within a class which is in turn nested within a namespace.
-If an issue occurs in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
+If the result occurred in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
 the outermost construct,
 the next element shall refer to a construct nested immediately within the first construct,
 and so on, with the last element referring to the most deeply nested construct.
@@ -572,10 +576,10 @@ and so on, with the last element referring to the most deeply nested construct.
 ### Constraints { #location-Constraints }
 
 Within any one location object, if the `analysisTarget` property (&sect;[#location-analysisTarget])
-and the `issueFile` property (&sect;[#location-issueFile]) would both refer to the same location,
-then the `analysisTarget` property shall be present and the `issueFile` property shall be absent.
-If the `analysisTarget` property and the `issueFile` property would refer to different locations,
-then the `analysisTarget` property and the `issueFile` property shall both be present.
+and the `resultFile` property (&sect;[#location-resultFile]) would both refer to the same location,
+then the `analysisTarget` property shall be present and the `resultFile` property shall be absent.
+If the `analysisTarget` property and the `resultFile` property would refer to different locations,
+then the `analysisTarget` property and the `resultFile` property shall both be present.
 
 Within any one location object, the `logicalLocation` property (&sect;[#location-logicalLocation])
 and the `fullyQualifiedLogicalName` property (&sect;[#location-fullyQualifiedLogicalName])
@@ -585,38 +589,38 @@ shall either both be present or both be absent.
 
 A `location` object shall contain a property named `analysisTarget` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
 that identifies the file that the static analysis tool was instructed to scan.
-This need not be the same as the file where the issue actually occurs. See `issueFile` (&sect;[#location-issueFile]) for more information on this point.
+This need not be the same as the file where the result actually occurred. See `resultFile` (&sect;[#location-resultFile]) for more information on this point.
 
-### `issueFile` property { #location-issueFile }
+### `resultFile` property { #location-resultFile }
 
-A `location` object may contain a property named `issueFile` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
-that identifies the file where the static analysis tool detected the issue.
+A `location` object may contain a property named `resultFile` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
+that identifies the file where the static analysis tool produced the result.
 
-If the issue actually occurs at the location specified in the `analysisTarget` property,
-then the `issueFile` property shall not be present.
-If the issue occurs in a different file from the one specified in the `analysisTarget` property,
-then the `issueFile` property shall be present.
+If the result actually occurred at the location specified in the `analysisTarget` property,
+then the `resultFile` property shall not be present.
+If the result occurred in a different file from the one specified in the `analysisTarget` property,
+then the `resultFile` property shall be present.
 
 ~ IsoNumberedExample { @IsoNumberedExample=1 }
 Suppose a static analysis tool for C++ source code is instructed to scan the source file _a.cpp_,
 which includes the header file _b.h_,
-and suppose the tool detects an issue in _b.h_.
+and suppose the tool detects a problem in _b.h_.
 In this case, the tool should report the `analysisTarget` as _a.cpp_,
-and it should report the `issueFile` as _b.h_.
+and it should report the `resultFile` as _b.h_.
 ~
 
 ~ IsoNumberedExample
-Suppose a static analysis tool for object code detects an issue in the binary file _c.dll_,
+Suppose a static analysis tool for object code detects a problem in the binary file _c.dll_,
 and suppose the tool has available symbol information which maps that location within the binary
 to a specific line in a source file _d.cpp_.
 In this case, the tool should report the `analysisTarget` as _c.dll_,
-and it should report the `issueFile` as _d.cpp_.
+and it should report the `resultFile` as _d.cpp_.
 ~
 
 ### `logicalLocation` property { #location-logicalLocation }
 
 A `location` object may contain a property named `logicalLocation` whose value is a `logicalLocation` object (&sect;[#logicalLocation-info])
-which specifies the logical location where the static analysis tool detected the issue.
+which specifies the logical location where the static analysis tool produced the result.
 
 ### `fullyQualifiedLogicalName` property { #location-fullyQualifiedLogicalName }
 
@@ -635,7 +639,7 @@ C#: `Namespace1.Namespace2.Class.Method(System.String, int[])`
 ~
 
 ~ IsoNote
-The intent of this property is to allow an issue log viewer to display the logical location
+The intent of this property is to allow a result log viewer to display the logical location
 in a way that is easily understood by an end user.
 ~
 
@@ -668,10 +672,10 @@ the MIME content-type (RFC 2045) of the file.
 ### `region` property { #physicalLocationComponent-region }
 
 A `physicalLocationComponent` object may have a property named `region` whose value is a `region` object (&sect;[#region]),
-that represents the region within a file where the issue was detected.
+that represents the region within a file where the result occurred.
 It should be present only on the last element of the physical location array in which the `physicalLocationComponent` occurs.
 This is because all the other elements of the array represent layers of packaging;
-only the last element represents the actual file within which the issue occurs.
+only the last element represents the actual file within which the result occurred.
 
 ## `region` object { #region }
 
@@ -768,7 +772,7 @@ When a `region` object represents a region in a text file, it may contain a prop
 If the region has a length of 0, then `endColumn` shall not be present.
 If the region has a length greater than 0, then `endColumn` shall be present
 (even if its value is the same as the value of `startColumn`,
-which could happen if the first and last characters in the range occurred on different lines),
+which could happen if the first and last characters in the range are on different lines),
 and its value shall be the column number of the last character of the region.
 
 When a `region` object represents a region in a binary file, the `endColumn` property shall not be present.
@@ -815,7 +819,7 @@ A `logicalLocationComponent` object is an element of a `logicalLocation` object 
 ### `name` property { #logicalLocationComponent-name }
 
 A `logicalLocationComponent` object shall contain a property called `name`, whose value shall be a string that identifies
-the construct in which the issue occurred.
+the construct in which the result occurred.
 For example, this property might contain the name of a class or a method.
 
 The name property need not be suitable for display.
@@ -843,8 +847,8 @@ If none of those strings accurately describes the construct, `kind` may contain 
 
 ### General { #annotatedCodeLocation-General }
 
-An `annotatedCodeLocation` object is an element of an `executionFlow` object (&sect;[#issue-executionFlows])
-or a `stack` object (&sect;[#issue-callStacks]).
+An `annotatedCodeLocation` object is an element of an `executionFlow` object (&sect;[#result-executionFlows])
+or a `stack` object (&sect;[#result-callStacks]).
 
 ### `physicalLocations` property { #annotatedCodeLocation-physicalLocations }
 
@@ -874,14 +878,14 @@ The value shall not be a JSON array or sub-object.
 
 ### General { #fix-General }
 
-A `fix` object represents a proposed fix for the issue represented by the `issue` object (&sect;[#issue]) in which it occurs.
+A `fix` object represents a proposed fix for the problem indicated by the `result` object (&sect;[#result]) in which it occurs.
 It specifies a set of files to modify.
 For each file, it specifies which bytes to remove, and provides new bytes to be inserted.
 
 ~IsoExample
 
 ````
-    {                                                     # an issue object (see \(&sect;[#issue]\))
+    {                                                     # a result object (see \(&sect;[#result]\))
         "fix":
         {
             "description":                                # see \(&sect;[#fix-description]\)
@@ -903,7 +907,7 @@ For each file, it specifies which bytes to remove, and provides new bytes to be 
 A `fix` object shall contain a property named `description` whose value is a string describing the proposed fix.
 
 ~IsoNote
-The purpose of the `description` property is to enable an issue log viewer to present the proposed fix to the end user.
+The purpose of the `description` property is to enable a result log viewer to present the proposed fix to the end user.
 ~
 
 ~IsoExample

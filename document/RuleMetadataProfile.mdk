@@ -2,13 +2,13 @@
 
 ## General
 
-It is sometimes useful for an issue management system to provide information to the end user
-about the rules that were violated by the issues in a log file.
-For example, the user might want to know whether the issue is a potential security risk,
-or where to find additional documentation for the issue.
+It is sometimes useful for a result management system to provide information to the end user
+about the rules that were evaluated in the course of producing the results in a log file.
+For example, the user might want to know whether the result indicates a potential security risk,
+or where to find additional documentation for the result.
 We refer to this information as rule metadata.
 
-It is possible for an issue management system to have built-in knowledge of
+It is possible for an result management system to have built-in knowledge of
 the metadata for the rules defined by a set of well-known static analysis tools.
 It is also possible for the system to provide a means for end users to upload
 metadata for rules defined by specialized tools used in their organizations.
@@ -83,7 +83,7 @@ when displayed in user interface contexts where the available space is limited t
 
 An `ruleDescriptor` object should contain a property named `fullDescription` whose value is a string that describes the rule.
 
-The `fullDescription` property should, as far as possible, provide details sufficient to enable resolution of issues. 
+The `fullDescription` property should, as far as possible, provide details sufficient to enable resolution of any problem indicated by the result. 
 
 The first sentence of the `fullDescription` property should provide a concise description of the rule,
 suitable for display in cases where available space is limited.
@@ -111,15 +111,15 @@ string formatting function (_e.g._, the C language `printf` function) to constru
 an arbitrary number of additional function arguments.
 
 The set of names appearing in the `formatSpecifiers` property shall contain at least the set of strings
-which occur as values of the `issue.formattedMessage.specifierId` property in the issue log.
+which occur as values of the `result.formattedMessage.specifierId` property in the result log.
 The `formatSpecifiers` property may contain additional name/value pairs whose names do not appear
-as the value of the `issue.formattedMessage.specifierId` property for any issue in the issue log.
+as the value of the `result.formattedMessage.specifierId` property for any result in the result log.
 
 ~IsoNote
 Additional name/value pairs are permitted in the `formatSpecifiers` property
 for the convenience of tool vendors, who might find it easier to emit the entire set of messages
 supported by a rule, rather than restricting it to those messages that happen to appear in the
-issue log.
+result log.
 ~
 
 ~ IsoExample
@@ -145,21 +145,21 @@ This allows tools to include information about the rule that is not explicitly s
 The value within each name/value pair shall be a string, which may be the empty string.
 The value shall not be a JSON array or sub-object.
 
-## `issue` object { #rule-metadata-profile-issue }
+## `result` object { #rule-metadata-profile-result }
 
-### General { #rule-metadata-profile-issue-general }
+### General { #rule-metadata-profile-result-general }
 
-The Rule Metadata Profile defines one additional property in the `issue` object (&sect;[#issue]).
+The Rule Metadata Profile defines one additional property in the `result` object (&sect;[#result]).
 
-### `formattedMessage` property { #issue-formattedMessage }
+### `formattedMessage` property { #result-formattedMessage }
 
-An `issue` object (&sect;[#issue]) may contain a `formattedMessage` property whose value is
+An `result` object (&sect;[#result]) may contain a `formattedMessage` property whose value is
 a `formattedMessage` object (&sect;[#formattedMessage]) that can be used to construct
-a fully formatted message that describes the issue.
+a fully formatted message that describes the result.
 
-If the `formattedMessage` property is present on an `issue`, the `fullMessage` property (&sect;[#issue-fullMessage])
+If the `formattedMessage` property is present on an `result`, the `fullMessage` property (&sect;[#result-fullMessage])
 shall not be present.
-If the `fullMessage` property is present on an `issue`, the `formattedMessage` property
+If the `fullMessage` property is present on an `result`, the `formattedMessage` property
 shall not be present.
 
 ## `formattedMessage` object { #formattedMessage }
@@ -170,11 +170,11 @@ A `formattedMessage` object contains information that can be used to construct a
 
 ### `specifierId` property { #formattedMessage-id }
 A `formattedMessage` object must contain a property named `specifierId`, whose value is a string that identifies the format string
-used to format the message that describes this issue.
+used to format the message that describes this result.
 The value of `specifierId` must correspond to one of the names in the set of name/value pairs contained in the `formatSpecifiers` property (&sect;[#ruleDescriptor-formatSpecifiers])
-of the `ruleInfo` object (&sect;[#ruleDescriptor]) whose `id` property (&sect;[#ruleDescriptor-id]) matches the `ruleId` property (&sect;[#issue-ruleId]) of this issue.
+of the `ruleInfo` object (&sect;[#ruleDescriptor]) whose `id` property (&sect;[#ruleDescriptor-id]) matches the `ruleId` property (&sect;[#result-ruleId]) of this issue.
 
 ### `arguments` property { #formattedMessage-arguments }
 A `formattedMessage` object may contain a property named `arguments`,
 whose value is an array of string values that will be used, in combination with a format specifier,
-to construct an issue message.
+to construct a result message.
