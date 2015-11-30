@@ -28,7 +28,7 @@ or conformance to certification standards.
 
 * Represent static analysis results for all kinds of programming artifacts, including source code and object code. 
 
-* Represent the logical construct within which a result is produced, such as a function, class, or namespace. 
+* Represent the logical construct against which a result is produced, such as a function, class, or namespace. 
 
-* Represent the physical location where a result is produced, including problems that are detected in nested files
+* Represent the physical location at which a result is produced, including problems that are detected in nested files
 (such as a source file within a compressed container).

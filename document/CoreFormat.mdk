@@ -374,11 +374,11 @@ A `result` object shall contain a property named `fullMessage` whose value is a 
 The `fullMessage` property should provide sufficient details to allow an end user to resolve any problem that the result might indicate.
 In particular, `fullMessage` shall include all of the following information that is available and relevant to the result:
 
-*	Information sufficient to identify the analysis target, and the location within the target where the result occurred.
+*	Information sufficient to identify the analysis target, and the location within the target where the problem occurred.
 
-*	The condition within the analysis target that led to the result being reported.
+*	The condition within the analysis target that led to the problem being reported.
 
-*	The risks or problems potentially associated with not fixing the problem indicated by the result, if any.
+*	The risks potentially associated with not fixing the problem.
 
 *	The full range of responses to the problem that the end user could take
 (including the definition of conditions where it might be appropriate not to fix the problem, or to conclude that the result is a false positive).
@@ -418,7 +418,7 @@ This is an example of a `shortMessage`:
 ### `locations` property { #result-locations }
 
 A `result` object shall contain a property named `locations` whose value is an array,
-each of whose elements is a `location` object (&sect;[#location]) which specifies a location where the result occurs.
+each of whose elements is a `location` object (&sect;[#location]) which specifies a location where the result occurred.
 The `locations` array shall contain at least one element if the result can be associated with a location.
 In rare circumstances, it might not be possible to specify a location for a result.
 
@@ -518,7 +518,7 @@ For tools that examine source code written in such a language, this value shall 
 if the tool determines that the result occurred at a location within the scope of an instance of such a construct
 which is intended to suppress that particular class of result.
 It shall be set to `"false"` if the tool determines that the result did not occur at such a location.
-It shall omitted if the tool cannot or chooses not to determine whether the result occurs at such a location.
+It shall omitted if the tool cannot or chooses not to determine whether the result occurred at such a location.
 
 For tools that do not examine source code written in such a language, this value shall be omitted.
 
@@ -554,7 +554,7 @@ A physical location specifies a reference to a programming artifact together wit
 A physical location is represented by an array of `physicalLocationComponent objects` (&sect;[#physicalLocationComponent]);
 for convenience, we refer to this array as a `physicalLocation` object.
 This allows reference to results which occur in files nested within other files, for example, within a compressed container.
-If a result occurs in such a nested file, the first `physicalLocationComponent` object in the array shall refer to the outermost container,
+If the result occurred in such a nested file, the first `physicalLocationComponent` object in the array shall refer to the outermost container,
 the next element shall refer to a file nested immediately within that container, and so on,
 with the last element referring to the most deeply nested file.
 
@@ -568,7 +568,7 @@ A logical location is represented by an array of `logicalLocationComponent` obje
 for convenience, we refer to this array as a `logicalLocation` object.
 This allows reference to results which occur in nested logical components, for example,
 a method nested within a class which is in turn nested within a namespace.
-If a result occurs in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
+If the result occurred in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
 the outermost construct,
 the next element shall refer to a construct nested immediately within the first construct,
 and so on, with the last element referring to the most deeply nested construct.
@@ -589,28 +589,28 @@ shall either both be present or both be absent.
 
 A `location` object shall contain a property named `analysisTarget` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
 that identifies the file that the static analysis tool was instructed to scan.
-This need not be the same as the file where the result actually occurs. See `resultFile` (&sect;[#location-resultFile]) for more information on this point.
+This need not be the same as the file where the result actually occurred. See `resultFile` (&sect;[#location-resultFile]) for more information on this point.
 
 ### `resultFile` property { #location-resultFile }
 
 A `location` object may contain a property named `resultFile` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
 that identifies the file where the static analysis tool produced the result.
 
-If the result actually occurs at the location specified in the `analysisTarget` property,
+If the result actually occurred at the location specified in the `analysisTarget` property,
 then the `resultFile` property shall not be present.
-If the result occurs in a different file from the one specified in the `analysisTarget` property,
+If the result occurred in a different file from the one specified in the `analysisTarget` property,
 then the `resultFile` property shall be present.
 
 ~ IsoNumberedExample { @IsoNumberedExample=1 }
 Suppose a static analysis tool for C++ source code is instructed to scan the source file _a.cpp_,
 which includes the header file _b.h_,
-and suppose the tool produces a result in _b.h_.
+and suppose the tool detects a problem in _b.h_.
 In this case, the tool should report the `analysisTarget` as _a.cpp_,
 and it should report the `resultFile` as _b.h_.
 ~
 
 ~ IsoNumberedExample
-Suppose a static analysis tool for object code produces a result in the binary file _c.dll_,
+Suppose a static analysis tool for object code detects a problem in the binary file _c.dll_,
 and suppose the tool has available symbol information which maps that location within the binary
 to a specific line in a source file _d.cpp_.
 In this case, the tool should report the `analysisTarget` as _c.dll_,
@@ -672,10 +672,10 @@ the MIME content-type (RFC 2045) of the file.
 ### `region` property { #physicalLocationComponent-region }
 
 A `physicalLocationComponent` object may have a property named `region` whose value is a `region` object (&sect;[#region]),
-that represents the region within a file where the result occurs.
+that represents the region within a file where the result occurred.
 It should be present only on the last element of the physical location array in which the `physicalLocationComponent` occurs.
 This is because all the other elements of the array represent layers of packaging;
-only the last element represents the actual file within which the result occurs.
+only the last element represents the actual file within which the result occurred.
 
 ## `region` object { #region }
 
@@ -772,7 +772,7 @@ When a `region` object represents a region in a text file, it may contain a prop
 If the region has a length of 0, then `endColumn` shall not be present.
 If the region has a length greater than 0, then `endColumn` shall be present
 (even if its value is the same as the value of `startColumn`,
-which could happen if the first and last characters in the range occurred on different lines),
+which could happen if the first and last characters in the range are on different lines),
 and its value shall be the column number of the last character of the region.
 
 When a `region` object represents a region in a binary file, the `endColumn` property shall not be present.
