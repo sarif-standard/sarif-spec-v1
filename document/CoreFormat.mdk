@@ -385,7 +385,7 @@ constitutes a problem cannot be determined without further evaluation, either by
 
 ~ IsoNote
 After further evaluation, a person or an automated tool might change the `kind` property from `pending` to
-`warning`, `error`, or `passed`.
+`warning`, `error`, or `pass`.
 ~
 
 ~ IsoNote
