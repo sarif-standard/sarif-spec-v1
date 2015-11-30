@@ -367,7 +367,7 @@ the stable, opaque identifier for the rule that was evaluated to produce the res
 `"CA2101"`
 ~
 
-### `kind` property { #issue-kind }
+### `kind` property { #result-kind }
 
 A `result` object may contain a property named `kind` whose value is one of a fixed set of strings
 that specify the category of the result.
