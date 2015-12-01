@@ -78,7 +78,7 @@ if new versions are defined in the future.
 ### `runLogs` property { #resultLog-runLogs }
 
 An `resultLog` object shall contain a property named `runLogs` whose value is an array
-containing one or more runLog objects (&sect;[#runLog]).
+of one or more runLog objects (&sect;[#runLog]).
 
 ## `runLog` object { #runLog }
 
@@ -361,11 +361,74 @@ A `result` object describes a single result produced by a static analysis tool.
 ### `ruleId` property { #result-ruleId }
 
 A `result` object shall contain a property named `ruleId` whose value is a string containing
-a stable, opaque identifier for the rule that was evaluated to produce the result.
+the stable, opaque identifier for the rule that was evaluated to produce the result.
 
 ~ IsoExample
 `"CA2101"`
 ~
+
+### `kind` property { #result-kind }
+
+A `result` object may contain a property named `kind` whose value is one of a fixed set of strings
+that specify the category of the result.
+
+If present, the `kind` property shall have one of the following values, with the specified meanings:
+
+* `pass`: The rule specified by the `ruleId` property (&sect;[#result-ruleId]) was evaluated, and no problem was found.
+
+* `warning`: The rule specified by the `ruleId` property was evaluated, and a problem was found.
+
+* `error`: The rule specified by the `ruleId` property was evaluated, and a serious problem was found.
+
+* `pending`: The rule specified by the `ruleId` property was evaluated, but whether the result of the evaluation
+constitutes a problem cannot be determined without further processing, either by a person or by an automated tool.
+
+~ IsoNote
+After further evaluation, a person or an automated tool might change the `kind` property from `pending` to
+`warning`, `error`, or `pass`.
+~
+
+~ IsoNote
+In some cases, team policy or corporate policy might determine if an analysis result constitutes a problem.
+~
+
+~ IsoExample
+A binary checker might produce a result stating that an analysis target was compiled with a particular version of the compiler.
+Subsequently, a post-processing tool might examine this result to determine whether the use of that version of the compiler
+complies with corporate policy.
+~
+
+* `notApplicable`: The rule specified by the `ruleId` property was not evaluated, because it does not apply to the
+file specified by `analysisTarget` (&sect;[#location-analysisTarget]).
+
+~ IsoExample
+A binary checker might have a rule that applies to 32-bit binaries only.
+Such a tool would produce a `notApplicable` result if it were run on a 64-bit binary.
+~
+
+* `internalError`: The tool encountered an internal error that prevented it from performing a complete analysis.
+
+    If the error occurred in the course of evaluating a specific rule, the `ruleId` property should either specify that rule,
+    or it should specify a unique value, distinct from the id of all other rules known to that tool, which indicates that
+    an error occurred during rule evaluation.
+
+    If the error did not occur in the course of evaluating a specific rule, the `ruleId` property should be set to a unique value,
+    distinct from the id of all other rules known to that tool, which indicates that an internal tool error occurred.
+
+~ IsoNote
+Depending on the nature of the error, the tool might or might not be able to continue running.
+In all cases, the presence of a `result` object whose `kind` property is set to `internalError` indicates
+that the run failed, because it could could not successfully run all specified rules on all specified
+analysis targets.
+
+If a tool encounters an error in the course of evaluating a rule, the tool might report the error, disable the rule,
+and continue to execute the remaining rules.
+
+If a tool encounters an error outside of the evaluation of a rule, the tool might report
+the error to the log and halt. (The tool might also just exit, either normally or abnormally.)
+~
+
+If the `kind` property is not present, it shall be considered equivalent to the value `warning`.
 
 ### `fullMessage` property { #result-fullMessage }
 
@@ -528,7 +591,7 @@ The `#pragma` warning construct in C# is such a syntactic construct.
 
 ### `fixes` property { #result-fixes }
 
-A `result` object may contain a property names `fixes`, whose value is a JSON array of `fix` objects (&sect;[#fix]).
+A `result` object may contain a property names `fixes`, whose value is a JSON array of zero or more `fix` objects (&sect;[#fix]).
 
 ### `properties` property { #result-properties }
 
