@@ -593,41 +593,34 @@ results: [
         "kind": "error",
         "shortMessage": "Name 'index' cannot be used in this scope because it would give a different meaning to 'index'.",
 
-        "locations": [                  # An array of location objects (see \(&sect;[#location]\))
-            {                           # A location object
-
-                "physicalLocations": [  # An array of physicalLocation objects ...
-                    [                   # ... each of which is an array of physicalLocationComponent objects (see \(&sect;[#physicalLocationComponent]\))
-
-                        {               # A physicalLocationComponent object.
-                            "analysisTarget": "file://C:/Code/a.js",
-                            "region": {
-                                "startLine": "2",
-                                "startColumn": "6"
-                            }
+        "locations": [
+            {
+                "analysisTarget": [
+                    {
+                        "uri": "file://C:/Code/a.js",
+                        "mimeType": "text/javascript",
+                        "region": {
+                            "startLine": "6",
+                            "startColumn": "10"
                         }
-
-                    ]
+                    }
                 ]
             }
         ],
 
         "relatedLocations": [           # An array of annotatedCodeLocation objects (see \(&sect;[#annotatedCodeLocation]\))
-            {                           # An annotatedCodeLocation object 
-
+            { 
                 "message": "The previous declaration of 'index' was here.",
-
                 "physicalLocations": [
                     [
-
                         {
-                            "analysisTarget": "file://C:/Code/a.js",
+                            "uri": "file://C:/Code/a.js",
+                            "mimeType": "text/javascript",
                             "region": {
-                                "startLine": "6",
-                                "startColumn": "10"
+                                "startLine": "2",
+                                "startColumn": "6"
                             }
                         }
-
                     ]
                 ]
             }
