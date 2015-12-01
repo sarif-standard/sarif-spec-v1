@@ -119,7 +119,7 @@ A `runLog` object shall contain a property named `toolInfo` whose value is a `to
 
 ### `runInfo` property { #runLog-runInfo }
 
-A `runLog` object shall contain a property named `runInfo` whose value is a `runInfo` object (&sect;[#runInfo]).
+A `runLog` object may contain a property named `runInfo` whose value is a `runInfo` object (&sect;[#runInfo]).
 
 ### `results` property { #runLog-results }
 
