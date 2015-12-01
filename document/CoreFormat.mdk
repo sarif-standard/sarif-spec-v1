@@ -571,6 +571,74 @@ This might happen, for example, if application code for which location informati
 for which location information is not available, which in turn calls back into application code.
 ~
 
+### `relatedLocations` property { #result-relatedLocations }
+
+A `result` object may contain a property named `relatedLocations` whose value is an array
+of one or more `annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]),
+each of which represents a location relevant to understanding the result.
+
+~ IsoExample
+Suppose that a tool for analyzing JavaScript has a rule that reports a problem
+when a variable declared in an inner scope hides a variable with the same name in an enclosing scope.
+The tool would report the problem on the line where the inner variable is declared.
+The tool could choose to add an element to the `relatedLocations` array, specifying
+the location where the outer variable was declared.
+
+The result might appear in the log file like this:
+
+```
+results: [
+    {
+        "ruleId": "JS3056",
+        "kind": "error",
+        "shortMessage": "Name 'index' cannot be used in this scope because it would give a different meaning to 'index'.",
+
+        "locations": [
+            {
+                "analysisTarget": [
+                    {
+                        "uri": "file://C:/Code/a.js",
+                        "mimeType": "text/javascript",
+                        "region": {
+                            "startLine": "6",
+                            "startColumn": "10"
+                        }
+                    }
+                ]
+            }
+        ],
+
+        "relatedLocations": [           # An array of annotatedCodeLocation objects (see \(&sect;[#annotatedCodeLocation]\))
+            { 
+                "message": "The previous declaration of 'index' was here.",
+                "physicalLocations": [
+                    [
+                        {
+                            "uri": "file://C:/Code/a.js",
+                            "mimeType": "text/javascript",
+                            "region": {
+                                "startLine": "2",
+                                "startColumn": "6"
+                            }
+                        }
+                    ]
+                ]
+            }
+        ]
+    },
+    ...
+]
+```
+
+The tool might write messages to the console like this:
+
+```
+C:\Code\a.js(6,10-10) : error : JS3056: Name 'index' cannot be used in this scope because it would give a different meaning to 'index'.
+C:\Code\a.js(2,6-6) : info : JS3056: The previous declaration of 'index' was here.
+```
+
+~
+
 ### `isSuppressedInSource` property { #result-isSuppressedInSource }
 
 A `result` object may contain a property named `isSuppressedInSource` whose value is one of the strings
@@ -910,8 +978,9 @@ If none of those strings accurately describes the construct, `kind` may contain 
 
 ### General { #annotatedCodeLocation-General }
 
-An `annotatedCodeLocation` object is an element of an `executionFlow` object (&sect;[#result-executionFlows])
-or a `stack` object (&sect;[#result-callStacks]).
+An `annotatedCodeLocation` object is an element of an `executionFlow` object (&sect;[#result-executionFlows]),
+a `stack` object (&sect;[#result-callStacks]),
+or the `relatedLocations` array (&sect;[#result-relatedLocations]).
 
 ### `physicalLocations` property { #annotatedCodeLocation-physicalLocations }
 
