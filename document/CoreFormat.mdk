@@ -381,7 +381,7 @@ If present, the `kind` property shall have one of the following values, with the
 * `error`: The rule specified by the `ruleId` property was evaluated, and a serious problem was found.
 
 * `pending`: The rule specified by the `ruleId` property was evaluated, but whether the result of the evaluation
-constitutes a problem cannot be determined without further evaluation, either by a person or by an automated tool.
+constitutes a problem cannot be determined without further processing, either by a person or by an automated tool.
 
 ~ IsoNote
 After further evaluation, a person or an automated tool might change the `kind` property from `pending` to
@@ -400,6 +400,11 @@ complies with corporate policy.
 
 * `notApplicable`: The rule specified by the `ruleId` property was not evaluated, because it does not apply to the
 file specified by `analysisTarget` (&sect;[#location-analysisTarget]).
+
+~ IsoExample
+A binary checker might have a rule that applies to 32-bit binaries only.
+Such a tool would produce a `notApplicable` result if it were run on a 64-bit binary.
+~
 
 * `internalError`: The tool encountered an internal error that prevented it from performing a complete analysis.
 
@@ -586,7 +591,7 @@ The `#pragma` warning construct in C# is such a syntactic construct.
 
 ### `fixes` property { #result-fixes }
 
-A `result` object may contain a property names `fixes`, whose value is a JSON array of zero or more `fix` objects (&sect;[#fix]).
+A `result` object shall contain a property names `fixes`, whose value is a JSON array of zero or more `fix` objects (&sect;[#fix]).
 
 ### `properties` property { #result-properties }
 
