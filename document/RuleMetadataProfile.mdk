@@ -136,6 +136,16 @@ result log.
 ````
 ~
 
+### `helpUri` property { #ruleDescriptor-helpUri }
+
+A `ruleDescriptor` object may contain a property named `helpUri`, whose value is a string
+containing the URI where the primary documentation for the rule can be found.
+
+~ IsoNote
+The documentation might include examples, contact information for the rule authors,
+and links to additional information about the rule.
+~
+
 ### `properties` property { #ruleDescriptor-properties }
 
 A `ruleDescriptor` object may contain a property named `properties`, whose value is a JSON object
