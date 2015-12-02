@@ -984,7 +984,7 @@ or the `relatedLocations` array (&sect;[#result-relatedLocations]).
 
 ### `physicalLocations` property { #annotatedCodeLocation-physicalLocations }
 
-An `annotatedCodeLocation` object must contain a property named `physicalLocations` whose value is an array of `physicalLocation` objects
+An `annotatedCodeLocation` object must contain a property named `physicalLocations` whose value is an array of one or more `physicalLocation` objects
 (&sect;[#physicalLocation-info]).
 Each `physicalLocation` object represents one physical view of the code to which the `annotatedCodeLocation` refers.
 For example, one `physicalLocation` object might refer to a location in source code;
