@@ -535,6 +535,11 @@ and suppose this tool scans a document in which the same word is misspelled in t
 Then the resulting log file should contain two distinct `result` objects,
 each of which should contain a `locations` array containing a single `location` object
 specifying the location of one instance of the misspelled word.
+
+In contrast, consider a tool which locates misspelled words in variable names.
+If the tool detects a misspelled variable name, it should produce a single `result` object whose
+`locations` array contains the location of every reference to the variable,
+since fixing some but not all of the references would cause a compilation error.
 ~
 
 ### `toolFingerprint` property { #result-toolFingerprint }
