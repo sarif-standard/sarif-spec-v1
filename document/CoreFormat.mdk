@@ -380,24 +380,6 @@ If present, the `kind` property shall have one of the following values, with the
 
 * `error`: The rule specified by the `ruleId` property was evaluated, and a serious problem was found.
 
-* `pending`: The rule specified by the `ruleId` property was evaluated, but whether the result of the evaluation
-constitutes a problem cannot be determined without further processing, either by a person or by an automated tool.
-
-~ IsoNote
-After further evaluation, a person or an automated tool might change the `kind` property from `pending` to
-`warning`, `error`, or `pass`.
-~
-
-~ IsoNote
-In some cases, team policy or corporate policy might determine if an analysis result constitutes a problem.
-~
-
-~ IsoExample
-A binary checker might produce a result stating that an analysis target was compiled with a particular version of the compiler.
-Subsequently, a post-processing tool might examine this result to determine whether the use of that version of the compiler
-complies with corporate policy.
-~
-
 * `notApplicable`: The rule specified by the `ruleId` property was not evaluated, because it does not apply to the
 file specified by `analysisTarget` (&sect;[#location-analysisTarget]).
 
