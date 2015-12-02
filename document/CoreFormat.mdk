@@ -1089,8 +1089,10 @@ A `fileChange` object represents a change to a single file.
 
 ### `uri` property { #fileChange-uri }
 
-A `fileChange` object shall contain a property named `uri` whose value is a string value that represents
-the location of the file as a valid URI.
+A `fileChange` object may contain a property named `uri` whose value is a string value that represents
+the location of the file as a valid URI. If the 'uri' property is not present, its value is assumed
+to be the uri that is associated with the current result (i.e., the uri present on the result 
+'analysisTarget' property or, if present, the uri of the result 'resultFile' property).
 
 ### `replacements` property { #fileChange-replacements }
 
