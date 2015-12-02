@@ -843,11 +843,11 @@ only the last element represents the actual file within which the result occurre
 
 A `region` object represents a region, that is, a contiguous portion of a file.
 The region can occur in a text file or a binary file. 
-All the properties in a `region` object shall be represented by integers,
-that is, by JSON number values with no sign, no fractional part, and no exponent part.
+Every property in a `region` object shall be represented by a non-negative integer,
+that is, by a JSON number value with no sign, no fractional part, and no exponent part.
 
-The line number of the first line in a text file is defined to be line 1.
-The column number of the first column on each line in a text file is defined to be column 1.
+The line number of the first line in a text file is defined to be 1.
+The column number of the first column on each line in a text file is defined to be 1.
 
 The offset of the first byte in a binary file is defined to be 0.
 
@@ -861,7 +861,10 @@ In that case, the `byteOffset` property (&sect;[#region-byteOffset]) shall not b
 The start of a region in a text file shall be represented in one of the following ways:
 
 *	By a combination of the `startLine` (&sect;[#region-startLine]) and `startColumn` (&sect;[#region-startColumn]) properties.
-If `startColumn` is not specified, the region is assumed to start at column 1.
+    If `startColumn` is not specified, the region is assumed to start at column 1.
+
+    For the remainder of this section, whenever `startColumn` is mentioned, it includes the case where `startColumn` was omitted
+    and so is assumed to be 1.
 
 *	By means of the `charOffset` property (&sect;[#region-charOffset]),
 which denotes the offset in characters from the start of the file.
@@ -873,11 +876,63 @@ If it is specified, it shall be represented as follows:
 *	If the start of the region was specified by the `startLine` (&sect;[#region-startLine]) and `startColumn` (&sect;[#region-startColumn]) properties,
 the end of the region shall be specified by either the `length` property (&sect;[#region-length]),
 or by a combination of the `endLine` (&sect;[#region-endLine]) and `endColumn` (&sect;[#region-endColumn]) properties.
-If `length` is specified, it shall represent a count of characters. If `endLine` is specified and `endColumn` is not specified,
-`endColumn` shall be assumed to be 1.
+If `length` is specified, it shall be non-negative and shall represent a count of characters.
+
+    If `endLine` is not specified, it shall be assumed to be the same as `startLine`.
+    
+    For the remainder of this section, whenever `endLine` is mentioned, it includes the case where `endLine` was omitted
+    and so is assumed to be the same as `startLine`.
+
+    If `endLine` is the same as `startLine`, and if `endColumn` is not specified,
+    then `endColumn` shall be assumed to be the same as `startColumn`.
+
+    If `endLine` is different from `startLine`, and `endColumn` is not specified, `endColumn` shall be assumed to be 1.
+
+    For the remainder of this section, whenever `endColumn` is mentioned, it includes the case where
+    `endColumn` was omitted and so has its default value, which depends on the value of `endLine`
+    as described above.
+    
+    If `startLine` is the same as `endLine` and `startColumn` is the same as `endColumn`,
+    the length of the region is defined to be 0.
 
 *	If the start of the region was specified by the `charOffset` property (&sect;[#region-charOffset]),
 the end of the region shall be specified by the `length` property, which denotes a count of characters.
+
+`endLine` shall be greater than or equal to `startLine`.
+
+If `endLine` is equal to `startLine`, then `endColumn` shall be greater than or equal to `startColumn`.
+
+To represent a region that includes the last character in a line,
+excluding any trailing newline character,
+`endColumn` shall be set to a value 1 greater than the number of characters in the line,
+excluding the newline character if present.
+This is the case even for the last line of the file, which might not end with a newline.
+
+~ IsoExample
+Suppose a text file contains the following line, on line 5:
+
+```
+abcde
+```
+
+Then the region with `startLine` = 5, `startColumn` = 3, `endLine` = 5, and `endColumn` = 6
+represent the three characters `cde`.
+This is the case whether or not the line ends with a newline.
+~
+
+To include a newline in a region, `endLine` must be greater than `startLine`.
+
+~ IsoExample
+Suppose a text file contains the following lines, starting on line 5:
+
+```
+abcde
+fg
+```
+
+Then the region with `startLine` = 5, `startColumn` = 3, `endLine` = 6, and `endColumn` = 1
+represent the four characters `cde` plus a newline.
+~
 
 ### Regions in binary files
 
@@ -940,7 +995,7 @@ When a `region` object represents a region in a binary file, the `endColumn` pro
 ### `charOffset` property { #region-charOffset }
 
 When a `region` object represents a region in a text file, it may contain a property named `charOffset`,
-which shall have an integer value equal to the offset (measured in characters) of the first character in the region
+which shall have a non-negative integer value equal to the offset (measured in characters) of the first character in the region
 from the beginning of the file.
 
 The offset of the first character in a file shall have the value 0.
