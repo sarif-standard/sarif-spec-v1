@@ -406,6 +406,24 @@ A binary checker might have a rule that applies to 32-bit binaries only.
 Such a tool would produce a `notApplicable` result if it were run on a 64-bit binary.
 ~
 
+* `configurationError`: The tool encountered a rule configuration error.
+
+    The `ruleId` property for a `result` object whose `kind` property is `configurationError` should be
+    set to a unique value, distinct from the id of all other rules known to that tool, which indicates that
+    an error occurred while reading rule configuration information.
+
+~ IsoNote
+Many tools can be parameterized with information about which rules to run, and how they should be configured.
+In some cases, if the configuration information is invalid, the tool can ignore the invalid information
+and continue to run.
+~
+
+~ IsoExample
+Suppose a tool is invoked with a configuration file which specifies that the tool should disable rule X.
+If there is no such rule as rule X, then the tool should report a `configurationError`. The tool might
+continue to run, reporting results for the rules that are correctly configured.
+~
+
 * `internalError`: The tool encountered an internal error that prevented it from performing a complete analysis.
 
     If the error occurred in the course of evaluating a specific rule, the `ruleId` property should either specify that rule,
