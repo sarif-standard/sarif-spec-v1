@@ -1066,13 +1066,10 @@ An `annotatedCodeLocation` object is an element of an `executionFlow` object (&s
 a `stack` object (&sect;[#result-callStacks]),
 or the `relatedLocations` array (&sect;[#result-relatedLocations]).
 
-### `physicalLocations` property { #annotatedCodeLocation-physicalLocations }
+### `physicalLocation` property { #annotatedCodeLocation-physicalLocation }
 
-An `annotatedCodeLocation` object must contain a property named `physicalLocations` whose value is an array of one or more `physicalLocation` objects
-(&sect;[#physicalLocation-info]).
-Each `physicalLocation` object represents one physical view of the code to which the `annotatedCodeLocation` refers.
-For example, one `physicalLocation` object might refer to a location in source code;
-another might refer to the corresponding location in assembly language code.
+An `annotatedCodeLocation` object must contain a property named `physicalLocation` whose value is a `physicalLocation` object
+(&sect;[#physicalLocation-info]) that specifies the code location to which the `annotatedCodeLocation` object refers.
 
 ### `message` property { #annotatedCodeLocation-message }
 
@@ -1120,7 +1117,7 @@ For each file, it specifies which bytes to remove, and provides new bytes to be 
 
 ### `description` property { #fix-description }
 
-A `fix` object shall contain a property named `description` whose value is a string describing the proposed fix.
+A `fix` object may contain a property named `description` whose value is a string describing the proposed fix.
 
 ~IsoNote
 The purpose of the `description` property is to enable a result log viewer to present the proposed fix to the end user.
