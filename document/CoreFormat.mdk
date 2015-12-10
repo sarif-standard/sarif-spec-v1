@@ -735,11 +735,69 @@ and so on, with the last element referring to the most deeply nested construct.
 
 ### Constraints { #location-Constraints }
 
-Within any one location object, if the `analysisTarget` property (&sect;[#location-analysisTarget])
-and the `resultFile` property (&sect;[#location-resultFile]) would both refer to the same location,
-then the `analysisTarget` property shall be present and the `resultFile` property shall be absent.
-If the `analysisTarget` property and the `resultFile` property would refer to different locations,
-then the `analysisTarget` property and the `resultFile` property shall both be present.
+Depending on the information available to the tool that produces the SARIF log file,
+either or both of the `analysisTarget` property (&sect;[#location-analysisTarget]) and the
+`resultFile` property (&sect;[#location-resultFile]) shall be present.
+
+If the tool that produces the log file knows the analysis target, then the `analysisTarget`
+property shall be present.
+If the tool knows that the result file is different from the analysis target,
+then the `resultFile` property shall be present;
+otherwise the `resultFile` property shall be absent.
+
+~ IsoNote
+Generally, an analysis tool will know both the file it was instructed to scan
+(the analysis target) and the file in which it detects a problem (the result file).
+~
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+Suppose a static analysis tool for C++ source code is instructed to scan the source file _a.cpp_,
+and suppose the tool detects a problem in _a.cpp_.
+In this case, the tool should set the `analysisTarget` property to `a.cpp`,
+and it should not set the `resultFile` property.
+~
+
+~ IsoNumberedExample
+Suppose a static analysis tool for C++ source code is instructed to scan the source file _a.cpp_,
+which includes the header file _b.h_,
+and suppose the tool detects a problem in _b.h_.
+In this case, the tool should set the `analysisTarget` property to `a.cpp`,
+and it should set the `resultFile` property to `b.h`.
+~
+
+~ IsoNumberedExample
+Suppose a static analysis tool for object code detects a problem in the binary file _c.dll_,
+and suppose the tool has available symbol information which maps that location within the binary
+to a specific line in a source file _d.cpp_.
+In this case, the tool should set the `analysisTarget` property to `c.dll`,
+and it should set the `resultFile` property to `d.cpp`.
+~
+
+If the tool that produces the log file does not know the analysis target,
+then the `resultFile` property shall be present and the `analysisTarget` property shall be absent.
+
+~ IsoNote
+Some static analysis tools produce output in a format that does not include both the
+analysis target and the result file.
+In such cases, a conversion tool which translates the output into the SARIF format
+might only have the result file available. 
+~
+
+~ IsoExample
+Suppose a static analysis tool for C++ source code is instructed to scan the source file _a.cpp_,
+which includes the header file _b.h_,
+and suppose the tool detects a problem in _b.h_.
+Suppose further that the tool produces output in a format other than SARIF, for example:
+
+```
+{ "file": "b.h", "line": 6, "column" 1, "Uninitialized variable" }
+```
+
+In this case, a conversion tool that translates this output into SARIF format would know
+only the result file, not the analysis target.
+The conversion tool should set the `resultFile` property to `b.h`,
+and it should not set the `analysisTarget` property. 
+~
 
 Within any one location object, the `logicalLocation` property (&sect;[#location-logicalLocation])
 and the `fullyQualifiedLogicalName` property (&sect;[#location-fullyQualifiedLogicalName])
@@ -760,22 +818,6 @@ If the result actually occurred at the location specified in the `analysisTarget
 then the `resultFile` property shall not be present.
 If the result occurred in a different file from the one specified in the `analysisTarget` property,
 then the `resultFile` property shall be present.
-
-~ IsoNumberedExample { @IsoNumberedExample=1 }
-Suppose a static analysis tool for C++ source code is instructed to scan the source file _a.cpp_,
-which includes the header file _b.h_,
-and suppose the tool detects a problem in _b.h_.
-In this case, the tool should report the `analysisTarget` as _a.cpp_,
-and it should report the `resultFile` as _b.h_.
-~
-
-~ IsoNumberedExample
-Suppose a static analysis tool for object code detects a problem in the binary file _c.dll_,
-and suppose the tool has available symbol information which maps that location within the binary
-to a specific line in a source file _d.cpp_.
-In this case, the tool should report the `analysisTarget` as _c.dll_,
-and it should report the `resultFile` as _d.cpp_.
-~
 
 ### `logicalLocation` property { #location-logicalLocation }
 
