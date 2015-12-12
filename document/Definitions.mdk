@@ -24,16 +24,16 @@ problem
 (static analysis) tool
   ~ program that examines programming artifacts in order to detect problems, without executing the program
   ~ Example: Lint
- 
- conversion tool
+
+conversion tool
   ~ program that converts the output of another program into a different format
 
 analysis target
   ~ programming artifact which a static analysis tool is instructed to analyze
-  
- result file
+
+result file
   ~ file in which a static analysis tool detects a problem
- 
+
 rule
   ~ specific criterion for correctness verified by a static analysis tool
   ~ NOTE 1: Many static analysis tools associate a "rule id" with each result they report, but some do not.
