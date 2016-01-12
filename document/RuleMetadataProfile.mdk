@@ -8,7 +8,7 @@ For example, the user might want to know whether the result indicates a potentia
 or where to find additional documentation for the result.
 We refer to this information as rule metadata.
 
-It is possible for an result management system to have built-in knowledge of
+It is possible for a result management system to have built-in knowledge of
 the metadata for the rules defined by a set of well-known static analysis tools.
 It is also possible for the system to provide a means for end users to upload
 metadata for rules defined by specialized tools used in their organizations.
