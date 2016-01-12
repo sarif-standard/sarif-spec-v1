@@ -31,6 +31,14 @@ The Rule Metadata Profile defines one additional property in the `runLog` object
 A `runLog` object (&sect;[#runLog]) may contain a property named `ruleInfo`
 whose value is an array of `ruleDescriptor` (&sect;[#ruleDescriptor]) objects.
 
+If the `ruleInfo` property is present, then for each distinct `ruleId` (&sect;[#result-ruleId])
+mentioned by any `result` object (&sect;[#result]) in this `runLog`,
+`ruleInfo` must contain exactly one `ruleDescriptor` object
+whose `id` property (&sect;[#ruleDescriptor-id]) matches that `ruleId`.
+
+The `ruleInfo` property may contain additional `ruleDescriptor` objects whose
+`id` properties are not mentioned by any `result` object in this `runLog`.
+
 ## `ruleDescriptor` object { #ruleDescriptor }
 
 ### General { #ruleDescriptor-General }
