@@ -102,6 +102,9 @@ camelCase name
   ~ name that begins with a lowercase letter, and in which each subsequent word begins with an uppercase letter
   ~ Example: `camelCase`, `version`, `fullName`.
 
+property bag
+  ~ a JSON object consisting of a set of name/value pairs with arbitrary camelCase names
+
 region
   ~ contiguous portion of a file
 
