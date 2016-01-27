@@ -12,6 +12,7 @@ as described in the JSON specification.
 We refer to the object represented by this top-level value as the `sarifLog` object (&sect;[#sarifLog]).
 
 Every JSON property name in the SARIF format shall be a camelCase name.
+This includes the names of properties defined in property bags such as `result.properties` (&sect;[#result-properties]).
 
 ~ IsoNote
 A single run of a static analysis tool that supports the SARIF format produces a SARIF log file
@@ -692,8 +693,7 @@ A `result` object may contain a property names `fixes`, whose value is a JSON ar
 
 ### `properties` property { #result-properties }
 
-A `result` object may contain a property named `properties`, whose value is a JSON object
-consisting of a set of name/value pairs with arbitrary names.
+A `result` object may contain a property named `properties`, whose value is property bag.
 This allows tools to include information about the result that is not explicitly specified in the SARIF format.
 
 The value within each name/value pair shall be a string,
@@ -850,8 +850,7 @@ in a way that is easily understood by an end user.
 
 ### `properties` property { #location-properties }
 
-A `location` object may contain a property named `properties`, whose value is a JSON object
-consisting of a set of name/value pairs with arbitrary names.
+A `location` object may contain a property named `properties`, whose value is a property bag.
 This allows tools to include information about the location that is not explicitly specified in the SARIF format.
 
 The value within each name/value pair shall be a string,
@@ -1124,8 +1123,7 @@ For example, if the `annotatedCodeLocation` refers to an `if` statement, the `me
 
 ### `properties` property { #annotatedCodeLocation-properties }
 
-An `annotatedCodeLocation` object may contain a property named `properties`, whose value is a JSON object
-consisting of a set of name/value pairs with arbitrary names.
+An `annotatedCodeLocation` object may contain a property named `properties`, whose value is a property bag.
 This allows tools to include information about the entry that is not explicitly specified in the SARIF format.
 
 The value within each name/value pair shall be a string,
