@@ -691,6 +691,10 @@ The `#pragma` warning construct in C# is such a syntactic construct.
 
 A `result` object may contain a property names `fixes`, whose value is a JSON array of zero or more `fix` objects (&sect;[#fix]).
 
+### `tags` property { #result-tags }
+
+A `result` object may contain a property named `tags`, whose value is an array of zero or more arbitrary strings.
+
 ### `properties` property { #result-properties }
 
 A `result` object may contain a property named `properties`, whose value is property bag.
@@ -847,6 +851,10 @@ C#: `Namespace1.Namespace2.Class.Method(System.String, int[])`
 The intent of this property is to allow a result log viewer to display the logical location
 in a way that is easily understood by an end user.
 ~
+
+### `tags` property { #location-tags }
+
+A `location` object may contain a property named `tags`, whose value is an array of zero or more arbitrary strings.
 
 ### `properties` property { #location-properties }
 
@@ -1120,6 +1128,10 @@ An `annotatedCodeLocation` object must contain a property named `physicalLocatio
 An `annotatedCodeLocation` object may contain a property named `message` whose value is a string that describes
 the significance of this entry within the overall execution flow.
 For example, if the `annotatedCodeLocation` refers to an `if` statement, the `message` property might contain the string "take true branch".
+
+### `tags` property { #annotatedCodeLocation-tags }
+
+A `annotatedCodeLocation` object may contain a property named `tags`, whose value is an array of zero or more arbitrary strings.
 
 ### `properties` property { #annotatedCodeLocation-properties }
 
