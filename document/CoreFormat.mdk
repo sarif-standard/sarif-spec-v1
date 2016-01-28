@@ -39,6 +39,22 @@ particularly in cases where a tool is analyzing files stored on a physical file 
 For example, a file path might contain the account name of a developer.
 ~
 
+## Tag set properties
+
+Certain properties in this specification are defined to be "tag sets".
+A tag set is a JSON array containing zero or more arbitrary strings;
+no element of the array shall be a number, an array, or an object.
+No two of the strings shall be the same.
+Two strings shall be considered the same if they consist of the same
+sequence of Unicode code points.
+
+## Property bag properties
+
+Certain properties in this specification are defined to be "property bags".
+A property bag is a JSON object.
+The names of the properties within this JSON object shall be camelCase strings.
+The values of the properties shall be arbitrary strings; they shall not be numbers, arrays, or sub-objects.
+
 ## `sarifLog` object { #sarifLog }
 
 ### General { #sarifLog-General }
@@ -318,6 +334,15 @@ The user would then configure the tool to produce hashes using the algorithms re
 Analysis tools that are configurable to produce hashes with a variety of commonly used algorithms
 will interoperate most easily with such systems.
 ~
+
+### `tags` property { #fileReference-tags }
+
+A `fileReference` object may contain a property named `tags`, whose value is a tag set.
+
+### `properties` property { #fileReference-properties }
+
+A `fileReference` object may contain a property named `properties`, whose value is property bag.
+This allows tools to include information about the file that is not explicitly specified in the SARIF format.
 
 ## `hash` object { #hash }
 
@@ -693,16 +718,12 @@ A `result` object may contain a property names `fixes`, whose value is a JSON ar
 
 ### `tags` property { #result-tags }
 
-A `result` object may contain a property named `tags`, whose value is an array of zero or more arbitrary strings.
+A `result` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #result-properties }
 
 A `result` object may contain a property named `properties`, whose value is property bag.
 This allows tools to include information about the result that is not explicitly specified in the SARIF format.
-
-The value within each name/value pair shall be a string,
-which may be the empty string.
-The value shall not be a JSON array or sub-object.
 
 ## `location` object { #location }
 
@@ -854,16 +875,12 @@ in a way that is easily understood by an end user.
 
 ### `tags` property { #location-tags }
 
-A `location` object may contain a property named `tags`, whose value is an array of zero or more arbitrary strings.
+A `location` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #location-properties }
 
 A `location` object may contain a property named `properties`, whose value is a property bag.
 This allows tools to include information about the location that is not explicitly specified in the SARIF format.
-
-The value within each name/value pair shall be a string,
-which may be the empty string.
-The value shall not be a JSON array or sub-object.
 
 ## `physicalLocationComponent` object { #physicalLocationComponent }
 
@@ -1131,16 +1148,12 @@ For example, if the `annotatedCodeLocation` refers to an `if` statement, the `me
 
 ### `tags` property { #annotatedCodeLocation-tags }
 
-A `annotatedCodeLocation` object may contain a property named `tags`, whose value is an array of zero or more arbitrary strings.
+A `annotatedCodeLocation` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #annotatedCodeLocation-properties }
 
 An `annotatedCodeLocation` object may contain a property named `properties`, whose value is a property bag.
 This allows tools to include information about the entry that is not explicitly specified in the SARIF format.
-
-The value within each name/value pair shall be a string,
-which may be the empty string.
-The value shall not be a JSON array or sub-object.
 
 ## `fix` object { #fix }
 
