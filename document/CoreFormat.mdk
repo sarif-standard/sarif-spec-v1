@@ -39,7 +39,16 @@ particularly in cases where a tool is analyzing files stored on a physical file 
 For example, a file path might contain the account name of a developer.
 ~
 
-## Property bag-valued properties
+## Tag set properties
+
+Certain properties in this specification are defined to be "tag sets".
+A tag set is a JSON array containing zero or more arbitrary strings;
+no element of the array shall be a number, an array, or an object.
+No two of the strings shall be the same.
+Two strings shall be considered the same if they consist of the same
+sequence of Unicode code points.
+
+## Property bag properties
 
 Certain properties in this specification are defined to be "property bags".
 A property bag is a JSON object.
@@ -328,7 +337,7 @@ will interoperate most easily with such systems.
 
 ### `tags` property { #fileReference-tags }
 
-A `fileReference` object may contain a property named `tags`, whose value is an array of zero or more arbitrary strings.
+A `fileReference` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #fileReference-properties }
 
@@ -709,7 +718,7 @@ A `result` object may contain a property names `fixes`, whose value is a JSON ar
 
 ### `tags` property { #result-tags }
 
-A `result` object may contain a property named `tags`, whose value is an array of zero or more arbitrary strings.
+A `result` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #result-properties }
 
@@ -866,7 +875,7 @@ in a way that is easily understood by an end user.
 
 ### `tags` property { #location-tags }
 
-A `location` object may contain a property named `tags`, whose value is an array of zero or more arbitrary strings.
+A `location` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #location-properties }
 
@@ -1139,7 +1148,7 @@ For example, if the `annotatedCodeLocation` refers to an `if` statement, the `me
 
 ### `tags` property { #annotatedCodeLocation-tags }
 
-A `annotatedCodeLocation` object may contain a property named `tags`, whose value is an array of zero or more arbitrary strings.
+A `annotatedCodeLocation` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #annotatedCodeLocation-properties }
 
