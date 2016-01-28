@@ -39,6 +39,13 @@ particularly in cases where a tool is analyzing files stored on a physical file 
 For example, a file path might contain the account name of a developer.
 ~
 
+## Property bag-valued properties
+
+Certain properties in this specification are defined to be "property bags".
+A property bag is a JSON object.
+The names of the properties within this JSON object shall be camelCase strings.
+The values of the properties shall be arbitrary strings; they shall not be numbers, arrays, or sub-objects.
+
 ## `sarifLog` object { #sarifLog }
 
 ### General { #sarifLog-General }
@@ -318,6 +325,15 @@ The user would then configure the tool to produce hashes using the algorithms re
 Analysis tools that are configurable to produce hashes with a variety of commonly used algorithms
 will interoperate most easily with such systems.
 ~
+
+### `tags` property { #fileReference-tags }
+
+A `fileReference` object may contain a property named `tags`, whose value is an array of zero or more arbitrary strings.
+
+### `properties` property { #fileReference-properties }
+
+A `fileReference` object may contain a property named `properties`, whose value is property bag.
+This allows tools to include information about the file that is not explicitly specified in the SARIF format.
 
 ## `hash` object { #hash }
 
@@ -700,10 +716,6 @@ A `result` object may contain a property named `tags`, whose value is an array o
 A `result` object may contain a property named `properties`, whose value is property bag.
 This allows tools to include information about the result that is not explicitly specified in the SARIF format.
 
-The value within each name/value pair shall be a string,
-which may be the empty string.
-The value shall not be a JSON array or sub-object.
-
 ## `location` object { #location }
 
 ### General { #location-General }
@@ -860,10 +872,6 @@ A `location` object may contain a property named `tags`, whose value is an array
 
 A `location` object may contain a property named `properties`, whose value is a property bag.
 This allows tools to include information about the location that is not explicitly specified in the SARIF format.
-
-The value within each name/value pair shall be a string,
-which may be the empty string.
-The value shall not be a JSON array or sub-object.
 
 ## `physicalLocationComponent` object { #physicalLocationComponent }
 
@@ -1137,10 +1145,6 @@ A `annotatedCodeLocation` object may contain a property named `tags`, whose valu
 
 An `annotatedCodeLocation` object may contain a property named `properties`, whose value is a property bag.
 This allows tools to include information about the entry that is not explicitly specified in the SARIF format.
-
-The value within each name/value pair shall be a string,
-which may be the empty string.
-The value shall not be a JSON array or sub-object.
 
 ## `fix` object { #fix }
 
