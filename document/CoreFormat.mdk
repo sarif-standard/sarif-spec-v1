@@ -265,6 +265,7 @@ The string shall be in the format specified by (&sect;[#fileFormat-dateTime]).
 A `runInfo` object may contain a property named `runEndTime` whose value is a string
 specifying the date and time at which the run ended.
 The string shall be in the format specified by (&sect;[#fileFormat-dateTime]).
+
 ### `invocationInfo` property { #runInfo-invocationInfo }
 
 A `runInfo` object may contain a property named `invocationInfo` whose value is a string
