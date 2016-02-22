@@ -114,14 +114,19 @@ An `sarifLog` object specifies the version of the file format and contains the o
 
 ### `version` property { #sarifLog-version }
 
-An `sarifLog` object shall contain a property named `version` whose value is the string `"0.4"`.
+A `sarifLog` object shall contain a property named `version` whose value is the string `"1.0.0-beta.1"`.
 
 Although the order in which the name/value pairs appear in a JSON object value is not semantically significant,
-the `version` property should appear first.
-
+the `version` property should appear first. 
 ~ IsoNote
 This will make it easier for parsers to handle multiple versions of the SARIF format,
 if new versions are defined in the future.
+~
+
+~ IsoNote
+The value of this property, in the version of SARIF described by
+this document and in all future versions of the SARIF standard, will be in the format specified by Semantic
+Versioning 2.0.0
 ~
 
 ### `runLogs` property { #sarifLog-runLogs }
@@ -314,7 +319,7 @@ and no files matched the wildcard.
 ```
 [
     {
-        "uri": "file://C:/Code/a.cc",
+        "uri": "file:///C:/Code/a.cc",
         "hashes": [
             {
                 "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
@@ -324,7 +329,7 @@ and no files matched the wildcard.
     },
 
     {
-        "uri": "file://C:/Code/b.cc",
+        "uri": "file:///C:/Code/b.cc",
         "hashes": [
             {
                 "value": "ffc654abaa74903dae1d2ff532078ec0a9d5f674",
@@ -696,7 +701,7 @@ results: [
             {
                 "analysisTarget": [
                     {
-                        "uri": "file://C:/Code/a.js",
+                        "uri": "file:///C:/Code/a.js",
                         "mimeType": "text/javascript",
                         "region": {
                             "startLine": "6",
@@ -713,7 +718,7 @@ results: [
                 "physicalLocations": [
                     [
                         {
-                            "uri": "file://C:/Code/a.js",
+                            "uri": "file:///C:/Code/a.js",
                             "mimeType": "text/javascript",
                             "region": {
                                 "startLine": "2",
