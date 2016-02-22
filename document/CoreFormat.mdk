@@ -314,7 +314,7 @@ and no files matched the wildcard.
 ```
 [
     {
-        "uri": "file://C:/Code/a.cc",
+        "uri": "file:///C:/Code/a.cc",
         "hashes": [
             {
                 "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
@@ -324,7 +324,7 @@ and no files matched the wildcard.
     },
 
     {
-        "uri": "file://C:/Code/b.cc",
+        "uri": "file:///C:/Code/b.cc",
         "hashes": [
             {
                 "value": "ffc654abaa74903dae1d2ff532078ec0a9d5f674",
@@ -696,7 +696,7 @@ results: [
             {
                 "analysisTarget": [
                     {
-                        "uri": "file://C:/Code/a.js",
+                        "uri": "file:///C:/Code/a.js",
                         "mimeType": "text/javascript",
                         "region": {
                             "startLine": "6",
@@ -713,7 +713,7 @@ results: [
                 "physicalLocations": [
                     [
                         {
-                            "uri": "file://C:/Code/a.js",
+                            "uri": "file:///C:/Code/a.js",
                             "mimeType": "text/javascript",
                             "region": {
                                 "startLine": "2",
