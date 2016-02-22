@@ -114,14 +114,19 @@ An `sarifLog` object specifies the version of the file format and contains the o
 
 ### `version` property { #sarifLog-version }
 
-An `sarifLog` object shall contain a property named `version` whose value is the string `"0.4"`.
+A `sarifLog` object shall contain a property named `version` whose value is the string `"1.0.0-beta.1"`.
 
 Although the order in which the name/value pairs appear in a JSON object value is not semantically significant,
-the `version` property should appear first.
-
+the `version` property should appear first. 
 ~ IsoNote
 This will make it easier for parsers to handle multiple versions of the SARIF format,
 if new versions are defined in the future.
+~
+
+~ IsoNote
+The value of this property, in the version of SARIF described by
+this document and in all future versions of the SARIF standard, will be in the format specified by Semantic
+Versioning 2.0.0
 ~
 
 ### `runLogs` property { #sarifLog-runLogs }
