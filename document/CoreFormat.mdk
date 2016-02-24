@@ -454,12 +454,20 @@ A `result` object describes a single result produced by a static analysis tool.
 
 ### `ruleId` property { #result-ruleId }
 
-A `result` object shall contain a property named `ruleId` whose value is a string containing
+A `result` object should contain a property named `ruleId` whose value is a string containing
 the stable, opaque identifier for the rule that was evaluated to produce the result.
 
 ~ IsoExample
 `"CA2101"`
 ~
+
+Static analysis tools that produce the SARIF format shall provide a `ruleId` for each `result`
+(with the possible exception of `result`s whose `kind` property is `note`; see (&sect;[#result-kind]).
+
+Not all existing static analysis tools emit the equivalent of a `ruleId` in their output.
+A conversion tool which converts the output of such a static analysis tool to the SARIF format
+may synthesize a `ruleId` for some or all of the `result`s from other information it has available,
+or it may omit `ruleId` from the `result`s.
 
 ### `kind` property { #result-kind }
 
