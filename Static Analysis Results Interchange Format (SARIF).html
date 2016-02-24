@@ -666,6 +666,7 @@ body.madoko.preview {
 <div class="tocitem"  ><a href="#formattedmessage-arguments" class="localref"><span class="heading-before"><span class="heading-label">9.5.3</span>.&#8194;</span><code class="code code1">arguments</code> property</a></div></div></div>
 <div class="tocitem"  ><a href="#annex-a" class="localref">Annex A (informative) Use of fingerprints by result management systems</a></div>
 <div class="tocitem"  ><a href="#sec-annex-b-informative-use-of-sarif-by-result-log-viewers" class="localref">Annex B (informative) Use of SARIF by result log viewers</a></div>
+<div class="tocitem"  ><a href="#annex-c" class="localref">Annex C (informative) Production of SARIF by conversion tools</a></div>
 <div class="tocitem"  ><a href="#sec-bibliography" class="localref">Bibliography</a></div></div></nav><h2 id="sec-foreword"  data-line="18;document\Foreward.mdk:1"  style="bookmark:Foreword"><span data-line="18;document\Foreward.mdk:1"></span>Foreword</h2>
 <p data-line="18;document\Foreward.mdk:3"><span data-line="18;document\Foreward.mdk:3"></span>ISO (the International Organization for Standardization) is a worldwide federation of national standards bodies
 (ISO member bodies).
@@ -799,7 +800,7 @@ a deviation from conformance to stylistic standards.
 <dd class="dd" data-line="26;document\Definitions.mdk:26" style="margin-left:1.5em">
 <p data-line="26;document\Definitions.mdk:26"><span data-line="26;document\Definitions.mdk:26"></span>Example: Lint
 </p></dd>
-<dt class="dt dl-li loose-li" style="font-weight:bold">conversion tool</dt>
+<dt class="dt dl-li loose-li" style="font-weight:bold">conversion tool, converter</dt>
 <dd class="dd" data-line="26;document\Definitions.mdk:28" style="margin-left:1.5em">
 <p data-line="26;document\Definitions.mdk:28"><span data-line="26;document\Definitions.mdk:28"></span>program that converts the output of another program into a different format
 </p></dd>
@@ -2357,23 +2358,57 @@ In the absence of the <span data-line="42;document\AnnexB.mdk:21"></span><code c
 It is recommended that the static analysis tool provide the <span data-line="42;document\AnnexB.mdk:22"></span><code class="code code1">mimeType</code><span data-line="42;document\AnnexB.mdk:22"></span> property
 (which it must know, because it was able to interpret the file in which it produced the result),
 rather than forcing the viewer to rely on a file name extension.
-</p><h2 id="sec-bibliography"  data-line="44;document\Bibliography.mdk:1"  style="bookmark:Bibliography"><span data-line="44;document\Bibliography.mdk:1"></span>Bibliography</h2>
-<p data-line="44;document\Bibliography.mdk:3"><span data-line="44;document\Bibliography.mdk:3"></span>ISO 8601:2004, <span data-line="44;document\Bibliography.mdk:3"></span><em>Data elements and interchange formats &#8211; Information interchange &#8211; Representation of dates and times</em><span data-line="44;document\Bibliography.mdk:3"></span>.
-Available from  <span data-line="44;document\Bibliography.mdk:4"></span>&#60;<span data-line="44;document\Bibliography.mdk:4"></span><a href="http://www.iso.org/iso/catalogue_detail?csnumber=40874">http://www.iso.org/iso/catalogue_detail?csnumber=40874</a><span data-line="44;document\Bibliography.mdk:4"></span>&#62;<span data-line="44;document\Bibliography.mdk:4"></span>
+</p><h2 id="annex-c"  data-line="44;document\AnnexC.mdk:1"  style="bookmark:Annex C (informative) Production of SARIF by conversion tools"><span data-line="44;document\AnnexC.mdk:1"></span>Annex C (informative) Production of SARIF by conversion tools</h2>
+<p data-line="44;document\AnnexC.mdk:3"><span data-line="44;document\AnnexC.mdk:3"></span>There are two broad categories of tools that can produce output in the SARIF format.
+Static analysis tools produce SARIF as a result of performing a scan on a set of analysis targets.
+Converters translate existing data from a non-SARIF format into the SARIF format.
+That data might come from a static analysis tool that produces output in a non-SARIF format,
+from a bug database, or from any other source.
 </p>
-<p class="indent" data-line="44;document\Bibliography.mdk:6"><span data-line="44;document\Bibliography.mdk:6"></span>ISO/IEC 9899, <span data-line="44;document\Bibliography.mdk:6"></span><em>Information technology - Programming languages – C</em><span data-line="44;document\Bibliography.mdk:6"></span>
+<p class="indent" data-line="44;document\AnnexC.mdk:9"><span data-line="44;document\AnnexC.mdk:9"></span>This Annex provides guidance to the implementers of converters.
+In this Annex, the words <span data-line="44;document\AnnexC.mdk:10"></span>&#8220;should&#8221;<span data-line="44;document\AnnexC.mdk:10"></span> and <span data-line="44;document\AnnexC.mdk:10"></span>&#8220;may&#8221;<span data-line="44;document\AnnexC.mdk:10"></span> are used non-normatively,
+purely to express that guidance.
 </p>
-<p class="indent" data-line="44;document\Bibliography.mdk:8"><span data-line="44;document\Bibliography.mdk:8"></span>ISO/IEC 14882, <span data-line="44;document\Bibliography.mdk:8"></span><em>Information technology - Programming languages - C++</em><span data-line="44;document\Bibliography.mdk:8"></span>
+<p class="indent" data-line="44;document\AnnexC.mdk:13"><span data-line="44;document\AnnexC.mdk:13"></span>Converters should populate those elements of the SARIF format
+for which a direct equivalent exists in the input data.
+If the input data includes information for which there is no SARIF equivalent,
+converters may use it to populate the various property bags and tag lists defined by the SARIF format,
+or they may simply omit it from the output.
+If the input data does not include an equivalent for any SARIF element,
+the converter should <span data-line="44;document\AnnexC.mdk:19"></span><em>not</em><span data-line="44;document\AnnexC.mdk:19"></span> attempt to synthesize that element.
+For example, a converter should not attempt to heuristically extract a rule id from the text of an unstructured error message.
 </p>
-<p class="indent" data-line="44;document\Bibliography.mdk:10"><span data-line="44;document\Bibliography.mdk:10"></span>ISO/IEC 23270, <span data-line="44;document\Bibliography.mdk:10"></span><em>Information technology - Programming languages - C#</em><span data-line="44;document\Bibliography.mdk:10"></span>
+<p class="indent" data-line="44;document\AnnexC.mdk:22"><span data-line="44;document\AnnexC.mdk:22"></span>If a converter were to synthesize values, it would potentially introduces additional complexity in the implementation of SARIF viewers.
+The reason is that the viewer itself might examine the analysis tool and its version in the <span data-line="44;document\AnnexC.mdk:23"></span><code class="code code1">toolInfo</code><span data-line="44;document\AnnexC.mdk:23"></span>,
+and attempt to synthesize missing elements.
 </p>
-<p class="indent" data-line="44;document\Bibliography.mdk:12"><span data-line="44;document\Bibliography.mdk:12"></span>RFC 2045, <span data-line="44;document\Bibliography.mdk:12"></span><em>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies</em><span data-line="44;document\Bibliography.mdk:12"></span>.
-Available from <span data-line="44;document\Bibliography.mdk:13"></span>&#60;<span data-line="44;document\Bibliography.mdk:13"></span><a href="https://tools.ietf.org/html/rfc2045">https://tools.ietf.org/html/rfc2045</a><span data-line="44;document\Bibliography.mdk:13"></span>&#62;<span data-line="44;document\Bibliography.mdk:13"></span>
+<p class="indent" data-line="44;document\AnnexC.mdk:26"><span data-line="44;document\AnnexC.mdk:26"></span>Now suppose a converter made a bad choice in synthesizing a missing element, and then fixed the problem in an update.
+As a result, two log files claiming to have been produced by the same version of the same static analysis tools
+might have different elements filled in, or the same elements filled in differently.
+For that matter, two different converters might make different choices in how to synthesize missing elements.
+As a result, the viewer would have to take into account both the analysis tool (and its version)
+and the converter (and its version) in deciding how to synthesize any remaining elements. 
 </p>
-<p class="indent" data-line="44;document\Bibliography.mdk:15"><span data-line="44;document\Bibliography.mdk:15"></span>RFC 3629, <span data-line="44;document\Bibliography.mdk:15"></span><em>UTF-8, a transformation format of ISO 10646</em><span data-line="44;document\Bibliography.mdk:15"></span>.
-Available from <span data-line="44;document\Bibliography.mdk:16"></span>&#60;<span data-line="44;document\Bibliography.mdk:16"></span><a href="https://tools.ietf.org/html/rfc3629">https://tools.ietf.org/html/rfc3629</a><span data-line="44;document\Bibliography.mdk:16"></span>&#62;<span data-line="44;document\Bibliography.mdk:16"></span>
+<p class="indent" data-line="44;document\AnnexC.mdk:33"><span data-line="44;document\AnnexC.mdk:33"></span>By design, to avoid this added complexity, the SARIF standard does not define an element to hold the converter version.
+This, together with the guidance that converter implementers should not attempt to synthesize missing elements,
+allows viewer implementers to assume that all files from the same version of the same tool are identical in structure.
+</p><h2 id="sec-bibliography"  data-line="46;document\Bibliography.mdk:1"  style="bookmark:Bibliography"><span data-line="46;document\Bibliography.mdk:1"></span>Bibliography</h2>
+<p data-line="46;document\Bibliography.mdk:3"><span data-line="46;document\Bibliography.mdk:3"></span>ISO 8601:2004, <span data-line="46;document\Bibliography.mdk:3"></span><em>Data elements and interchange formats &#8211; Information interchange &#8211; Representation of dates and times</em><span data-line="46;document\Bibliography.mdk:3"></span>.
+Available from  <span data-line="46;document\Bibliography.mdk:4"></span>&#60;<span data-line="46;document\Bibliography.mdk:4"></span><a href="http://www.iso.org/iso/catalogue_detail?csnumber=40874">http://www.iso.org/iso/catalogue_detail?csnumber=40874</a><span data-line="46;document\Bibliography.mdk:4"></span>&#62;<span data-line="46;document\Bibliography.mdk:4"></span>
 </p>
-<p class="indent" data-line="44;document\Bibliography.mdk:18"><span data-line="44;document\Bibliography.mdk:18"></span>Semantic Versioning 2.0.0 <span data-line="44;document\Bibliography.mdk:18"></span>[<span data-line="44;document\Bibliography.mdk:18"></span>viewed 2015-06-02<span data-line="44;document\Bibliography.mdk:18"></span>]<span data-line="44;document\Bibliography.mdk:18"></span>. Available from <span data-line="44;document\Bibliography.mdk:18"></span>&#60;<span data-line="44;document\Bibliography.mdk:18"></span><a href="http://semver.org">http://semver.org</a><span data-line="44;document\Bibliography.mdk:18"></span>&#62;<span data-line="44;document\Bibliography.mdk:18"></span>
+<p class="indent" data-line="46;document\Bibliography.mdk:6"><span data-line="46;document\Bibliography.mdk:6"></span>ISO/IEC 9899, <span data-line="46;document\Bibliography.mdk:6"></span><em>Information technology - Programming languages – C</em><span data-line="46;document\Bibliography.mdk:6"></span>
+</p>
+<p class="indent" data-line="46;document\Bibliography.mdk:8"><span data-line="46;document\Bibliography.mdk:8"></span>ISO/IEC 14882, <span data-line="46;document\Bibliography.mdk:8"></span><em>Information technology - Programming languages - C++</em><span data-line="46;document\Bibliography.mdk:8"></span>
+</p>
+<p class="indent" data-line="46;document\Bibliography.mdk:10"><span data-line="46;document\Bibliography.mdk:10"></span>ISO/IEC 23270, <span data-line="46;document\Bibliography.mdk:10"></span><em>Information technology - Programming languages - C#</em><span data-line="46;document\Bibliography.mdk:10"></span>
+</p>
+<p class="indent" data-line="46;document\Bibliography.mdk:12"><span data-line="46;document\Bibliography.mdk:12"></span>RFC 2045, <span data-line="46;document\Bibliography.mdk:12"></span><em>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies</em><span data-line="46;document\Bibliography.mdk:12"></span>.
+Available from <span data-line="46;document\Bibliography.mdk:13"></span>&#60;<span data-line="46;document\Bibliography.mdk:13"></span><a href="https://tools.ietf.org/html/rfc2045">https://tools.ietf.org/html/rfc2045</a><span data-line="46;document\Bibliography.mdk:13"></span>&#62;<span data-line="46;document\Bibliography.mdk:13"></span>
+</p>
+<p class="indent" data-line="46;document\Bibliography.mdk:15"><span data-line="46;document\Bibliography.mdk:15"></span>RFC 3629, <span data-line="46;document\Bibliography.mdk:15"></span><em>UTF-8, a transformation format of ISO 10646</em><span data-line="46;document\Bibliography.mdk:15"></span>.
+Available from <span data-line="46;document\Bibliography.mdk:16"></span>&#60;<span data-line="46;document\Bibliography.mdk:16"></span><a href="https://tools.ietf.org/html/rfc3629">https://tools.ietf.org/html/rfc3629</a><span data-line="46;document\Bibliography.mdk:16"></span>&#62;<span data-line="46;document\Bibliography.mdk:16"></span>
+</p>
+<p class="indent" data-line="46;document\Bibliography.mdk:18"><span data-line="46;document\Bibliography.mdk:18"></span>Semantic Versioning 2.0.0 <span data-line="46;document\Bibliography.mdk:18"></span>[<span data-line="46;document\Bibliography.mdk:18"></span>viewed 2015-06-02<span data-line="46;document\Bibliography.mdk:18"></span>]<span data-line="46;document\Bibliography.mdk:18"></span>. Available from <span data-line="46;document\Bibliography.mdk:18"></span>&#60;<span data-line="46;document\Bibliography.mdk:18"></span><a href="http://semver.org">http://semver.org</a><span data-line="46;document\Bibliography.mdk:18"></span>&#62;<span data-line="46;document\Bibliography.mdk:18"></span>
 </p><span data-line=""></span>
 </body>
 

@@ -25,7 +25,7 @@ problem
   ~ program that examines programming artifacts in order to detect problems, without executing the program
   ~ Example: Lint
 
-conversion tool
+conversion tool, converter
   ~ program that converts the output of another program into a different format
 
 analysis target
