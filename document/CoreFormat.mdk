@@ -475,8 +475,7 @@ Static analysis tools that produce the SARIF format shall provide a `ruleId` for
 
 Not all existing static analysis tools emit the equivalent of a `ruleId` in their output.
 A conversion tool which converts the output of such a static analysis tool to the SARIF format
-may synthesize a `ruleId` for some or all of the `result`s from other information it has available,
-or it may omit `ruleId` from the `result`s.
+shall omit `ruleId` from the `result`s.
 
 ### `kind` property { #result-kind }
 
