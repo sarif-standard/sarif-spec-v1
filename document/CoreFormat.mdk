@@ -277,20 +277,29 @@ A `runInfo` object may contain a property named `invocationInfo` whose value is 
 containing the runtime parameters with which the tool was invoked.
 For command line tools, this string may consist of the completely specified command line used to invoke the tool.
 
+If the invocation information contains information which should not be disclosed,
+such as passwords, tokens, database connection strings, or in some circumstances even the fully qualified path to
+the tool executable, that information should be redacted or omitted.
+
 ~ IsoExample
 Suppose a tool is invoked with the command line
 
 ```
-    C:\Tools\CodeScanner\CodeScanner.exe /input C:\Code\*.cc
+    C:\Users\johnsmith\Tools\DbScanner\DbScanner.exe
+        /ConnectionString "Server=CorpServer;Database=Accounting;User Id=Admin;Password=S3cr#t" /input *.sql
 ```
 
-Then the value of the `invocationInfo` property should be `"C:\Tools\CodeScanner\CodeScanner.exe /input C:\Code\*.cc"`. In 
-circumstances where the fully qualified path to the tool provides undesirable information disclosure, this information
-may be omitted, for example:
+Then the value of the `invocationInfo` property might contain the redacted command line
 
 ```
-    /input C:\Code\*.cc
+    CodeScanner.exe /connectionString=[UNKNOWN] /input=*.sql 
 ```
+~
+
+~ IsoNote
+Redacting sensitive information from `invocationInfo` makes it more difficult to precisely reproduce
+an analysis run. The value of `invocationInfo` would have to be combined with information from another
+source to allow the run to be repeated.
 ~
 
 ### `analysisTargets` property { #runInfo-analysisTargets }
@@ -459,12 +468,19 @@ A `result` object describes a single result produced by a static analysis tool.
 
 ### `ruleId` property { #result-ruleId }
 
-A `result` object shall contain a property named `ruleId` whose value is a string containing
+A `result` object should contain a property named `ruleId` whose value is a string containing
 the stable, opaque identifier for the rule that was evaluated to produce the result.
 
 ~ IsoExample
 `"CA2101"`
 ~
+
+Static analysis tools that produce the SARIF format shall provide a `ruleId` for each `result`
+(with the possible exception of `result`s whose `kind` property is `note`; see (&sect;[#result-kind]).
+
+Not all existing static analysis tools emit the equivalent of a `ruleId` in their output.
+A conversion tool which converts the output of such a static analysis tool to the SARIF format
+shall omit `ruleId` from the `result`s.
 
 ### `kind` property { #result-kind }
 
