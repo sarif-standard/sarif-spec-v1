@@ -656,10 +656,15 @@ This is an example of a `shortMessage`:
 
 ### `locations` property { #result-locations }
 
-A `result` object shall contain a property named `locations` whose value is an array,
-each of whose elements is a `location` object (&sect;[#location]) which specifies a location where the result occurred.
-The `locations` array shall contain at least one element if the result can be associated with a location.
+A `result` object should contain a property named `locations` whose value is an array
+of one or more `location` objects (&sect;[#location]), each of which specifies a location where the result occurred.
+
+~ IsoNote
 In rare circumstances, it might not be possible to specify a location for a result.
+However, `locations` is very valuable information for anyone who needs to diagnose and correct
+the condition described by the result, so the authors of static analysis tools should make
+every effort to provide it.
+~
 
 ~ IsoNumberedExample { @IsoNumberedExample=1}
 If a C++ analyzer detects that no file defines a `main` method,
