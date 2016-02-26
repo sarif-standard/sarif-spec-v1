@@ -18,9 +18,14 @@ converters may use it to populate the various property bags and tag lists define
 or they may simply omit it from the output.
 When populating a property bag with such information,
 converters should use a property name that matches the name of that piece of information in the
-native tool format (assuming of course that that name is a valid JSON property name),
+native tool format,
 even if that name does not conform to the camelCase convention used in the rest of this specification.
 This makes it easier to match these properties with the source data in the native tool format.
+
+~ IsoNote
+The converter must replace any characters that cannot occur in a JSON string with
+the appropriate escape sequence.
+~
 
 If the input data does not include an equivalent for any SARIF element,
 the converter should _not_ attempt to synthesize that element.

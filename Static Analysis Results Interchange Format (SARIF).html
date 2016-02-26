@@ -2437,26 +2437,29 @@ converters may use it to populate the various property bags and tag lists define
 or they may simply omit it from the output.
 When populating a property bag with such information,
 converters should use a property name that matches the name of that piece of information in the
-native tool format (assuming of course that that name is a valid JSON property name),
+native tool format,
 even if that name does not conform to the camelCase convention used in the rest of this specification.
 This makes it easier to match these properties with the source data in the native tool format.
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:25"><span data-line="46;document\AnnexC.mdk:25"></span>If the input data does not include an equivalent for any SARIF element,
-the converter should <span data-line="46;document\AnnexC.mdk:26"></span><em>not</em><span data-line="46;document\AnnexC.mdk:26"></span> attempt to synthesize that element.
+<div class="isonote block" data-line="46;document\AnnexC.mdk:25" style="font-size:small">
+<p data-line="46;document\AnnexC.mdk:26"><span data-line="46;document\AnnexC.mdk:26"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="46;document\AnnexC.mdk:26"></span>The converter must replace any characters that cannot occur in a JSON string with
+the appropriate escape sequence.</p></div>
+<p data-line="46;document\AnnexC.mdk:30"><span data-line="46;document\AnnexC.mdk:30"></span>If the input data does not include an equivalent for any SARIF element,
+the converter should <span data-line="46;document\AnnexC.mdk:31"></span><em>not</em><span data-line="46;document\AnnexC.mdk:31"></span> attempt to synthesize that element.
 For example, a converter should not attempt to heuristically extract a rule id from the text of an unstructured error message.
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:29"><span data-line="46;document\AnnexC.mdk:29"></span>If a converter were to synthesize values, it would potentially introduces additional complexity in the implementation of SARIF viewers.
-The reason is that the viewer itself might examine the analysis tool and its version in the <span data-line="46;document\AnnexC.mdk:30"></span><code class="code code1">toolInfo</code><span data-line="46;document\AnnexC.mdk:30"></span>,
+<p class="indent" data-line="46;document\AnnexC.mdk:34"><span data-line="46;document\AnnexC.mdk:34"></span>If a converter were to synthesize values, it would potentially introduces additional complexity in the implementation of SARIF viewers.
+The reason is that the viewer itself might examine the analysis tool and its version in the <span data-line="46;document\AnnexC.mdk:35"></span><code class="code code1">toolInfo</code><span data-line="46;document\AnnexC.mdk:35"></span>,
 and attempt to synthesize missing elements.
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:33"><span data-line="46;document\AnnexC.mdk:33"></span>Now suppose a converter made a bad choice in synthesizing a missing element, and then fixed the problem in an update.
+<p class="indent" data-line="46;document\AnnexC.mdk:38"><span data-line="46;document\AnnexC.mdk:38"></span>Now suppose a converter made a bad choice in synthesizing a missing element, and then fixed the problem in an update.
 As a result, two log files claiming to have been produced by the same version of the same static analysis tools
 might have different elements filled in, or the same elements filled in differently.
 For that matter, two different converters might make different choices in how to synthesize missing elements.
 As a result, the viewer would have to take into account both the analysis tool (and its version)
 and the converter (and its version) in deciding how to synthesize any remaining elements. 
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:40"><span data-line="46;document\AnnexC.mdk:40"></span>By design, to avoid this added complexity, the SARIF standard does not define an element to hold the converter version.
+<p class="indent" data-line="46;document\AnnexC.mdk:45"><span data-line="46;document\AnnexC.mdk:45"></span>By design, to avoid this added complexity, the SARIF standard does not define an element to hold the converter version.
 This, together with the guidance that converter implementers should not attempt to synthesize missing elements,
 allows viewer implementers to assume that all files from the same version of the same tool are identical in structure.
 </p><h2 id="sec-bibliography"  data-line="48;document\Bibliography.mdk:1"  style="bookmark:Bibliography"><span data-line="48;document\Bibliography.mdk:1"></span>Bibliography</h2>
