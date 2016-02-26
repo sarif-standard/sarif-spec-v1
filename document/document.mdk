@@ -37,6 +37,8 @@ Copyright © 2015 Microsoft Corporation. All rights reserved.
 
 [INCLUDE=RuleMetadataProfile]
 
+[INCLUDE=ToolOrchestrationProfile]
+
 [INCLUDE=AnnexA]
 
 [INCLUDE=AnnexB]

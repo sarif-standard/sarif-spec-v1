@@ -12,8 +12,11 @@ For example, a result management system might augment the information defined in
 elements that hold the triage status of a result, or comments provided by end users.
 
 This document defines the core format (&sect;[#core-format]),
-along with three profiles:
-result management (&sect;[#result-management-profile]),
-policy compliance (&sect;[#policy-compliance-profile]),
-and rule metadata (&sect;[#rule-metadata-profile]).
+along with four profiles:
+
+* Result management (&sect;[#result-management-profile])
+* Policy compliance (&sect;[#policy-compliance-profile])
+* Rule metadata (&sect;[#rule-metadata-profile])
+* Tool orchestration (&sect;[#tool-orchestration-profile])
+
 Additional profiles might be defined in the future.
