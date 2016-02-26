@@ -21,7 +21,7 @@ The Tool Orchestration Profile defines four additional properties on the `runInf
 A `runInfo` object may contain a property named `correlationId` whose value is a string
 that allows the run to be associated with other artifacts.
 
-~ IsoNote
+~ IsoExample
 In an environment where a static analysis tool is executed as part of a larger
 automated build process, the "build id" might serve as the `correlationId`,
 allowing the tool run to be associated with other artifacts produced by the build.
