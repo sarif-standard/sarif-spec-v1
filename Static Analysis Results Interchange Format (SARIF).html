@@ -2322,10 +2322,10 @@ that are intended for use in this scenario.
 <p data-line="40;document\ToolOrchestrationProfile.mdk:17"><span data-line="40;document\ToolOrchestrationProfile.mdk:17"></span>The Tool Orchestration Profile defines four additional properties on the <span data-line="40;document\ToolOrchestrationProfile.mdk:17"></span><code class="code code1">runInfo</code><span data-line="40;document\ToolOrchestrationProfile.mdk:17"></span> object (<span data-line="40;document\ToolOrchestrationProfile.mdk:17"></span>&#167;<span data-line="40;document\ToolOrchestrationProfile.mdk:17"></span><a href="#runinfo" title="6.9.&#8194;runInfo object" class="localref" style="target-element:h2"><span class="heading-label">6.9</span></a><span data-line="40;document\ToolOrchestrationProfile.mdk:17"></span>).
 </p><h4 id="tool-orchestration-profile-runinfo-correlationid"  data-line="40;document\ToolOrchestrationProfile.mdk:19"  style="bookmark:10.2.2.&#8194;`correlationId` property"><span data-line="40;document\ToolOrchestrationProfile.mdk:19"></span><span class="heading-before"><span class="heading-label">10.2.2</span>.&#8194;</span><span data-line="40;document\ToolOrchestrationProfile.mdk:19"></span><code class="code code1">correlationId</code><span data-line="40;document\ToolOrchestrationProfile.mdk:19"></span> property</h4>
 <p data-line="40;document\ToolOrchestrationProfile.mdk:21"><span data-line="40;document\ToolOrchestrationProfile.mdk:21"></span>A <span data-line="40;document\ToolOrchestrationProfile.mdk:21"></span><code class="code code1">runInfo</code><span data-line="40;document\ToolOrchestrationProfile.mdk:21"></span> object may contain a property named <span data-line="40;document\ToolOrchestrationProfile.mdk:21"></span><code class="code code1">correlationId</code><span data-line="40;document\ToolOrchestrationProfile.mdk:21"></span> whose value is a string
-that allows the run to be associated with other artifacts.
+that allows the run to be associated with other artifacts produced by a larger automation process.
 </p>
-<div class="isonote block" data-line="40;document\ToolOrchestrationProfile.mdk:24" style="font-size:small">
-<p data-line="40;document\ToolOrchestrationProfile.mdk:25"><span data-line="40;document\ToolOrchestrationProfile.mdk:25"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="40;document\ToolOrchestrationProfile.mdk:25"></span>In an environment where a static analysis tool is executed as part of a larger
+<div class="isoexample block" data-line="40;document\ToolOrchestrationProfile.mdk:24" style="font-size:small">
+<p data-line="40;document\ToolOrchestrationProfile.mdk:25"><span data-line="40;document\ToolOrchestrationProfile.mdk:25"></span><span class="example-before">EXAMPLE&#160;&#160;&#160;</span><span data-line="40;document\ToolOrchestrationProfile.mdk:25"></span>In an environment where a static analysis tool is executed as part of a larger
 automated build process, the <span data-line="40;document\ToolOrchestrationProfile.mdk:26"></span>&#8220;build id&#8221;<span data-line="40;document\ToolOrchestrationProfile.mdk:26"></span> might serve as the <span data-line="40;document\ToolOrchestrationProfile.mdk:26"></span><code class="code code1">correlationId</code><span data-line="40;document\ToolOrchestrationProfile.mdk:26"></span>,
 allowing the tool run to be associated with other artifacts produced by the build.</p></div><h4 id="tool-orchestration-profile-runinfo-architecture"  data-line="40;document\ToolOrchestrationProfile.mdk:30"  style="bookmark:10.2.3.&#8194;`architecture` property"><span data-line="40;document\ToolOrchestrationProfile.mdk:30"></span><span class="heading-before"><span class="heading-label">10.2.3</span>.&#8194;</span><span data-line="40;document\ToolOrchestrationProfile.mdk:30"></span><code class="code code1">architecture</code><span data-line="40;document\ToolOrchestrationProfile.mdk:30"></span> property</h4>
 <p data-line="40;document\ToolOrchestrationProfile.mdk:32"><span data-line="40;document\ToolOrchestrationProfile.mdk:32"></span>A <span data-line="40;document\ToolOrchestrationProfile.mdk:32"></span><code class="code code1">runInfo</code><span data-line="40;document\ToolOrchestrationProfile.mdk:32"></span> object may contain a property named <span data-line="40;document\ToolOrchestrationProfile.mdk:32"></span><code class="code code1">architecture</code><span data-line="40;document\ToolOrchestrationProfile.mdk:32"></span> that specifies the hardware
@@ -2431,25 +2431,35 @@ purely to express that guidance.
 </p>
 <p class="indent" data-line="46;document\AnnexC.mdk:13"><span data-line="46;document\AnnexC.mdk:13"></span>Converters should populate those elements of the SARIF format
 for which a direct equivalent exists in the input data.
-If the input data includes information for which there is no SARIF equivalent,
+</p>
+<p class="indent" data-line="46;document\AnnexC.mdk:16"><span data-line="46;document\AnnexC.mdk:16"></span>If the input data includes information for which there is no SARIF equivalent,
 converters may use it to populate the various property bags and tag lists defined by the SARIF format,
 or they may simply omit it from the output.
-If the input data does not include an equivalent for any SARIF element,
-the converter should <span data-line="46;document\AnnexC.mdk:19"></span><em>not</em><span data-line="46;document\AnnexC.mdk:19"></span> attempt to synthesize that element.
+When populating a property bag with such information,
+converters should use a property name that matches the name of that piece of information in the
+native tool format,
+even if that name does not conform to the camelCase convention used in the rest of this specification.
+This makes it easier to match these properties with the source data in the native tool format.
+</p>
+<div class="isonote block" data-line="46;document\AnnexC.mdk:25" style="font-size:small">
+<p data-line="46;document\AnnexC.mdk:26"><span data-line="46;document\AnnexC.mdk:26"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="46;document\AnnexC.mdk:26"></span>The converter must replace any characters that cannot occur in a JSON string with
+the appropriate escape sequence.</p></div>
+<p data-line="46;document\AnnexC.mdk:30"><span data-line="46;document\AnnexC.mdk:30"></span>If the input data does not include an equivalent for any SARIF element,
+the converter should <span data-line="46;document\AnnexC.mdk:31"></span><em>not</em><span data-line="46;document\AnnexC.mdk:31"></span> attempt to synthesize that element.
 For example, a converter should not attempt to heuristically extract a rule id from the text of an unstructured error message.
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:22"><span data-line="46;document\AnnexC.mdk:22"></span>If a converter were to synthesize values, it would potentially introduces additional complexity in the implementation of SARIF viewers.
-The reason is that the viewer itself might examine the analysis tool and its version in the <span data-line="46;document\AnnexC.mdk:23"></span><code class="code code1">toolInfo</code><span data-line="46;document\AnnexC.mdk:23"></span>,
+<p class="indent" data-line="46;document\AnnexC.mdk:34"><span data-line="46;document\AnnexC.mdk:34"></span>If a converter were to synthesize values, it would potentially introduces additional complexity in the implementation of SARIF viewers.
+The reason is that the viewer itself might examine the analysis tool and its version in the <span data-line="46;document\AnnexC.mdk:35"></span><code class="code code1">toolInfo</code><span data-line="46;document\AnnexC.mdk:35"></span>,
 and attempt to synthesize missing elements.
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:26"><span data-line="46;document\AnnexC.mdk:26"></span>Now suppose a converter made a bad choice in synthesizing a missing element, and then fixed the problem in an update.
+<p class="indent" data-line="46;document\AnnexC.mdk:38"><span data-line="46;document\AnnexC.mdk:38"></span>Now suppose a converter made a bad choice in synthesizing a missing element, and then fixed the problem in an update.
 As a result, two log files claiming to have been produced by the same version of the same static analysis tools
 might have different elements filled in, or the same elements filled in differently.
 For that matter, two different converters might make different choices in how to synthesize missing elements.
 As a result, the viewer would have to take into account both the analysis tool (and its version)
 and the converter (and its version) in deciding how to synthesize any remaining elements. 
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:33"><span data-line="46;document\AnnexC.mdk:33"></span>By design, to avoid this added complexity, the SARIF standard does not define an element to hold the converter version.
+<p class="indent" data-line="46;document\AnnexC.mdk:45"><span data-line="46;document\AnnexC.mdk:45"></span>By design, to avoid this added complexity, the SARIF standard does not define an element to hold the converter version.
 This, together with the guidance that converter implementers should not attempt to synthesize missing elements,
 allows viewer implementers to assume that all files from the same version of the same tool are identical in structure.
 </p><h2 id="sec-bibliography"  data-line="48;document\Bibliography.mdk:1"  style="bookmark:Bibliography"><span data-line="48;document\Bibliography.mdk:1"></span>Bibliography</h2>
