@@ -1,1 +1,35 @@
 # Annex D (informative) Locating rule metadata { - #Annex-D }
+
+~ IsoNote
+This Annex provides guidance related to the inclusion of rule metadata in a SARIF log file.
+In this Annex, the words "should" and "may" are used non-normatively,
+purely to express that guidance.
+~
+
+The Rule Metadata Profile (&sect;[#rule-metadata-profile]) defines a format
+for including rule metadata in a SARIF log file.
+Compliance with the Rule Metadata Profile is optional; that is, a SARIF log
+file need not include any rule metadata.
+This raises the questions of when rule metadata should be included in a log file,
+and how to locate the rule metadata if it is not included in the log file.
+
+Rule metadata should be included in a log file in the following circumstances:
+
+1. The log file is intended to be viewed in a tool such as a result log viewer that needs to
+    display rule metadata related to each result even when the tool is not connected to
+    a network.
+
+2. The log file is intended to be uploaded to a result management system which requires
+    information about every rule specified by every result, and which might not have prior
+    knowledge of the rules specified by the results in this log file.
+
+3. Neither #1 nor #2 applies, but the increased log file size due to the rule metadata
+    is not considered significant.
+
+If rule metadata is not included in the log file, this specification does not specify
+a mechanism for locating the metadata.
+If the SARIF log file is produced in the context of an engineering system that provides
+a service from which rule metadata can be obtained (for example, a result management system,
+or a web service dedicated to rule metadata), then tooling can be created to merge
+a log file with the relevant metadata when required (for example, when presenting the
+results in a log file viewer).

@@ -1,14 +1,16 @@
-# Annex C (informative) Production of SARIF by conversion tools { - #Annex-C }
+# Annex C (informative) Production of SARIF by converters { - #Annex-C }
+
+~ IsoNote
+This Annex provides guidance to the implementers of converters.
+In this Annex, the words "should" and "may" are used non-normatively,
+purely to express that guidance.
+~
 
 There are two broad categories of tools that can produce output in the SARIF format.
 Static analysis tools produce SARIF as a result of performing a scan on a set of analysis targets.
 Converters translate existing data from a non-SARIF format into the SARIF format.
 That data might come from a static analysis tool that produces output in a non-SARIF format,
 from a bug database, or from any other source.
-
-This Annex provides guidance to the implementers of converters.
-In this Annex, the words "should" and "may" are used non-normatively,
-purely to express that guidance.
 
 Converters should populate those elements of the SARIF format
 for which a direct equivalent exists in the input data.

@@ -689,7 +689,7 @@ body.madoko.preview {
 <div class="tocitem"  ><a href="#tool-orchestration-profile-runinfo-runendtime" class="localref"><span class="heading-before"><span class="heading-label">10.2.5</span>.&#8194;</span><code class="code code1">runEndTime</code> property</a></div></div></div>
 <div class="tocitem"  ><a href="#annex-a" class="localref">Annex A (informative) Use of fingerprints by result management systems</a></div>
 <div class="tocitem"  ><a href="#annex-b" class="localref">Annex B (informative) Use of SARIF by result log viewers</a></div>
-<div class="tocitem"  ><a href="#annex-c" class="localref">Annex C (informative) Production of SARIF by conversion tools</a></div>
+<div class="tocitem"  ><a href="#annex-c" class="localref">Annex C (informative) Production of SARIF by converters</a></div>
 <div class="tocitem"  ><a href="#annex-d" class="localref">Annex D (informative) Locating rule metadata</a></div>
 <div class="tocitem"  ><a href="#annex-e" class="localref">Annex E (informative) Relationships among rules, correctness criteria, and policies</a></div>
 <div class="tocitem"  ><a href="#sec-bibliography" class="localref">Bibliography</a></div></div></nav><h2 id="sec-foreword"  data-line="18;document\Foreward.mdk:1"  style="bookmark:Foreword"><span data-line="18;document\Foreward.mdk:1"></span>Foreword</h2>
@@ -2482,21 +2482,21 @@ In the absence of the <span data-line="44;document\AnnexB.mdk:21"></span><code c
 It is recommended that the static analysis tool provide the <span data-line="44;document\AnnexB.mdk:22"></span><code class="code code1">mimeType</code><span data-line="44;document\AnnexB.mdk:22"></span> property
 (which it must know, because it was able to interpret the file in which it produced the result),
 rather than forcing the viewer to rely on a file name extension.
-</p><h2 id="annex-c"  data-line="46;document\AnnexC.mdk:1"  style="bookmark:Annex C (informative) Production of SARIF by conversion tools"><span data-line="46;document\AnnexC.mdk:1"></span>Annex C (informative) Production of SARIF by conversion tools</h2>
-<p data-line="46;document\AnnexC.mdk:3"><span data-line="46;document\AnnexC.mdk:3"></span>There are two broad categories of tools that can produce output in the SARIF format.
+</p><h2 id="annex-c"  data-line="46;document\AnnexC.mdk:1"  style="bookmark:Annex C (informative) Production of SARIF by converters"><span data-line="46;document\AnnexC.mdk:1"></span>Annex C (informative) Production of SARIF by converters</h2>
+<div class="isonote block" data-line="46;document\AnnexC.mdk:3" style="font-size:small">
+<p data-line="46;document\AnnexC.mdk:4"><span data-line="46;document\AnnexC.mdk:4"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="46;document\AnnexC.mdk:4"></span>This Annex provides guidance to the implementers of converters.
+In this Annex, the words <span data-line="46;document\AnnexC.mdk:5"></span>&#8220;should&#8221;<span data-line="46;document\AnnexC.mdk:5"></span> and <span data-line="46;document\AnnexC.mdk:5"></span>&#8220;may&#8221;<span data-line="46;document\AnnexC.mdk:5"></span> are used non-normatively,
+purely to express that guidance.</p></div>
+<p data-line="46;document\AnnexC.mdk:9"><span data-line="46;document\AnnexC.mdk:9"></span>There are two broad categories of tools that can produce output in the SARIF format.
 Static analysis tools produce SARIF as a result of performing a scan on a set of analysis targets.
 Converters translate existing data from a non-SARIF format into the SARIF format.
 That data might come from a static analysis tool that produces output in a non-SARIF format,
 from a bug database, or from any other source.
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:9"><span data-line="46;document\AnnexC.mdk:9"></span>This Annex provides guidance to the implementers of converters.
-In this Annex, the words <span data-line="46;document\AnnexC.mdk:10"></span>&#8220;should&#8221;<span data-line="46;document\AnnexC.mdk:10"></span> and <span data-line="46;document\AnnexC.mdk:10"></span>&#8220;may&#8221;<span data-line="46;document\AnnexC.mdk:10"></span> are used non-normatively,
-purely to express that guidance.
-</p>
-<p class="indent" data-line="46;document\AnnexC.mdk:13"><span data-line="46;document\AnnexC.mdk:13"></span>Converters should populate those elements of the SARIF format
+<p class="indent" data-line="46;document\AnnexC.mdk:15"><span data-line="46;document\AnnexC.mdk:15"></span>Converters should populate those elements of the SARIF format
 for which a direct equivalent exists in the input data.
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:16"><span data-line="46;document\AnnexC.mdk:16"></span>If the input data includes information for which there is no SARIF equivalent,
+<p class="indent" data-line="46;document\AnnexC.mdk:18"><span data-line="46;document\AnnexC.mdk:18"></span>If the input data includes information for which there is no SARIF equivalent,
 converters may use it to populate the various property bags and tag lists defined by the SARIF format,
 or they may simply omit it from the output.
 When populating a property bag with such information,
@@ -2505,28 +2505,65 @@ native tool format,
 even if that name does not conform to the camelCase convention used in the rest of this specification.
 This makes it easier to match these properties with the source data in the native tool format.
 </p>
-<div class="isonote block" data-line="46;document\AnnexC.mdk:25" style="font-size:small">
-<p data-line="46;document\AnnexC.mdk:26"><span data-line="46;document\AnnexC.mdk:26"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="46;document\AnnexC.mdk:26"></span>The converter must replace any characters that cannot occur in a JSON string with
+<div class="isonote block" data-line="46;document\AnnexC.mdk:27" style="font-size:small">
+<p data-line="46;document\AnnexC.mdk:28"><span data-line="46;document\AnnexC.mdk:28"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="46;document\AnnexC.mdk:28"></span>The converter must replace any characters that cannot occur in a JSON string with
 the appropriate escape sequence.</p></div>
-<p data-line="46;document\AnnexC.mdk:30"><span data-line="46;document\AnnexC.mdk:30"></span>If the input data does not include an equivalent for any SARIF element,
-the converter should <span data-line="46;document\AnnexC.mdk:31"></span><em>not</em><span data-line="46;document\AnnexC.mdk:31"></span> attempt to synthesize that element.
+<p data-line="46;document\AnnexC.mdk:32"><span data-line="46;document\AnnexC.mdk:32"></span>If the input data does not include an equivalent for any SARIF element,
+the converter should <span data-line="46;document\AnnexC.mdk:33"></span><em>not</em><span data-line="46;document\AnnexC.mdk:33"></span> attempt to synthesize that element.
 For example, a converter should not attempt to heuristically extract a rule id from the text of an unstructured error message.
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:34"><span data-line="46;document\AnnexC.mdk:34"></span>If a converter were to synthesize values, it would potentially introduces additional complexity in the implementation of SARIF viewers.
-The reason is that the viewer itself might examine the analysis tool and its version in the <span data-line="46;document\AnnexC.mdk:35"></span><code class="code code1">toolInfo</code><span data-line="46;document\AnnexC.mdk:35"></span>,
+<p class="indent" data-line="46;document\AnnexC.mdk:36"><span data-line="46;document\AnnexC.mdk:36"></span>If a converter were to synthesize values, it would potentially introduces additional complexity in the implementation of SARIF viewers.
+The reason is that the viewer itself might examine the analysis tool and its version in the <span data-line="46;document\AnnexC.mdk:37"></span><code class="code code1">toolInfo</code><span data-line="46;document\AnnexC.mdk:37"></span>,
 and attempt to synthesize missing elements.
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:38"><span data-line="46;document\AnnexC.mdk:38"></span>Now suppose a converter made a bad choice in synthesizing a missing element, and then fixed the problem in an update.
+<p class="indent" data-line="46;document\AnnexC.mdk:40"><span data-line="46;document\AnnexC.mdk:40"></span>Now suppose a converter made a bad choice in synthesizing a missing element, and then fixed the problem in an update.
 As a result, two log files claiming to have been produced by the same version of the same static analysis tools
 might have different elements filled in, or the same elements filled in differently.
 For that matter, two different converters might make different choices in how to synthesize missing elements.
 As a result, the viewer would have to take into account both the analysis tool (and its version)
 and the converter (and its version) in deciding how to synthesize any remaining elements. 
 </p>
-<p class="indent" data-line="46;document\AnnexC.mdk:45"><span data-line="46;document\AnnexC.mdk:45"></span>By design, to avoid this added complexity, the SARIF standard does not define an element to hold the converter version.
+<p class="indent" data-line="46;document\AnnexC.mdk:47"><span data-line="46;document\AnnexC.mdk:47"></span>By design, to avoid this added complexity, the SARIF standard does not define an element to hold the converter version.
 This, together with the guidance that converter implementers should not attempt to synthesize missing elements,
 allows viewer implementers to assume that all files from the same version of the same tool are identical in structure.
-</p><h2 id="annex-d"  data-line="48;document\AnnexD.mdk:1"  style="bookmark:Annex D (informative) Locating rule metadata"><span data-line="48;document\AnnexD.mdk:1"></span>Annex D (informative) Locating rule metadata</h2><h2 id="annex-e"  data-line="50;document\AnnexE.mdk:1"  style="bookmark:Annex E (informative) Relationships among rules, correctness criteria, and policies"><span data-line="50;document\AnnexE.mdk:1"></span>Annex E (informative) Relationships among rules, correctness criteria, and policies</h2>
+</p><h2 id="annex-d"  data-line="48;document\AnnexD.mdk:1"  style="bookmark:Annex D (informative) Locating rule metadata"><span data-line="48;document\AnnexD.mdk:1"></span>Annex D (informative) Locating rule metadata</h2>
+<div class="isonote block" data-line="48;document\AnnexD.mdk:3" style="font-size:small">
+<p data-line="48;document\AnnexD.mdk:4"><span data-line="48;document\AnnexD.mdk:4"></span><span class="example-before">NOTE&#160;&#160;&#160;</span><span data-line="48;document\AnnexD.mdk:4"></span>This Annex provides guidance related to the inclusion of rule metadata in a SARIF log file.
+In this Annex, the words <span data-line="48;document\AnnexD.mdk:5"></span>&#8220;should&#8221;<span data-line="48;document\AnnexD.mdk:5"></span> and <span data-line="48;document\AnnexD.mdk:5"></span>&#8220;may&#8221;<span data-line="48;document\AnnexD.mdk:5"></span> are used non-normatively,
+purely to express that guidance.</p></div>
+<p data-line="48;document\AnnexD.mdk:9"><span data-line="48;document\AnnexD.mdk:9"></span>The Rule Metadata Profile (<span data-line="48;document\AnnexD.mdk:9"></span>&#167;<span data-line="48;document\AnnexD.mdk:9"></span><a href="#rule-metadata-profile" title="9.&#8194;Rule Metadata Profile" class="localref" style="target-element:h1"><span class="heading-label">9</span></a><span data-line="48;document\AnnexD.mdk:9"></span>) defines a format
+for including rule metadata in a SARIF log file.
+Compliance with the Rule Metadata Profile is optional; that is, a SARIF log
+file need not include any rule metadata.
+This raises the questions of when rule metadata should be included in a log file,
+and how to locate the rule metadata if it is not included in the log file.
+</p>
+<p class="indent para-continue" data-line="48;document\AnnexD.mdk:16"><span data-line="48;document\AnnexD.mdk:16"></span>Rule metadata should be included in a log file in the following circumstances:
+</p>
+<ol class="ol loose" data-line="48;document\AnnexD.mdk:18">
+<li class="li ol-li loose-li" data-line="48;document\AnnexD.mdk:18">
+<p data-line="48;document\AnnexD.mdk:18"><span data-line="48;document\AnnexD.mdk:18"></span>The log file is intended to be viewed in a tool such as a result log viewer that needs to
+ display rule metadata related to each result even when the tool is not connected to
+ a network.
+</p></li>
+<li class="li ol-li loose-li" data-line="48;document\AnnexD.mdk:22">
+<p data-line="48;document\AnnexD.mdk:22"><span data-line="48;document\AnnexD.mdk:22"></span>The log file is intended to be uploaded to a result management system which requires
+ information about every rule specified by every result, and which might not have prior
+ knowledge of the rules specified by the results in this log file.
+</p></li>
+<li class="li ol-li loose-li" data-line="48;document\AnnexD.mdk:26">
+<p data-line="48;document\AnnexD.mdk:26"><span data-line="48;document\AnnexD.mdk:26"></span>Neither <span data-line="48;document\AnnexD.mdk:26"></span>#<span data-line="48;document\AnnexD.mdk:26"></span>1 nor <span data-line="48;document\AnnexD.mdk:26"></span>#<span data-line="48;document\AnnexD.mdk:26"></span>2 applies, but the increased log file size due to the rule metadata
+ is not considered significant.
+</p></li></ol>
+
+<p data-line="48;document\AnnexD.mdk:29"><span data-line="48;document\AnnexD.mdk:29"></span>If rule metadata is not included in the log file, this specification does not specify
+a mechanism for locating the metadata.
+If the SARIF log file is produced in the context of an engineering system that provides
+a service from which rule metadata can be obtained (for example, a result management system,
+or a web service dedicated to rule metadata), then tooling can be created to merge
+a log file with the relevant metadata when required (for example, when presenting the
+results in a log file viewer).
+</p><h2 id="annex-e"  data-line="50;document\AnnexE.mdk:1"  style="bookmark:Annex E (informative) Relationships among rules, correctness criteria, and policies"><span data-line="50;document\AnnexE.mdk:1"></span>Annex E (informative) Relationships among rules, correctness criteria, and policies</h2>
 <p data-line="50;document\AnnexE.mdk:3"><span data-line="50;document\AnnexE.mdk:3"></span>As defined in the Terms and Definitions section (<span data-line="50;document\AnnexE.mdk:3"></span>&#167;<span data-line="50;document\AnnexE.mdk:3"></span><a href="#terms-and-definitions" title="3.&#8194;Terms and definitions" class="localref" style="target-element:h1"><span class="heading-label">3</span></a><span data-line="50;document\AnnexE.mdk:3"></span>),
 a rule is a specific criterion for correctness verified by a static analysis tool,
 and a rule id is a unique, stable identifier that a tool associates with a rule.
