@@ -1,1 +1,65 @@
 # Policy Compliance Profile { #policy-compliance-profile }
+
+## General { #policy-compliance-profile-general }
+
+It is sometimes desirable to use the output of a static analysis tool to help determine
+whether a project is in compliance with applicable policies.
+For example, a policy might state that "the code shall contain no null-dereference errors."
+To determine whether their code base complies with this policy,
+a team might run a tool that includes a rule that checks for null-dereference errors,
+and then examine the run log.
+The fact that the run log contains no results that violate this policy is not
+sufficient to determine compliance.
+The team must also be able to verify that the tool actually ran the necessary rule.
+
+The Policy Compliance Profile defines additional optional elements of the SARIF format
+that are intended for use in this scenario.
+
+## `runInfo` object { #policy-compliance-profile-runInfo }
+
+The Policy Compliance Profile defines one additional property on the `runInfo` object (&sect;[#runInfo]).
+
+### `complianceInfo` property { #runInfo-complianceInfo }
+
+A `runInfo` object (&sect;[#runInfo]) may contain a property named `complianceInfo`
+whose value is a `complianceInfo` object (&sect;[#complianceInfo]).
+
+## `complianceInfo` object { #complianceInfo }
+
+### General { #complianceInfo-general }
+
+A `complianceInfo` object contains information that helps determine whether the
+tool producing the log was configured in a way that complies with applicable policies.
+
+A `complianceInfo` object is not a policy or statement of policy.
+It is merely a collection of information that helps determine policy compliance.
+
+### `executedRules` property { #complianceInfo-executedRules }
+
+A `complianceInfo` object (&sect;[#complianceInfo])
+shall contain a property named `executedRules` whose value is an array
+of zero or more `executedRule` objects (&sect;[#executedRule]).
+
+## `executedRule` object { #executedRule }
+
+### General { #executedRule-general }
+
+An `executedRule` object specifies a rule that the static analysis tool was configured
+to execute for the run described by the current `runLog` (&sect;[#runLog]).
+The `runLog` need not contain any `result` objects (&sect;[#result]) for this rule,
+and indeed it will not if the tool detected no violations of the rule.
+The purpose of the `executedRule` object is to allow verification that the tool
+was correctly configured with the appropriate set of rules.
+
+### `ruleId` property { #executedRule-ruleId }
+
+An `executedRule` object shall contain a property named `ruleId` whose value is a string
+containing the stable, unique identifier for a rule that the tool was configured to run.
+
+No two `executedRule` objects in the same `complianceInfo` object (&sect;[#complianceInfo])
+shall have the same `ruleId`.
+
+~ IsoNote
+Not all tools associate a unique rule id with each rule that they execute.
+The Policy Compliance Profile is not compatible with such tools.
+~
