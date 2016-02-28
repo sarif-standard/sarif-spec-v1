@@ -11,8 +11,10 @@ that is, it shall consist of a comma-separated sequence of name/value pairs, enc
 as described in the JSON specification.
 We refer to the object represented by this top-level value as the `sarifLog` object (&sect;[#sarifLog]).
 
-Every JSON property name in the SARIF format shall be a camelCase name.
-This includes the names of properties defined in property bags such as `result.properties` (&sect;[#result-properties]).
+Every JSON property name defined by the SARIF format shall be a camelCase name.
+Because the names of properties defined in property bags (&sect;[#property-bag-properties]) such as `result.properties` (&sect;[#result-properties]),
+are not defined by the SARIF format, they are not subject to this requirement.
+These property names should also be cameCase, but see [Annex C](#Annex-C) for exceptions.
 
 ~ IsoNote
 A single run of a static analysis tool that supports the SARIF format produces a SARIF log file
@@ -48,11 +50,12 @@ No two of the strings shall be the same.
 Two strings shall be considered the same if they consist of the same
 sequence of Unicode code points.
 
-## Property bag properties
+## Property bag properties { #property-bag-properties }
 
 Certain properties in this specification are defined to be "property bags".
 A property bag is a JSON object.
-The names of the properties within this JSON object shall be camelCase strings.
+The names of the properties within this JSON object should be camelCase strings,
+but see [Annex C](#Annex-C) for exceptions.
 The values of the properties shall be arbitrary strings; they shall not be numbers, arrays, or sub-objects.
 
 ## Date/time properties { #fileFormat-dateTime }
