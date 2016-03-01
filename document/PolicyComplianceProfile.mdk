@@ -34,29 +34,29 @@ tool producing the log was configured in a way that complies with applicable pol
 A `complianceInfo` object is not a policy or statement of policy.
 It is merely a collection of information that helps determine policy compliance.
 
-### `executedRules` property { #complianceInfo-executedRules }
+### `enabledRules` property { #complianceInfo-enabledRules }
 
 A `complianceInfo` object (&sect;[#complianceInfo])
-shall contain a property named `executedRules` whose value is an array
-of zero or more `executedRule` objects (&sect;[#executedRule]).
+shall contain a property named `enabledRules` whose value is an array
+of zero or more `configuredRule` objects (&sect;[#configuredRule]).
 
-## `executedRule` object { #executedRule }
+## `configuredRule` object { #configuredRule }
 
-### General { #executedRule-general }
+### General { #configuredRule-general }
 
-An `executedRule` object specifies a rule that the static analysis tool was configured
+An `configuredRule` object specifies a rule that the static analysis tool was configured
 to execute for the run described by the current `runLog` (&sect;[#runLog]).
 The `runLog` need not contain any `result` objects (&sect;[#result]) for this rule,
 and indeed it will not if the tool detected no violations of the rule.
-The purpose of the `executedRule` object is to allow verification that the tool
+The purpose of the `configuredRule` object is to allow verification that the tool
 was correctly configured with the appropriate set of rules.
 
-### `ruleId` property { #executedRule-ruleId }
+### `ruleId` property { #configuredRule-ruleId }
 
-An `executedRule` object shall contain a property named `ruleId` whose value is a string
+An `configuredRule` object shall contain a property named `ruleId` whose value is a string
 containing the stable, unique identifier for a rule that the tool was configured to run.
 
-No two `executedRule` objects in the same `complianceInfo` object (&sect;[#complianceInfo])
+No two `configuredRule` objects in the same `complianceInfo` object (&sect;[#complianceInfo])
 shall have the same `ruleId`.
 
 ~ IsoNote
