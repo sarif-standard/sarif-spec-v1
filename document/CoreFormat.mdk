@@ -14,7 +14,7 @@ We refer to the object represented by this top-level value as the `sarifLog` obj
 Every JSON property name defined by the SARIF format shall be a camelCase name.
 Because the names of properties defined in property bags (&sect;[#property-bag-properties]) such as `result.properties` (&sect;[#result-properties]),
 are not defined by the SARIF format, they are not subject to this requirement.
-These property names should also be cameCase, but see [Annex C](#Annex-C) for exceptions.
+These property names should also be camelCase, but see [Annex C](#Annex-C) for exceptions.
 
 ~ IsoNote
 A single run of a static analysis tool that supports the SARIF format produces a SARIF log file
