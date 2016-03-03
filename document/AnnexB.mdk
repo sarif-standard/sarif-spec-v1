@@ -1,4 +1,4 @@
-# Annex B (informative) Use of SARIF by result log viewers { - }
+# Annex B (informative) Use of SARIF by result log viewers { - #Annex-B }
 
 It is frequently useful for an end user to view the results produced by a static analysis tool
 in the context of the programming artifacts in which they occur.

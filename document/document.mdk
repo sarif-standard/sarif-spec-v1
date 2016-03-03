@@ -33,8 +33,6 @@ Copyright © 2015 Microsoft Corporation. All rights reserved.
 
 [INCLUDE=ResultManagementProfile]
 
-[INCLUDE=PolicyComplianceProfile]
-
 [INCLUDE=RuleMetadataProfile]
 
 [INCLUDE=ToolOrchestrationProfile]
@@ -44,5 +42,7 @@ Copyright © 2015 Microsoft Corporation. All rights reserved.
 [INCLUDE=AnnexB]
 
 [INCLUDE=AnnexC]
+
+[INCLUDE=AnnexD]
 
 [INCLUDE=Bibliography]
