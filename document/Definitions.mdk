@@ -130,3 +130,21 @@ core format
 
 profile
   ~ set of SARIF elements that are intended to be useful in a specific static analysis usage scenario
+
+newline sequence
+  ~ sequence of one or more characters representing the end of a line of text
+  ~ Note: Some systems represent a newline sequence with a single newline character; others represent it as a carriage return character followed by a newline character.
+
+text file
+  ~ file considered as a sequence of characters organized into lines and columns
+
+line
+  ~ contiguous sequence of characters, starting either at the beginning of a file
+    or immediately after a newline sequence, and ending at and including the nearest subsequent newline sequence,
+    if one is present, or else extending to the end of the file
+
+column
+  ~ 1-based index of a character within a line
+
+binary file
+  ~ file considered as a sequence of bytes
