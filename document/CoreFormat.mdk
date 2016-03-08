@@ -1022,7 +1022,7 @@ In a binary region, the `startLine` property shall be absent.
 
 ~ IsoNumberedNote { @IsoNumberedNote=1 }
 Consumers of SARIF files can use the presence or absence of the `startLine` property to
-determine whether to treat a region as a text region or as a binary region
+determine whether to treat a region as a text region or as a binary region.
 ~
 
 ~ IsoNumberedNote
@@ -1054,7 +1054,7 @@ as occupying two columns.
 ~ IsoNumberedNote { @IsoNumberedNote=1 }
 The reason for this requirement is that is common for existing tools to ignore surrogate pairs
 when calculating column numbers.
-~  
+~
 
 ~ IsoNumberedNote
 Programs such as viewers that process SARIF log files together with the analysis target files
@@ -1153,10 +1153,14 @@ properties shall be absent.
 When a `region` object represents a text region, it shall contain a property named `startLine`,
 which shall have an integer value equal to the line number of the line containing the first character in the region.
 
+The line number of the first line in the file is defined to be 1.
+
 ### `startColumn` property { #region-startColumn }
 
 When a `region` object represents a text region, it may contain a property named `startColumn`,
 which shall have an integer value equal to the column number of the first character in the region.
+
+The column number of the first column on each line is defined to be 1.
 
 If `startColumn` is absent, it shall be inferred as specified in &sect;[#region-textFiles].
 
