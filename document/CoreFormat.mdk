@@ -250,6 +250,15 @@ If the operating system does not provide such a value, the `fileVersion` propert
 On the Windows platform, this information is available in the `FILEVERSION` member of the `VERSIONINFO` structure.
 ~
 
+### `tags` property { #toolInfo-tags }
+
+A `toolInfo` object may contain a property named `tags`, whose value is a tag set.
+
+### `properties` property { #toolInfo-properties }
+
+A `toolInfo` object may contain a property named `properties`, whose value is property bag.
+This allows tools to include information about the themselves that is not explicitly specified in the SARIF format.
+
 ## `runInfo` object { #runInfo }
 
 ### General { #runInfo-General }
