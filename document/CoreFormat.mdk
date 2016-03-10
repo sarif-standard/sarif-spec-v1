@@ -24,12 +24,12 @@ of multiple single-run log files into a single SARIF log file that contains the 
 This allows the aggregated results to be conveniently stored in a file or transported over a network.
 ~
 
-## URI-valued properties
+## URI-valued properties { #uriProperties }
 
 Certain properties in this specification specify the URI of a file.
-The value of every such property, if present, shall be a valid URI.
+The value of every such property, if present, shall be a valid URI as described in RFC 3986.
 
-If the URI refers to a file stored in a version control system (VCS),
+If a URI refers to a file stored in a version control system (VCS),
 the value shall preserve relevant details that permit the target file to be retrieved from the VCS.
 If the URI refers to a file stored on a physical file system, it may be specified as a relative URI
 that omits root information details
@@ -39,6 +39,19 @@ that omits root information details
 An absolute URI may contain information that represents unwanted information disclosure,
 particularly in cases where a tool is analyzing files stored on a physical file system.
 For example, a file path might contain the account name of a developer.
+~
+
+Two URIs shall be considered equivalent if their normalized forms are the same
+as described in RFC 3986.
+
+~ IsoNote
+For example, in the normalized form specified in RFC 3986:
+
+* Percent-encoded characters use upper-case hexadecimal digits.
+* Characters in the ALPHA and DIGIT ranges are not be percent-encoded,
+nor are hyphen, underscore, or tilde.
+* The ":" delimiter is omitted if the port component of the authority is empty.
+* In the host component, registered names and hexadecimal addresses use lower-case.
 ~
 
 ## Tag set properties
@@ -303,25 +316,26 @@ an analysis run. The value of `invocationInfo` would have to be combined with in
 source to allow the run to be repeated.
 ~
 
-### `analysisTargets` property { #runInfo-analysisTargets }
+### `fileInfo` property { #runInfo-fileInfo }
 
-A `runInfo` object may contain a property named `analysisTargets` whose value is an array,
-each of whose elements is a `fileReference` object (&sect;[#fileReference])
-representing the location of a single analysis target scanned during the run.
-This array shall contain one entry for each analysis target that was scanned,
-even if the analysis targets were not individually specified on the command line.
+A `runInfo` object may contain a property named `fileInfo` whose value is a JSON object
+which is treated as a dictionary, each of whose entries represents a file that was scanned
+in the course of the run.
 
-~ IsoNumberedNote { @IsoNumberedNote=1 }
-The command line with which the tool was invoked might specify its input files
-by means of a wild card such as *.cc, or it might specify them implicitly,
-for example, by scanning the files in the current directory.
-~
+The property names of this object shall be the URIs of scanned files.
+No two of these property names shall be equivalent as defined in &sect;[#uriProperties].
 
-The `analysisTargets` array shall be empty if no analysis targets were scanned in the course of the run.
+Each property value shall be a `fileReference` object (&sect;[#fileReference])
+which contains information about the file identified by the URI in the property name.
 
-~ IsoNumberedNote
-This could happen if the command line specified a wildcard such as *.cc for the input files,
-and no files matched the wildcard.
+The dictionary may contain entries for all scanned files,
+or it may contain entries only for files in which results were detected,
+or for a subset of those files.
+
+~ IsoNote
+`fileReference` objects contain information that is useful for viewers.
+Viewers will be able to provide the most information to users if the `fileInfo`
+property is present and contains an entry for every file in which results were detected.
 ~
 
 ~ IsoExample
@@ -330,6 +344,7 @@ and no files matched the wildcard.
 [
     {
         "uri": "file:///C:/Code/a.cc",
+        "mimeType": "text/x-c",
         "hashes": [
             {
                 "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
@@ -340,6 +355,7 @@ and no files matched the wildcard.
 
     {
         "uri": "file:///C:/Code/b.cc",
+        "mimeType": "text/x-c",
         "hashes": [
             {
                 "value": "ffc654abaa74903dae1d2ff532078ec0a9d5f674",
