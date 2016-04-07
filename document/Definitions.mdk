@@ -92,7 +92,7 @@ baseline
 flow analysis
   ~ process used by some static analysis tools to detect problems by simulating the flow of execution through a portion of the program without actually executing the program
 
-execution flow
+code flow
   ~ sequence of program locations considered by a static analysis tool in the process of performing a flow analysis
 
 call stack

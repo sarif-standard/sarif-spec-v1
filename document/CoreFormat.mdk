@@ -796,26 +796,26 @@ A `result` object may contain a property named `toolFingerprint` whose value is 
 that contributes to the process of uniquely identifying the result.
 [Annex A](#Annex-A) explains how a result management system can use this value.
 
-### `executionFlows` property { #result-executionFlows }
+### `codeFlows` property { #result-codeFlows }
 
-A `result` object may contain a property named `executionFlows` whose value is an array of arrays of
+A `result` object may contain a property named `codeFlows` whose value is an array of arrays of
 `annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
-For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as an `executionFlow` object;
-hence we may say that the value of the `executionFlows` property is an array of `executionFlow` objects.
-The `executionFlows` property is intended for use by static analysis tools that perform flow analysis
+For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as a `codeFlow` object;
+hence we may say that the value of the `codeFlows` property is an array of `codeFlow` objects.
+The `codeFlows` property is intended for use by static analysis tools that perform flow analysis
 in the process of producing results.
 
-Each `executionFlow` object in the `executionFlows` array shall describe a single execution flow.
-An execution flow is a sequence of locations visited by the tool in the course of performing a flow analysis.
-An execution flow is in turn represented by an array of `annotatedCodeLocation` objects.
+Each `codeFlow` object in the `codeFlows` array shall describe a single code flow.
+A code flow is a sequence of locations visited by the tool in the course of performing a flow analysis.
+A code flow is represented by an array of `annotatedCodeLocation` objects.
 This array need not include every location visited by the tool,
 but the entries that are present shall occur in the order that the tool visited them.
 
-A single result may contain one or more execution flows, one or more call stacks (&sect;[#result-callStacks]), or both.
+A single result may contain one or more code flows, one or more call stacks (&sect;[#result-callStacks]), or both.
 
 ~ IsoNote
-The SARIF file format allows multiple execution flows within a single `result` object
-to allow for the possibility that a static analysis tool might simulate more than one execution flow
+The SARIF file format allows multiple code flows within a single `result` object
+to allow for the possibility that a static analysis tool might simulate more than one code flow
 in the course of producing a single result.
 ~
 
@@ -834,7 +834,7 @@ A stack is in turn represented by an array of `annotatedCodeLocation` objects.
 This array shall include every function call in the stack for which the tool has information,
 and the entries that are present shall occur in order with the innermost call first and the outermost call last.
 
-A single result may contain one or more call stacks, one or more execution flows (&sect;[#result-executionFlows]), or both.
+A single result may contain one or more call stacks, one or more code flows (&sect;[#result-codeFlows]), or both.
 
 ~ IsoNumberedNote { @IsoNumberedNote=1}
 The SARIF file format allows multiple call stacks within a single `result` object
@@ -1412,7 +1412,7 @@ If none of those strings accurately describes the construct, `kind` may contain 
 
 ### General { #annotatedCodeLocation-General }
 
-An `annotatedCodeLocation` object is an element of an `executionFlow` object (&sect;[#result-executionFlows]),
+An `annotatedCodeLocation` object is an element of an `codeFlow` object (&sect;[#result-codeFlows]),
 a `stack` object (&sect;[#result-callStacks]),
 or the `relatedLocations` array (&sect;[#result-relatedLocations]).
 
@@ -1424,7 +1424,7 @@ An `annotatedCodeLocation` object must contain a property named `physicalLocatio
 ### `message` property { #annotatedCodeLocation-message }
 
 An `annotatedCodeLocation` object may contain a property named `message` whose value is a string that describes
-the significance of this entry within the overall execution flow.
+the significance of this entry within the overall code flow.
 For example, if the `annotatedCodeLocation` refers to an `if` statement, the `message` property might contain the string "take true branch".
 
 ### `tags` property { #annotatedCodeLocation-tags }
