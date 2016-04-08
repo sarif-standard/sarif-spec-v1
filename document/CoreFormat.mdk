@@ -880,7 +880,6 @@ results: [
                 "analysisTarget": [
                     {
                         "uri": "file:///C:/Code/a.js",
-                        "mimeType": "text/javascript",
                         "region": {
                             "startLine": "6",
                             "startColumn": "10"
@@ -897,7 +896,6 @@ results: [
                     [
                         {
                             "uri": "file:///C:/Code/a.js",
-                            "mimeType": "text/javascript",
                             "region": {
                                 "startLine": "2",
                                 "startColumn": "6"
@@ -1123,7 +1121,6 @@ The value of the `uri` property should be equal to the name of one of the proper
         "fileInfo": {
           "file:///C:/Code/main.cc": [
             {
-              "uri": "file:///C:/Code/main.cc",
               "mimeType": "text/x-c",
               "tags": [ "entryPoint" ]
             }
