@@ -1061,7 +1061,7 @@ The value of the `logicalLocation` property shall be
 an array of `logicalLocationComponent` objects (&sect;[#logicalLocationComponent]).
 This allows reference to results which occur in nested logical components, for example,
 a method nested within a class which is in turn nested within a namespace.
-When a result occurrs in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
+When a result occurs in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
 the outermost construct,
 the next element shall refer to a construct nested immediately within the first construct,
 and so on, with the last element referring to the most deeply nested construct.
