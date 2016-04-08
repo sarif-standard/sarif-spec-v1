@@ -355,8 +355,7 @@ runInfo: {
                         "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
                         "algorithm": "SHA-256"
                     }
-                ],
-                "tags": [ "entryPoint" ]
+                ]
             }
         ]
     }
@@ -376,33 +375,6 @@ If the scanned file is nested more than one level deep in the outermost containi
 the fragments representing each level of nesting may be combined in any way desired,
 as long as no two of the resulting property names are equivalent as defined in &sect;[#uriProperties].
 
-If the resulting fragment contains any characters which cannot occur in a fragment as specified in RFC 3986,
-those character must be percent-encoded as specified in RFC 3986.
-
-~ IsoNumberedExample
-Suppose a result is detected within a Flash object contained in a word processing document which is in turned contained
-in a Zip archive.
-Suppose the path to the word processing document within the Zip archive is `/docs/intro.docx`.
-Then one possible value for the property name within the `fileInfo` object would be:
-
-```
-file:///C:/Code/presentation.zip#/docs/intro.docx/Flash1
-```
-
-Note that the following would _not_ be valid, because a URI fragment cannot contain a `#` character,
-and the property names within a `fileInfo` object are required to be valid URIs:
-
-```
-file:///C:/Code/presentation.zip#/docs/intro.docx#Flash1
-```
-
-However, the following _would_ be valid, because the `#` character has been percent-encoded:
-
-```
-file:///C:/Code/presentation.zip#/docs/intro.docx%23Flash1
-```
-~
-
 ~ IsoNumberedNote
 It need not be possible to use this URI to navigate directly to the nested scanned file.
 The information necessary to do that is specified in the `pathFromParent` property (&sect;[#fileReference-pathFromParent]),
@@ -411,6 +383,35 @@ of the `fileReference` objects in the array .
 ~
 
 ~ IsoNumberedExample
+Suppose a result is detected within a Flash object contained in a word processing document which is in turned contained
+in a compressed archive.
+Suppose the path to the word processing document within the compressed archive is `/docs/intro.docx`.
+Then one possible value for the property name within the `fileInfo` object would be:
+
+```
+file:///C:/Code/presentation.zip#/docs/intro.docx/Flash1
+```
+~
+
+If the fragment contains any characters which cannot occur in a fragment as specified in RFC 3986,
+those character must be percent-encoded as specified in RFC 3986.
+
+~ IsoNumberedExample
+Suppose a compressed container contains a file named `/docs/chapter#1.doc`.
+Then one possible value for the property name within the `fileInfo` object would be:
+
+```
+file:///C:/Code/presentation.zip#/docs/chapter%231.doc
+```
+The `#` character has been percent-encoded as `%23`.
+~
+
+~ IsoNumberedExample
+This example shows a `fileInfo` property that represents a file nested two levels deep in its
+outermost container.
+The first level of nesting is specified by a path within a compressed container.
+The second level of nesting is specified by a byte offset from the start of the container,
+together with a length. See &sect;[#fileReference]. 
 
 ```
 runInfo: {
@@ -807,21 +808,19 @@ A `result` object may contain a property named `codeFlows` whose value is an arr
 `annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
 For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as a `codeFlow` object;
 hence we may say that the value of the `codeFlows` property is an array of `codeFlow` objects.
-The `codeFlows` property is intended for use by static analysis tools that perform flow analysis
-in the process of producing results.
+The `codeFlows` property is intended for use by static analysis tools that provide execution path
+details that illustrate a possible problem in the code.
 
 Each `codeFlow` object in the `codeFlows` array shall describe a single code flow.
-A code flow is a sequence of locations visited by the tool in the course of performing a flow analysis.
+A code flow is a sequence of locations that specify a possible execution path through the code.
 A code flow is represented by an array of `annotatedCodeLocation` objects.
 This array need not include every location visited by the tool,
 but the entries that are present shall occur in the order that the tool visited them.
 
-A single result may contain one or more code flows, one or more call stacks (&sect;[#result-callStacks]), or both.
-
 ~ IsoNote
 The SARIF file format allows multiple code flows within a single `result` object
-to allow for the possibility that a static analysis tool might simulate more than one code flow
-in the course of producing a single result.
+to allow for the possibility that a single result might be provoked by more than one
+path through the program.
 ~
 
 ### `stacks` property { #result-callStacks }
@@ -834,17 +833,14 @@ The `stacks` property is intended for use by static analysis tools that collects
 in the process of producing results.
 
 Each `stack` object in the stacks array shall describe a single call stack.
-A call stack is a sequence of nested function calls simulated by the tool in the course of performing a flow analysis.
+A call stack is a sequence of nested function calls.
 A stack is in turn represented by an array of `annotatedCodeLocation` objects.
 This array shall include every function call in the stack for which the tool has information,
 and the entries that are present shall occur in order with the innermost call first and the outermost call last.
 
-A single result may contain one or more call stacks, one or more code flows (&sect;[#result-codeFlows]), or both.
-
 ~ IsoNumberedNote { @IsoNumberedNote=1}
 The SARIF file format allows multiple call stacks within a single `result` object
-to allow for the possibility that a static analysis tool might simulate more than one call stack
-in the course of producing a single result.
+to allow for the possibility that a single result might be provoked by way of more than one call stack.
 ~
 
 ~ IsoNumberedNote
@@ -1122,7 +1118,6 @@ The value of the `uri` property should be equal to the name of one of the proper
           "file:///C:/Code/main.cc": [
             {
               "mimeType": "text/x-c",
-              "tags": [ "entryPoint" ]
             }
           ]
         }
@@ -1140,10 +1135,7 @@ The value of the `uri` property should be equal to the name of one of the proper
                   "startLine": 24,
                   "startColumn": 9
                 }
-              },
-              "logicalLocation": [
-                ...
-              ]
+              }
             }
           ]
         }
@@ -1164,7 +1156,7 @@ If the result occurs in a nested file, then the `region` property shall specify 
 with respect to the innermost nested file.
 
 ~ IsoExample
-If a result occurs in a C++ file contained in a Zip archive, then the region would represent
+If a result occurs in a C++ file contained in a compressed archive, then the region would represent
 the line and column number of the result with the C++ file.
 It would not represent (for example) the offset of the C++ file from the start of the archive.
 ~
@@ -1421,7 +1413,7 @@ or the `relatedLocations` array (&sect;[#result-relatedLocations]).
 ### `physicalLocation` property { #annotatedCodeLocation-physicalLocation }
 
 An `annotatedCodeLocation` object must contain a property named `physicalLocation` whose value is a `physicalLocation` object
-(&sect;[#physicalLocation]) that specifies the code location to which the `annotatedCodeLocation` object refers.
+(&sect;[#physicalLocation]) that specifies the file location to which the `annotatedCodeLocation` object refers.
 
 ### `message` property { #annotatedCodeLocation-message }
 

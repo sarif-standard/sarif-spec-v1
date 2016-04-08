@@ -93,10 +93,10 @@ flow analysis
   ~ process used by some static analysis tools to detect problems by simulating the flow of execution through a portion of the program without actually executing the program
 
 code flow
-  ~ sequence of program locations considered by a static analysis tool in the process of performing a flow analysis
+  ~ sequence of program locations that specify a possible execution path through the code
 
 call stack
-  ~ sequence of nested function calls considered by a static analysis tool in the course of detecting a problem
+  ~ sequence of nested function calls
 
 camelCase name
   ~ name that begins with a lowercase letter, and in which each subsequent word begins with an uppercase letter
