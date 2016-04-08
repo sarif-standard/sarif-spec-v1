@@ -383,7 +383,7 @@ of the `fileReference` objects in the array .
 ~
 
 ~ IsoNumberedExample
-Suppose a result is detected within a Flash object contained in a word processing document which is in turned contained
+Suppose a result is detected within a Flash object contained in a word processing document which is in turn contained
 in a compressed archive.
 Suppose the path to the word processing document within the compressed archive is `/docs/intro.docx`.
 Then one possible value for the property name within the `fileInfo` object would be:
@@ -455,39 +455,45 @@ referred to as the "containing file."
 
 If this `fileReference` object refers to a file which is nested within another file, and
 if the location of the nested file with respect to its containing file can be expressed
-by means of a path (as is the case for compressed containers such as Zip archives),
+only by means of a path within its containing file,
 then the `fileReference` object shall contain a property named `pathFromParent`
-whose value is a string specifying the path from the root
-of the containing file to the file represented by this `fileReference` object.
+whose value is a string specifying that path.
+
+If the location of the nested file can be expressed either by means of a path within the containing file
+or by means of a byte offset from the start of the containing file, then either `pathFromParent`
+or `offsetFromParent` (&sect;[#fileReference-offsetFromParent]) or both shall be present; they must not both be absent.
 
 If this `fileReference` object refers to a file which is not nested within another file,
-or if the location of the file within its containing file cannot be expressed by means of a path,
-then the `pathFromParent` property shall be absent. 
+or if the location of the file within its containing property cannot be expressed by means of a path,
+then the `pathFromParent` property shall be absent.
 
 ### `offsetFromParent` property { #fileReference-offsetFromParent }
 
 If this `fileReference` object refers to a file which is nested within another file, and
-if the location of the nested file with respect to its containing file cannot be expressed
-by means of a path (for example, a Flash object nested within a word processing document),
+if the location of the nested file with respect to its containing file can be expressed
+only by means of a byte offset from the start of the containing file,
 then the `fileReference` object shall contain a property named `offsetFromParent`
-whose value is an integer specifying the offset in bytes
-of the file from the beginning of its containing file.
+whose value is an integer specifying that offset.
+
+If the location of the nested file can be expressed either by means of a byte offset
+from the start of the containing file or by means of a path within the containing file, then either `offsetFromParent`
+or `pathFromParent` (&sect;[#fileReference-pathFromParent]) or both shall be present; they must not both be absent.
 
 If this `fileReference` object refers to a file which is not nested within another file,
-or if the location of the file within its containing file can be expressed by means of a path,
+or if the location of the file within its containing property cannot be expressed by means of a byte offset,
 then the `offsetFromParent` property shall be absent. 
 
 ### `length` property { #fileReference-length }
 
 If this `fileReference` object refers to a file which is nested within another file, and
-if the location of the nested file with respect to its containing file cannot be expressed
-by means of a path (for example, a Flash object nested within a word processing document),
+if the location of the nested file with respect to its containing file can be expressed
+by means of a byte offset from the start of the containing file,
 then the `fileReference` object may contain a property named `length`
 whose value is an integer specifying the length in bytes
-of the file within its containing file.
+of the file from the start of its containing file.
 
 If this `fileReference` object refers to a file which is not nested within another file,
-or if the location of the file within its containinf file can be expressed by means of a path,
+or if the location of the file within its containing property cannot be expressed by means of a byte offset,
 then the `length` property shall be absent. 
 
 ### `mimeType` property { #fileReference-mimeType }
@@ -819,8 +825,8 @@ but the entries that are present shall occur in the order that the tool visited 
 
 ~ IsoNote
 The SARIF file format allows multiple code flows within a single `result` object
-to allow for the possibility that a single result might be provoked by more than one
-path through the program.
+to allow for the possibility that more than one path through the program might be
+relevant to a single result.
 ~
 
 ### `stacks` property { #result-callStacks }
@@ -840,7 +846,7 @@ and the entries that are present shall occur in order with the innermost call fi
 
 ~ IsoNumberedNote { @IsoNumberedNote=1}
 The SARIF file format allows multiple call stacks within a single `result` object
-to allow for the possibility that a single result might be provoked by way of more than one call stack.
+to allow for the possibility that more than one call stack might be relevant to a single result.
 ~
 
 ~ IsoNumberedNote
