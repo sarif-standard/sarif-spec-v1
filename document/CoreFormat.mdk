@@ -376,6 +376,9 @@ If the scanned file is nested more than one level deep in the outermost containi
 the fragments representing each level of nesting may be combined in any way desired,
 as long as no two of the resulting property names are equivalent as defined in &sect;[#uriProperties].
 
+If the resulting fragment contains any characters which cannot occur in a fragment as specified in RFC 3986,
+those character must be percent-encoded as specified in RFC 3986.
+
 ~ IsoNumberedExample
 Suppose a result is detected within a Flash object contained in a word processing document which is in turned contained
 in a Zip archive.
@@ -390,7 +393,13 @@ Note that the following would _not_ be valid, because a URI fragment cannot cont
 and the property names within a `fileInfo` object are required to be valid URIs:
 
 ```
-file:///C:/Code/presentation.zip#/docs/intro.docx#0Flash1
+file:///C:/Code/presentation.zip#/docs/intro.docx#Flash1
+```
+
+However, the following _would_ be valid, because the `#` character has been percent-encoded:
+
+```
+file:///C:/Code/presentation.zip#/docs/intro.docx%23Flash1
 ```
 ~
 
