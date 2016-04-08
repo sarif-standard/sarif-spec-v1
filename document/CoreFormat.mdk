@@ -338,7 +338,9 @@ Each property value in the `fileInfo` object shall be an array of `fileReference
 which contain information about the file identified by the URI in the property name.
 
 If the scanned file is not nested within another file, then the array shall consist of a single
-element, and the property name shall be the absolute URI of the scanned file.
+element, and the property name shall be the URI of the scanned file.
+If the absolute location of the scanned file is available, the URI should be an absolute URI;
+otherwise, the URI shall be a relative URI.
 
 ~ IsoNumberedExample { @IsoNumberedExample=1}
 
@@ -347,7 +349,6 @@ runInfo: {
     fileInfo: {
         "file:///C:/Code/main.cc": [
             {
-                "uri": "file:///C:/Code/main.cc"
                 "mimeType": "text/x-c",
                 "hashes": [
                     {
@@ -376,29 +377,28 @@ the fragments representing each level of nesting may be combined in any way desi
 as long as no two of the resulting property names are equivalent as defined in &sect;[#uriProperties].
 
 ~ IsoNumberedExample
-Consider a Flash object contained in a word processing document which is in turned contained
+Suppose a result is detected within a Flash object contained in a word processing document which is in turned contained
 in a Zip archive.
-Suppose the path to the word processing document within the Zip archive is `/docs/intro.doc`,
-and suppose the Flash object is located at offset `0x17f2` from the start of the word processing
-document.
+Suppose the path to the word processing document within the Zip archive is `/docs/intro.docx`.
 Then one possible value for the property name within the `fileInfo` object would be:
 
 ```
-file:///C:/Code/presentation.zip#/docs/intro.doc-0x17f2
+file:///C:/Code/presentation.zip#/docs/intro.docx/Flash1
 ```
 
 Note that the following would _not_ be valid, because a URI fragment cannot contain a `#` character,
 and the property names within a `fileInfo` object are required to be valid URIs:
 
 ```
-file:///C:/Code/presentation.zip#/docs/intro.doc#0x17f2
+file:///C:/Code/presentation.zip#/docs/intro.docx#0Flash1
 ```
 ~
 
 ~ IsoNumberedNote
 It need not be possible to use this URI to navigate directly to the nested scanned file.
-The information necessary to do that is specified in the `uri` properties of the
-`fileReference` objects in the array (&sect;[#fileReference-uri]).
+The information necessary to do that is specified in the `pathFromParent` property (&sect;[#fileReference-pathFromParent]),
+or in the `offsetFromParent` (&sect;[#fileReference-offsetFromParent]) and `length` (&sect;[#fileReference-length]) properties,
+of the `fileReference` objects in the array .
 ~
 
 ~ IsoNumberedExample
@@ -406,23 +406,19 @@ The information necessary to do that is specified in the `uri` properties of the
 ```
 runInfo: {
     fileInfo: {
-        "file:///C:/Code/app.zip#/src/main.cc": [
+        "file:///C:/Code/app.zip#/docs/intro.docx/Flash1": [
             {
-                "uri": "file:///C:/Code/app.zip"
                 "mimeType": "application/zip",
-
             },
             {
-                "uri": "#/src/main.cc"
-                "mimeType": "text/x-c",
-                "hashes": [
-                    {
-                        "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
-                        "algorithm": "SHA-256"
-                    }
-                ],
-                "tags": [ "entryPoint" ]
-           }
+                "pathFromParent": "/docs/intro.docx"
+                "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            },
+            {
+                "offsetFromParent": 17522,
+                "length": 4050,
+                "mimeType": "application/x-shockwave-flash"
+            }
         ]
     }
 }
@@ -442,47 +438,47 @@ This allows tools to include information about the run that is not explicitly sp
 
 ### General { #fileReference-General }
 
-A `fileReference` object represents a single file.
+A `fileReference` object represents a single file. In some cases, this file might be nested within another file,
+referred to as the "containing file."
 
-### `uri` property { #fileReference-uri }
+### `pathFromParent` property { #fileReference-pathFromParent }
 
-A `fileReference` object shall contain a property named `uri` whose value is a string that represents
-the location of the file as a valid URI.
+If this `fileReference` object refers to a file which is nested within another file, and
+if the location of the nested file with respect to its containing file can be expressed
+by means of a path (as is the case for compressed containers such as Zip archives),
+then the `fileReference` object shall contain a property named `pathFromParent`
+whose value is a string specifying the path from the root
+of the containing file to the file represented by this `fileReference` object.
 
 If this `fileReference` object refers to a file which is not nested within another file,
-then the `uri` property shall specify the location of the file, expressed as an absolute URI.
-If this object refers to a file which is nested within another file,
-then the `uri` property shall express the relative location of the file with respect to its container.
-In this case, the `uri` shall consist entirely of a fragment.
+or if the location of the file within its containing file cannot be expressed by means of a path,
+then the `pathFromParent` property shall be absent. 
 
-If the location of the nested file with respect to its parent can be expressed
-by means of a path (as is the case for compressed containers such as Zip archives),
-then the fragment shall consist of that path, expressed as an absolute path relative to
-the root of the container.
+### `offsetFromParent` property { #fileReference-offsetFromParent }
 
-~ IsoNumberedExample { @IsoNumberedExample=1}
-
-```
-"uri": "#/src/a.cc"
-```
-~
-
-If the location of the nested file with respect to its parent cannot be expressed
+If this `fileReference` object refers to a file which is nested within another file, and
+if the location of the nested file with respect to its containing file cannot be expressed
 by means of a path (for example, a Flash object nested within a word processing document),
-then the fragment shall consist of a hexadecimal number specifying the offset in bytes
-of the file from the beginning of its parent container.
-The hexadecimal number shall begin with the prefix `0x`.
-Any letters `a`-`f` which occur in the hexadecimal number may be in either upper case
-or lower case.
+then the `fileReference` object shall contain a property named `offsetFromParent`
+whose value is an integer specifying the offset in bytes
+of the file from the beginning of its containing file.
 
-~ IsoNumberedExample { @IsoNumberedExample=1}
+If this `fileReference` object refers to a file which is not nested within another file,
+or if the location of the file within its containing file can be expressed by means of a path,
+then the `offsetFromParent` property shall be absent. 
 
-```
-"uri": "#0x172fc0"
-```
-~
+### `length` property { #fileReference-length }
 
-For additional examples, see &sect;[#runInfo-fileInfo].
+If this `fileReference` object refers to a file which is nested within another file, and
+if the location of the nested file with respect to its containing file cannot be expressed
+by means of a path (for example, a Flash object nested within a word processing document),
+then the `fileReference` object may contain a property named `length`
+whose value is an integer specifying the length in bytes
+of the file within its containing file.
+
+If this `fileReference` object refers to a file which is not nested within another file,
+or if the location of the file within its containinf file can be expressed by means of a path,
+then the `length` property shall be absent. 
 
 ### `mimeType` property { #fileReference-mimeType }
 
@@ -492,7 +488,7 @@ the MIME type (RFC 2045) of the file.
 ### `hashes` property { #fileReference-hashes }
 
 A `fileReference` object may contain a property named `hashes` whose value is an array of `hash` objects (&sect;[#hash]),
-each of which specifies a hashed value for the file specified by the `uri` property (&sect;[#fileReference-uri]),
+each of which specifies a hashed value for the file specified by the `fileReference` object,
 along with the name of the algorithm used to compute the hash.
 
 If present, the array specified by `hashes` shall not be empty.
