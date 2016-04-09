@@ -483,8 +483,7 @@ then the `offsetFromParent` property shall be absent.
 
 If the `offsetFromParent` property (&sect;[#file-offsetFromParent]) is present,
 then the `file` object may contain a property named `length`
-whose value is an integer specifying the length in bytes
-of the file from the start of its containing file.
+whose value is an integer specifying the length of the file in bytes.
 
 If the `offsetFromParent` property is absent, then the `length` property shall be absent. 
 
