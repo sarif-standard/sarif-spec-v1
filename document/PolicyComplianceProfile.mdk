@@ -15,28 +15,28 @@ The team must also be able to verify that the tool actually ran the necessary ru
 The Policy Compliance Profile defines additional optional elements of the SARIF format
 that are intended for use in this scenario.
 
-## `runInfo` object { #policy-compliance-profile-runInfo }
+## `run` object { #policy-compliance-profile-run }
 
-The Policy Compliance Profile defines one additional property on the `runInfo` object (&sect;[#runInfo]).
+The Policy Compliance Profile defines one additional property on the `run` object (&sect;[#run]).
 
-### `complianceInfo` property { #runInfo-complianceInfo }
+### `compliance` property { #run-compliance }
 
-A `runInfo` object (&sect;[#runInfo]) may contain a property named `complianceInfo`
-whose value is a `complianceInfo` object (&sect;[#complianceInfo]).
+A `run` object (&sect;[#run]) may contain a property named `compliance`
+whose value is a `compliance` object (&sect;[#compliance]).
 
-## `complianceInfo` object { #complianceInfo }
+## `compliance` object { #compliance }
 
-### General { #complianceInfo-general }
+### General { #compliance-general }
 
-A `complianceInfo` object contains information that helps determine whether the
+A `compliance` object contains information that helps determine whether the
 tool producing the log was configured in a way that complies with applicable policies.
 
-A `complianceInfo` object is not a policy or statement of policy.
+A `compliance` object is not a policy or statement of policy.
 It is merely a collection of information that helps determine policy compliance.
 
-### `enabledRules` property { #complianceInfo-enabledRules }
+### `enabledRules` property { #compliance-enabledRules }
 
-A `complianceInfo` object (&sect;[#complianceInfo])
+A `compliance` object
 shall contain a property named `enabledRules` whose value is an array
 of zero or more `configuredRule` objects (&sect;[#configuredRule]).
 
@@ -56,7 +56,7 @@ was correctly configured with the appropriate set of rules.
 An `configuredRule` object shall contain a property named `ruleId` whose value is a string
 containing the stable, unique identifier for a rule that the tool was configured to run.
 
-No two `configuredRule` objects in the same `complianceInfo` object (&sect;[#complianceInfo])
+No two `configuredRule` objects in the same `compliance` object (&sect;[#compliance])
 shall have the same `ruleId`.
 
 ~ IsoNote

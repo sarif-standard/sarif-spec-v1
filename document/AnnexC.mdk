@@ -34,7 +34,7 @@ the converter should _not_ attempt to synthesize that element.
 For example, a converter should not attempt to heuristically extract a rule id from the text of an unstructured error message.
 
 If a converter were to synthesize values, it would potentially introduces additional complexity in the implementation of SARIF viewers.
-The reason is that the viewer itself might examine the analysis tool and its version in the `toolInfo`,
+The reason is that the viewer itself might examine the analysis tool and its version in the `tool` object,
 and attempt to synthesize missing elements.
 
 Now suppose a converter made a bad choice in synthesizing a missing element, and then fixed the problem in an update.
