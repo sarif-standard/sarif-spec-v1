@@ -451,50 +451,42 @@ This allows tools to include information about the run that is not explicitly sp
 A `fileReference` object represents a single file. In some cases, this file might be nested within another file,
 referred to as the "containing file."
 
+If the `fileReference` object does not represent a nested file, none of the properties
+`pathFromParent` (&sect;[#fileReference-pathFromParent]), `offsetFromParent` (&sect;[#fileReference-offsetFromParent]),
+or `length` (&sect;[#fileReference-length]) shall be present.
+
+If the location of a nested file can be expressed either by means of a path within the containing file
+or by means of a byte offset from the start of the containing file, then either `pathFromParent`
+or `offsetFromParent` (&sect;[#fileReference-offsetFromParent]) or both shall be present; they must not both be absent.
+
 ### `pathFromParent` property { #fileReference-pathFromParent }
 
-If this `fileReference` object refers to a file which is nested within another file, and
-if the location of the nested file with respect to its containing file can be expressed
+If the location of a nested file with respect to its containing file can be expressed
 only by means of a path within its containing file,
 then the `fileReference` object shall contain a property named `pathFromParent`
 whose value is a string specifying that path.
 
-If the location of the nested file can be expressed either by means of a path within the containing file
-or by means of a byte offset from the start of the containing file, then either `pathFromParent`
-or `offsetFromParent` (&sect;[#fileReference-offsetFromParent]) or both shall be present; they must not both be absent.
-
-If this `fileReference` object refers to a file which is not nested within another file,
-or if the location of the file within its containing property cannot be expressed by means of a path,
+If the location of the file within its containing property cannot be expressed by means of a path,
 then the `pathFromParent` property shall be absent.
 
 ### `offsetFromParent` property { #fileReference-offsetFromParent }
 
-If this `fileReference` object refers to a file which is nested within another file, and
-if the location of the nested file with respect to its containing file can be expressed
+If the location of a nested file with respect to its containing file can be expressed
 only by means of a byte offset from the start of the containing file,
 then the `fileReference` object shall contain a property named `offsetFromParent`
 whose value is an integer specifying that offset.
 
-If the location of the nested file can be expressed either by means of a byte offset
-from the start of the containing file or by means of a path within the containing file, then either `offsetFromParent`
-or `pathFromParent` (&sect;[#fileReference-pathFromParent]) or both shall be present; they must not both be absent.
-
-If this `fileReference` object refers to a file which is not nested within another file,
-or if the location of the file within its containing property cannot be expressed by means of a byte offset,
+If the location of the file within its containing property cannot be expressed by means of a byte offset,
 then the `offsetFromParent` property shall be absent. 
 
 ### `length` property { #fileReference-length }
 
-If this `fileReference` object refers to a file which is nested within another file, and
-if the location of the nested file with respect to its containing file can be expressed
-by means of a byte offset from the start of the containing file,
+If the `offsetFromParent` property (&sect;[#fileReference-offsetFromParent]) is present,
 then the `fileReference` object may contain a property named `length`
 whose value is an integer specifying the length in bytes
 of the file from the start of its containing file.
 
-If this `fileReference` object refers to a file which is not nested within another file,
-or if the location of the file within its containing property cannot be expressed by means of a byte offset,
-then the `length` property shall be absent. 
+If the `offsetFromParent` property is absent, then the `length` property shall be absent. 
 
 ### `mimeType` property { #fileReference-mimeType }
 
