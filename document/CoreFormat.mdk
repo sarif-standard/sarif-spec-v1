@@ -24,12 +24,12 @@ of multiple single-run log files into a single SARIF log file that contains the 
 This allows the aggregated results to be conveniently stored in a file or transported over a network.
 ~
 
-## URI-valued properties
+## URI-valued properties { #uriProperties }
 
 Certain properties in this specification specify the URI of a file.
-The value of every such property, if present, shall be a valid URI.
+The value of every such property, if present, shall be a valid URI as described in RFC 3986.
 
-If the URI refers to a file stored in a version control system (VCS),
+If a URI refers to a file stored in a version control system (VCS),
 the value shall preserve relevant details that permit the target file to be retrieved from the VCS.
 If the URI refers to a file stored on a physical file system, it may be specified as a relative URI
 that omits root information details
@@ -39,6 +39,19 @@ that omits root information details
 An absolute URI may contain information that represents unwanted information disclosure,
 particularly in cases where a tool is analyzing files stored on a physical file system.
 For example, a file path might contain the account name of a developer.
+~
+
+Two URIs shall be considered equivalent if their normalized forms are the same
+as described in RFC 3986.
+
+~ IsoNote
+For example, in the normalized form specified in RFC 3986:
+
+* Percent-encoded characters use upper-case hexadecimal digits.
+* Characters in the ALPHA and DIGIT ranges are not be percent-encoded,
+nor are hyphen, underscore, or tilde.
+* The ":" delimiter is omitted if the port component of the authority is empty.
+* In the host component, registered names and hexadecimal addresses use lower-case.
 ~
 
 ## Tag set properties
@@ -303,51 +316,122 @@ an analysis run. The value of `invocationInfo` would have to be combined with in
 source to allow the run to be repeated.
 ~
 
-### `analysisTargets` property { #runInfo-analysisTargets }
+### `fileInfo` property { #runInfo-fileInfo }
 
-A `runInfo` object may contain a property named `analysisTargets` whose value is an array,
-each of whose elements is a `fileReference` object (&sect;[#fileReference])
-representing the location of a single analysis target scanned during the run.
-This array shall contain one entry for each analysis target that was scanned,
-even if the analysis targets were not individually specified on the command line.
+A `runInfo` object should contain a property named `fileInfo` whose value is a JSON object,
+each of whose properties represents a file that was scanned in the course of the run.
 
-~ IsoNumberedNote { @IsoNumberedNote=1 }
-The command line with which the tool was invoked might specify its input files
-by means of a wild card such as *.cc, or it might specify them implicitly,
-for example, by scanning the files in the current directory.
+The `fileInfo` object should contain properties representing at least those files in which results were detected,
+but it may contain properties representing all scanned files (whether or not results were detected in those files),
+or for any subset of those files.
+
+~ IsoNumberedNote { @IsoNumberedNote=1}
+`fileReference` objects contain information that is useful for viewers.
+Viewers will be able to provide the most information to users if the `fileInfo`
+property is present and contains information for every file in which results were detected.
 ~
 
-The `analysisTargets` array shall be empty if no analysis targets were scanned in the course of the run.
+Each property name in the `fileInfo` object shall be the URI of a scanned file.
+No two of these property names shall be equivalent as defined in &sect;[#uriProperties].
 
-~ IsoNumberedNote
-This could happen if the command line specified a wildcard such as *.cc for the input files,
-and no files matched the wildcard.
-~
+Each property value in the `fileInfo` object shall be an array of `fileReference` objects (&sect;[#fileReference])
+which contain information about the file identified by the URI in the property name.
 
-~ IsoExample
+If the scanned file is not nested within another file, then the array shall consist of a single
+element, and the property name shall be the URI of the scanned file.
+If the absolute location of the scanned file is available, the URI should be an absolute URI;
+otherwise, the URI shall be a relative URI.
+
+~ IsoNumberedExample { @IsoNumberedExample=1}
 
 ```
-[
-    {
-        "uri": "file:///C:/Code/a.cc",
-        "hashes": [
+runInfo: {
+    fileInfo: {
+        "file:///C:/Code/main.cc": [
             {
-                "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
-                "algorithm": "SHA-256"
-            }
-        ]
-    },
-
-    {
-        "uri": "file:///C:/Code/b.cc",
-        "hashes": [
-            {
-                "value": "ffc654abaa74903dae1d2ff532078ec0a9d5f674",
-                "algorithm": "SHA-256"
+                "mimeType": "text/x-c",
+                "hashes": [
+                    {
+                        "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
+                        "algorithm": "SHA-256"
+                    }
+                ]
             }
         ]
     }
-] 
+}
+```
+~
+
+If the scanned file is nested within another file (for example, within a compressed container),
+then the first `fileReference` object in the array shall refer to the outermost container,
+the next one shall refer to a file nested immediately within that container, and so on,
+with the last element of the array referring to the most deeply nested file.
+
+In this case, the property name shall be the absolute URI of the outermost containing
+file, together with a fragment that describes the nesting of the scanned file within
+its parent or parents.
+If the scanned file is nested more than one level deep in the outermost containing file,
+the fragments representing each level of nesting may be combined in any way desired,
+as long as no two of the resulting property names are equivalent as defined in &sect;[#uriProperties].
+
+~ IsoNumberedNote
+It need not be possible to use this URI to navigate directly to the nested scanned file.
+The information necessary to do that is specified in the `pathFromParent` property (&sect;[#fileReference-pathFromParent]),
+or in the `offsetFromParent` (&sect;[#fileReference-offsetFromParent]) and `length` (&sect;[#fileReference-length]) properties,
+of the `fileReference` objects in the array .
+~
+
+~ IsoNumberedExample
+Suppose a result is detected within a Flash object contained in a word processing document which is in turn contained
+in a compressed archive.
+Suppose the path to the word processing document within the compressed archive is `/docs/intro.docx`.
+Then one possible value for the property name within the `fileInfo` object would be:
+
+```
+file:///C:/Code/presentation.zip#/docs/intro.docx/Flash1
+```
+~
+
+If the fragment contains any characters which cannot occur in a fragment as specified in RFC 3986,
+those character must be percent-encoded as specified in RFC 3986.
+
+~ IsoNumberedExample
+Suppose a compressed container contains a file named `/docs/chapter#1.doc`.
+Then one possible value for the property name within the `fileInfo` object would be:
+
+```
+file:///C:/Code/presentation.zip#/docs/chapter%231.doc
+```
+The `#` character has been percent-encoded as `%23`.
+~
+
+~ IsoNumberedExample
+This example shows a `fileInfo` property that represents a file nested two levels deep in its
+outermost container.
+The first level of nesting is specified by a path within a compressed container.
+The second level of nesting is specified by a byte offset from the start of the container,
+together with a length. See &sect;[#fileReference]. 
+
+```
+runInfo: {
+    fileInfo: {
+        "file:///C:/Code/app.zip#/docs/intro.docx/Flash1": [
+            {
+                "mimeType": "application/zip",
+            },
+            {
+                "pathFromParent": "/docs/intro.docx"
+                "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            },
+            {
+                "offsetFromParent": 17522,
+                "length": 4050,
+                "mimeType": "application/x-shockwave-flash"
+            }
+        ]
+    }
+}
 ```
 ~
 
@@ -364,17 +448,55 @@ This allows tools to include information about the run that is not explicitly sp
 
 ### General { #fileReference-General }
 
-A `fileReference` object represents a single file.
+A `fileReference` object represents a single file. In some cases, this file might be nested within another file,
+referred to as the "containing file."
 
-### `uri` property { #fileReference-uri }
+If the `fileReference` object does not represent a nested file, none of the properties
+`pathFromParent` (&sect;[#fileReference-pathFromParent]), `offsetFromParent` (&sect;[#fileReference-offsetFromParent]),
+or `length` (&sect;[#fileReference-length]) shall be present.
 
-A `fileReference` object shall contain a property named `uri` whose value is a string that represents
-the location of the file as a valid URI.
+If the location of a nested file can be expressed either by means of a path within the containing file
+or by means of a byte offset from the start of the containing file, then either `pathFromParent`
+or `offsetFromParent` (&sect;[#fileReference-offsetFromParent]) or both shall be present; they must not both be absent.
+
+### `pathFromParent` property { #fileReference-pathFromParent }
+
+If the location of a nested file with respect to its containing file can be expressed
+only by means of a path within its containing file,
+then the `fileReference` object shall contain a property named `pathFromParent`
+whose value is a string specifying that path.
+
+If the location of the file within its containing property cannot be expressed by means of a path,
+then the `pathFromParent` property shall be absent.
+
+### `offsetFromParent` property { #fileReference-offsetFromParent }
+
+If the location of a nested file with respect to its containing file can be expressed
+only by means of a byte offset from the start of the containing file,
+then the `fileReference` object shall contain a property named `offsetFromParent`
+whose value is an integer specifying that offset.
+
+If the location of the file within its containing property cannot be expressed by means of a byte offset,
+then the `offsetFromParent` property shall be absent. 
+
+### `length` property { #fileReference-length }
+
+If the `offsetFromParent` property (&sect;[#fileReference-offsetFromParent]) is present,
+then the `fileReference` object may contain a property named `length`
+whose value is an integer specifying the length in bytes
+of the file from the start of its containing file.
+
+If the `offsetFromParent` property is absent, then the `length` property shall be absent. 
+
+### `mimeType` property { #fileReference-mimeType }
+
+A `fileReference` object should contain a property named `mimeType` whose value is a string that specifies
+the MIME type (RFC 2045) of the file.
 
 ### `hashes` property { #fileReference-hashes }
 
 A `fileReference` object may contain a property named `hashes` whose value is an array of `hash` objects (&sect;[#hash]),
-each of which specifies a hashed value for the file specified by the `uri` property (&sect;[#fileReference-uri]),
+each of which specifies a hashed value for the file specified by the `fileReference` object,
 along with the name of the algorithm used to compute the hash.
 
 If present, the array specified by `hashes` shall not be empty.
@@ -678,27 +800,25 @@ A `result` object may contain a property named `toolFingerprint` whose value is 
 that contributes to the process of uniquely identifying the result.
 [Annex A](#Annex-A) explains how a result management system can use this value.
 
-### `executionFlows` property { #result-executionFlows }
+### `codeFlows` property { #result-codeFlows }
 
-A `result` object may contain a property named `executionFlows` whose value is an array of arrays of
+A `result` object may contain a property named `codeFlows` whose value is an array of arrays of
 `annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
-For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as an `executionFlow` object;
-hence we may say that the value of the `executionFlows` property is an array of `executionFlow` objects.
-The `executionFlows` property is intended for use by static analysis tools that perform flow analysis
-in the process of producing results.
+For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as a `codeFlow` object;
+hence we may say that the value of the `codeFlows` property is an array of `codeFlow` objects.
+The `codeFlows` property is intended for use by static analysis tools that provide execution path
+details that illustrate a possible problem in the code.
 
-Each `executionFlow` object in the `executionFlows` array shall describe a single execution flow.
-An execution flow is a sequence of locations visited by the tool in the course of performing a flow analysis.
-An execution flow is in turn represented by an array of `annotatedCodeLocation` objects.
+Each `codeFlow` object in the `codeFlows` array shall describe a single code flow.
+A code flow is a sequence of locations that specify a possible execution path through the code.
+A code flow is represented by an array of `annotatedCodeLocation` objects.
 This array need not include every location visited by the tool,
 but the entries that are present shall occur in the order that the tool visited them.
 
-A single result may contain one or more execution flows, one or more call stacks (&sect;[#result-callStacks]), or both.
-
 ~ IsoNote
-The SARIF file format allows multiple execution flows within a single `result` object
-to allow for the possibility that a static analysis tool might simulate more than one execution flow
-in the course of producing a single result.
+The SARIF file format allows multiple code flows within a single `result` object
+to allow for the possibility that more than one path through the program might be
+relevant to a single result.
 ~
 
 ### `stacks` property { #result-callStacks }
@@ -711,17 +831,14 @@ The `stacks` property is intended for use by static analysis tools that collects
 in the process of producing results.
 
 Each `stack` object in the stacks array shall describe a single call stack.
-A call stack is a sequence of nested function calls simulated by the tool in the course of performing a flow analysis.
+A call stack is a sequence of nested function calls.
 A stack is in turn represented by an array of `annotatedCodeLocation` objects.
 This array shall include every function call in the stack for which the tool has information,
 and the entries that are present shall occur in order with the innermost call first and the outermost call last.
 
-A single result may contain one or more call stacks, one or more execution flows (&sect;[#result-executionFlows]), or both.
-
 ~ IsoNumberedNote { @IsoNumberedNote=1}
 The SARIF file format allows multiple call stacks within a single `result` object
-to allow for the possibility that a static analysis tool might simulate more than one call stack
-in the course of producing a single result.
+to allow for the possibility that more than one call stack might be relevant to a single result.
 ~
 
 ~ IsoNumberedNote
@@ -757,7 +874,6 @@ results: [
                 "analysisTarget": [
                     {
                         "uri": "file:///C:/Code/a.js",
-                        "mimeType": "text/javascript",
                         "region": {
                             "startLine": "6",
                             "startColumn": "10"
@@ -774,7 +890,6 @@ results: [
                     [
                         {
                             "uri": "file:///C:/Code/a.js",
-                            "mimeType": "text/javascript",
                             "region": {
                                 "startLine": "2",
                                 "startColumn": "6"
@@ -834,33 +949,8 @@ This allows tools to include information about the result that is not explicitly
 ### General { #location-General }
 
 A `location` object specifies the location where a static analysis tool produced a result.
-A `location` object shall specify the physical location (&sect;[#physicalLocation-info]) of the result,
-and it may also specify the logical location (&sect;[#logicalLocation-info]) of the result.
-
-### Physical locations and the `physicalLocation` array { #physicalLocation-info }
-
-A physical location specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
-A physical location is represented by an array of `physicalLocationComponent objects` (&sect;[#physicalLocationComponent]);
-for convenience, we refer to this array as a `physicalLocation` object.
-This allows reference to results which occur in files nested within other files, for example, within a compressed container.
-If the result occurred in such a nested file, the first `physicalLocationComponent` object in the array shall refer to the outermost container,
-the next element shall refer to a file nested immediately within that container, and so on,
-with the last element referring to the most deeply nested file.
-
-Physical locations are applicable to results that occur in all kinds of programming artifacts.
-
-### Logical locations and the `logicalLocation` array { #logicalLocation-info }
-
-A logical location specifies a reference to a logical construct, for example, a class name or a function name,
-without specifying the programming artifact within which that construct occurs.
-A logical location is represented by an array of `logicalLocationComponent` objects (&sect;[#logicalLocationComponent]);
-for convenience, we refer to this array as a `logicalLocation` object.
-This allows reference to results which occur in nested logical components, for example,
-a method nested within a class which is in turn nested within a namespace.
-If the result occurred in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
-the outermost construct,
-the next element shall refer to a construct nested immediately within the first construct,
-and so on, with the last element referring to the most deeply nested construct.
+A `location` object should specify the physical location (&sect;[#physicalLocation]) of the result,
+and it may also specify the logical location (&sect;[#location-logicalLocation]) of the result.
 
 ### Constraints { #location-Constraints }
 
@@ -936,7 +1026,7 @@ shall either both be present or both be absent.
 
 ### `analysisTarget` property { #location-analysisTarget }
 
-A `location` object may contain a property named `analysisTarget` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
+A `location` object may contain a property named `analysisTarget` whose value is a `physicalLocation` object (&sect;[#physicalLocation])
 that identifies the file that the static analysis tool was instructed to scan.
 This need not be the same as the file where the result actually occurred. See `resultFile` (&sect;[#location-resultFile]) for more information on this point.
 
@@ -945,7 +1035,7 @@ Whether `analysisTarget` is present depends on the information available to the 
 
 ### `resultFile` property { #location-resultFile }
 
-A `location` object may contain a property named `resultFile` whose value is a `physicalLocation` object (&sect;[#physicalLocation-info])
+A `location` object may contain a property named `resultFile` whose value is a `physicalLocation` object (&sect;[#physicalLocation])
 that identifies the file where the static analysis tool produced the result.
 
 Whether `resultFile` is present depends on the information available to the tool that produces the log file
@@ -953,8 +1043,20 @@ Whether `resultFile` is present depends on the information available to the tool
 
 ### `logicalLocation` property { #location-logicalLocation }
 
-A `location` object may contain a property named `logicalLocation` whose value is a `logicalLocation` object (&sect;[#logicalLocation-info])
-which specifies the logical location where the static analysis tool produced the result.
+A `location` object may contain a property named `logicalLocation`,
+which specifies the logical location where the static analysis tool detected the result.
+
+A logical location specifies a programmatic construct, for example, a class name or a function name,
+without specifying the programming artifact within which that construct occurs.
+
+The value of the `logicalLocation` property shall be
+an array of `logicalLocationComponent` objects (&sect;[#logicalLocationComponent]).
+This allows reference to results which occur in nested logical components, for example,
+a method nested within a class which is in turn nested within a namespace.
+When a result occurs in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
+the outermost construct,
+the next element shall refer to a construct nested immediately within the first construct,
+and so on, with the last element referring to the most deeply nested construct.
 
 ### `fullyQualifiedLogicalName` property { #location-fullyQualifiedLogicalName }
 
@@ -986,29 +1088,76 @@ A `location` object may contain a property named `tags`, whose value is a tag se
 A `location` object may contain a property named `properties`, whose value is a property bag.
 This allows tools to include information about the location that is not explicitly specified in the SARIF format.
 
-## `physicalLocationComponent` object { #physicalLocationComponent }
+## `physicalLocation` object { #physicalLocation }
 
-### General { #physicalLocationComponent-General }
+### General { #physicalLocation-General }
 
-A `physicalLocationComponent` object is an element of a `physicalLocation` object (&sect;[#physicalLocation-info]).
+A `physicalLocation` object represents the physical location where a result was detected.
+A physical location specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
 
-### `uri` property { #physicalLocationComponent-uri }
+### `uri` property { #physicalLocation-uri }
 
-A `physicalLocationComponent` object shall contain a property named `uri` whose value is a string that represents
-the location of the file to be modified as a valid URI.
+A `physicalLocation` object shall contain a property named `uri` whose value is a string that represents
+the location of the file as a valid URI.
 
-### `mimeType` property { #physicalLocationComponent-mimeType }
+The value of the `uri` property should be equal to the name of one of the properties on the
+`runInfo.fileInfo` object (&sect;[#runInfo-fileInfo]).
+`fileInfo` provides additional information about the file specified by `uri`.
 
-A `physicalLocationComponent` object should contain a property named `mimeType` with a string value that specifies
-the MIME content-type (RFC 2045) of the file.
+~ IsoExample
+
+```
+{
+  "version": "1.0",
+  "runLogs": [
+    {
+      "runInfo": {
+        "fileInfo": {
+          "file:///C:/Code/main.cc": [
+            {
+              "mimeType": "text/x-c",
+            }
+          ]
+        }
+      },
+      
+      "results": [
+        {
+          "ruleId": "CA2101",
+          "kind": "error",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Code/main.cc",
+                "region: {
+                  "startLine": 24,
+                  "startColumn": 9
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+~
 
 ### `region` property { #physicalLocationComponent-region }
 
-A `physicalLocationComponent` object may have a property named `region` whose value is a `region` object (&sect;[#region]),
-that represents the region within a file where the result occurred.
-It should be present only on the last element of the physical location array in which the `physicalLocationComponent` occurs.
-This is because all the other elements of the array represent layers of packaging;
-only the last element represents the actual file within which the result occurred.
+A `physicalLocation` object may have a property named `region` whose value is a `region` object (&sect;[#region]),
+that represents the region within a file where the result was detected.
+
+If the result occurs in a nested file, then the `region` property shall specify the location of the result
+with respect to the innermost nested file.
+
+~ IsoExample
+If a result occurs in a C++ file contained in a compressed archive, then the region would represent
+the line and column number of the result with the C++ file.
+It would not represent (for example) the offset of the C++ file from the start of the archive.
+~
 
 ## `region` object { #region }
 
@@ -1222,7 +1371,7 @@ and represents an insertion point at the end of the file.
 
 ### General { #logicalLocationComponent-General }
 
-A `logicalLocationComponent` object is an element of a `logicalLocation` object (&sect;[#logicalLocation-info])
+A `logicalLocationComponent` object describes a component of a logical location.
 
 ### `name` property { #logicalLocationComponent-name }
 
@@ -1230,7 +1379,7 @@ A `logicalLocationComponent` object shall contain a property named `name`, whose
 the construct in which the result occurred.
 For example, this property might contain the name of a class or a method.
 
-The name property need not be suitable for display.
+The `name` property need not be suitable for display.
 
 ~ IsoExample
 A C++ analysis tool might emit the `name` property of a function as the "decorated" function name,
@@ -1255,19 +1404,19 @@ If none of those strings accurately describes the construct, `kind` may contain 
 
 ### General { #annotatedCodeLocation-General }
 
-An `annotatedCodeLocation` object is an element of an `executionFlow` object (&sect;[#result-executionFlows]),
+An `annotatedCodeLocation` object is an element of an `codeFlow` object (&sect;[#result-codeFlows]),
 a `stack` object (&sect;[#result-callStacks]),
 or the `relatedLocations` array (&sect;[#result-relatedLocations]).
 
 ### `physicalLocation` property { #annotatedCodeLocation-physicalLocation }
 
 An `annotatedCodeLocation` object must contain a property named `physicalLocation` whose value is a `physicalLocation` object
-(&sect;[#physicalLocation-info]) that specifies the code location to which the `annotatedCodeLocation` object refers.
+(&sect;[#physicalLocation]) that specifies the file location to which the `annotatedCodeLocation` object refers.
 
 ### `message` property { #annotatedCodeLocation-message }
 
 An `annotatedCodeLocation` object may contain a property named `message` whose value is a string that describes
-the significance of this entry within the overall execution flow.
+the significance of this entry within the overall code flow.
 For example, if the `annotatedCodeLocation` refers to an `if` statement, the `message` property might contain the string "take true branch".
 
 ### `tags` property { #annotatedCodeLocation-tags }
