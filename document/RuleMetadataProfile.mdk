@@ -20,15 +20,15 @@ in the log file itself.
 The Rule Metadata Profile defines additional optional elements of the SARIF format
 that are intended for use in this scenario.
 
-## `runLog` object { #rule-metadata-profile-runLog }
+## `run` object { #rule-metadata-profile-run }
 
-### General { #rule-metadata-profile-runLog-general }
+### General { #rule-metadata-profile-run-general }
 
-The Rule Metadata Profile defines one additional property in the `runLog` object (&sect;[#runLog]).
+The Rule Metadata Profile defines one additional property in the `run` object (&sect;[#run]).
 
 ### `rules` property { #rules }
 
-A `runLog` object (&sect;[#runLog]) may contain a property named `rules`
+A `run` object (&sect;[#run]) may contain a property named `rules`
 whose value is an array of `rule` objects (&sect;[#rule]) .
 
 ## `rule` object { #rule }
@@ -101,22 +101,22 @@ The `options` objects shall describe the set of configurable options supported b
 The value within each name/value pair shall be a string, which may be the empty string.
 The value shall not be a JSON array or sub-object.
 
-### `formatSpecifiers` property { #rule-formatSpecifiers }
+### `messageFormats` property { #rule-messageFormats }
 
-A `rule` object may contain a property named `formatSpecifiers`, whose value is a JSON object
+A `rule` object may contain a property named `messageFormats`, whose value is a JSON object
 consisting of a set of name/value pairs with arbitrary names.
 
 The value within each name/value pair shall be a string that can be passed to a
 string formatting function (_e.g._, the C language `printf` function) to construct a formatted message in combination with
 an arbitrary number of additional function arguments.
 
-The set of names appearing in the `formatSpecifiers` property shall contain at least the set of strings
-which occur as values of the `result.formattedMessage.specifierId` property in the result log.
-The `formatSpecifiers` property may contain additional name/value pairs whose names do not appear
-as the value of the `result.formattedMessage.specifierId` property for any result in the result log.
+The set of names appearing in the `messageFormats` property shall contain at least the set of strings
+which occur as values of the `result.formattedMessage.formatId` property in the result log.
+The `messageFormats` property may contain additional name/value pairs whose names do not appear
+as the value of the `result.formattedMessage.formatId` property for any result in the result log.
 
 ~IsoNote
-Additional name/value pairs are permitted in the `formatSpecifiers` property
+Additional name/value pairs are permitted in the `messageFormats` property
 for the convenience of tool vendors, who might find it easier to emit the entire set of messages
 supported by a rule, rather than restricting it to those messages that happen to appear in the
 result log.
@@ -178,10 +178,10 @@ shall not be present.
 
 A `formattedMessage` object contains information that can be used to construct a fully formatted message that describes a result.
 
-### `specifierId` property { #formattedMessage-id }
-A `formattedMessage` object must contain a property named `specifierId`, whose value is a string that identifies the format string
+### `formatId` property { #formattedMessage-id }
+A `formattedMessage` object must contain a property named `formatId`, whose value is a string that identifies the format string
 used to format the message that describes this result.
-The value of `specifierId` must correspond to one of the names in the set of name/value pairs contained in the `formatSpecifiers` property (&sect;[#rule-formatSpecifiers])
+The value of `formatId` must correspond to one of the names in the set of name/value pairs contained in the `messageFormats` property (&sect;[#rule-messageFormats])
 of the `rule` object (&sect;[#rule]) whose `id` property (&sect;[#rule-id]) matches the `ruleId` property (&sect;[#result-ruleId]) of this result.
 
 ### `arguments` property { #formattedMessage-arguments }

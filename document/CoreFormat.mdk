@@ -114,14 +114,14 @@ An `sarifLog` object specifies the version of the file format and contains the o
 ```
 {
     "version" : "0.1",  # see \(&sect;[#sarifLog-version]\)
-    "runLogs" :         # see \(&sect;[#sarifLog-runLogs]\)
+    "runs" :            # see \(&sect;[#sarifLog-runs]\)
     [
         {
-            ...         # a runLog object (see \(&sect;[#runLog]\))
+            ...         # a run object (see \(&sect;[#run]\))
         },
         ...
         {
-            ...         # another runLog object
+            ...         # another run object
         }
     ]
 }
@@ -145,31 +145,27 @@ this document and in all future versions of the SARIF standard, will be in the f
 Versioning 2.0.0
 ~
 
-### `runLogs` property { #sarifLog-runLogs }
+### `runs` property { #sarifLog-runs }
 
-An `sarifLog` object shall contain a property named `runLogs` whose value is an array
-of one or more runLog objects (&sect;[#runLog]).
+An `sarifLog` object shall contain a property named `runs` whose value is an array
+of one or more `run` objects (&sect;[#run]).
 
-## `runLog` object { #runLog }
+## `run` object { #run }
 
-### General { #runLog-General }
+### General { #run-General }
 
-A `runLog` object describes a single run of a static analysis tool,
+A `run` object describes a single run of a static analysis tool,
 and contains the output of that run.
 
 ~ IsoExample
 
 ```
 {
-    "tool":        # see \(&sect;[#runLog-tool]\)
+    "tool":        # see \(&sect;[#run-tool]\)
     {
         ...        # a tool object (see \(&sect;[#tool]\))
     },
-    "run":         # see \(&sect;[#runLog-run]\)
-    {
-        ...        # a run object (see \(&sect;[#run]\))
-    },
-    "results":     # see \(&sect;[#runLog-results]\)
+    "results":     # see \(&sect;[#run-results]\)
     [
         {
             ...    # a result object (see \(&sect;[#result]\))
@@ -183,112 +179,21 @@ and contains the output of that run.
 ```
 ~
 
-### `tool` property { #runLog-tool }
+### `tool` property { #run-tool }
 
-A `runLog` object shall contain a property named `tool` whose value is a `tool` object (&sect;[#tool]).
+A `run` object shall contain a property named `tool` whose value is a `tool` object (&sect;[#tool]).
 
-### `run` property { #runLog-run }
-
-A `runLog` object may contain a property named `run` whose value is a `run` object (&sect;[#run]).
-
-### `results` property { #runLog-results }
-
-A `runLog` object shall contain a property named `results` whose value is an array containing zero or more `result` objects (&sect;[#result]),
-each of which represents a single result produced in the course of a run.
-
-The `results` array shall be empty if the run that produced the `runLog` object did not produce any results.
-
-## `tool` object { #tool }
-
-### General { #tool-General }
-
-A `tool` object contains information describing the static analysis tool that was run.
-
-~ IsoNote
-If another tool post-processes the log file (for example, by removing certain results,
-or by adding information that was not known to the static analysis tool),
-the post-processing tool should not alter any part of the `tool` object.
-~
-
-~ IsoExample
-
-```
-{
-    "name": "CodeScanner",                                       # see \(&sect;[#tool-name]\)
-    "fullName": "CodeScanner 2.0, Developer Preview (en-US)",    # see \(&sect;[#tool-fullName]\)
-    "version": "2.0.0-beta",                                     # see \(&sect;[#tool-version]\)
-    "fileVersion": "2.0.1502.2"                                  # see \(&sect;[#tool-fileVersion]\)
-}
-```
-~
-
-### `name` property { #tool-name }
-
-A `tool` object shall contain a property named `name` whose value is a string containing the name of the tool that produced the log file.
-
-~ IsoExample
-`"CodeScanner"`
-~
-
-### `fullName` property { #tool-fullName }
-
-A `tool` object may contain a property named `fullName` whose value is a string containing the name of the tool
-along with its version and any other useful identifying information, such as its locale.
-
-~ IsoExample
-`"CodeScanner 2.0, Developer Preview (en-US)"`
-~
-
-### `version` property { #tool-version }
-
-A `tool` object should contain a property named `version` whose value is a string containing the tool version.
-If present, the string should be in the format specified by Semantic Versioning 2.0.0.
-
-~ IsoNote
-Semantic versions have the property of being sortable in chronological order of release.
-~
-
-~ IsoExample
-`"1.0.0-beta"`
-~
-
-### `fileVersion` property { #tool-fileVersion }
-
-If the operating system on which the tool runs provides a value for the file version of the tool's primary executable file,
-then the `tool` object may contain a property named `fileVersion` whose value is
-a string representation of that file version.
-If the operating system does not provide such a value, the `fileVersion` property shall not be present.
-
-~ IsoExample
-On the Windows platform, this information is available in the `FILEVERSION` member of the `VERSIONINFO` structure.
-~
-
-### `tags` property { #tool-tags }
-
-A `tool` object may contain a property named `tags`, whose value is a tag set.
-
-### `properties` property { #tool-properties }
-
-A `tool` object may contain a property named `properties`, whose value is property bag.
-This allows tools to include information about the themselves that is not explicitly specified in the SARIF format.
-
-## `run` object { #run }
-
-### General { #run-General }
-
-A `run` object describes the invocation of the static analysis tool that produced the results specified
-in the containing `runLog` object (&sect;[#runLog]).
-
-~ IsoNote
-The information in the `run` object makes it possible to precisely repeat a run of a static analysis tool,
-and to verify that the results reported in the log file were generated by an appropriate invocation of the tool.
-~
 
 ### `invocation` property { #run-invocation }
 
 A `run` object may contain a property named `invocation` whose value is a string
 containing the runtime parameters with which the tool was invoked.
 For command line tools, this string may consist of the completely specified command line used to invoke the tool.
+
+~ IsoNote
+The information in the `invocation` property makes it possible to precisely repeat a run of a static analysis tool,
+and to verify that the results reported in the log file were generated by an appropriate invocation of the tool.
+~
 
 If the invocation information contains information which should not be disclosed,
 such as passwords, tokens, database connection strings, or in some circumstances even the fully qualified path to
@@ -435,6 +340,13 @@ run: {
 ```
 ~
 
+### `results` property { #run-results }
+
+A `run` object shall contain a property named `results` whose value is an array containing zero or more `result` objects (&sect;[#result]),
+each of which represents a single result produced in the course of a run.
+
+The `results` array shall be empty if the run that produced the `run` object did not produce any results.
+
 ### `tags` property { #run-tags }
 
 A `run` object may contain a property named `tags`, whose value is a tag set.
@@ -444,6 +356,80 @@ A `run` object may contain a property named `tags`, whose value is a tag set.
 A `run` object may contain a property named `properties`, whose value is property bag.
 This allows tools to include information about the run that is not explicitly specified in the SARIF format.
 
+## `tool` object { #tool }
+
+### General { #tool-General }
+
+A `tool` object contains information describing the static analysis tool that was run.
+
+~ IsoNote
+If another tool post-processes the log file (for example, by removing certain results,
+or by adding information that was not known to the static analysis tool),
+the post-processing tool should not alter any part of the `tool` object.
+~
+
+~ IsoExample
+
+```
+{
+    "name": "CodeScanner",                                       # see \(&sect;[#tool-name]\)
+    "fullName": "CodeScanner 2.0, Developer Preview (en-US)",    # see \(&sect;[#tool-fullName]\)
+    "version": "2.0.0-beta",                                     # see \(&sect;[#tool-version]\)
+    "fileVersion": "2.0.1502.2"                                  # see \(&sect;[#tool-fileVersion]\)
+}
+```
+~
+
+### `name` property { #tool-name }
+
+A `tool` object shall contain a property named `name` whose value is a string containing the name of the tool that produced the log file.
+
+~ IsoExample
+`"CodeScanner"`
+~
+
+### `fullName` property { #tool-fullName }
+
+A `tool` object may contain a property named `fullName` whose value is a string containing the name of the tool
+along with its version and any other useful identifying information, such as its locale.
+
+~ IsoExample
+`"CodeScanner 2.0, Developer Preview (en-US)"`
+~
+
+### `version` property { #tool-version }
+
+A `tool` object should contain a property named `version` whose value is a string containing the tool version.
+If present, the string should be in the format specified by Semantic Versioning 2.0.0.
+
+~ IsoNote
+Semantic versions have the property of being sortable in chronological order of release.
+~
+
+~ IsoExample
+`"1.0.0-beta"`
+~
+
+### `fileVersion` property { #tool-fileVersion }
+
+If the operating system on which the tool runs provides a value for the file version of the tool's primary executable file,
+then the `tool` object may contain a property named `fileVersion` whose value is
+a string representation of that file version.
+If the operating system does not provide such a value, the `fileVersion` property shall not be present.
+
+~ IsoExample
+On the Windows platform, this information is available in the `FILEVERSION` member of the `VERSIONINFO` structure.
+~
+
+### `tags` property { #tool-tags }
+
+A `tool` object may contain a property named `tags`, whose value is a tag set.
+
+### `properties` property { #tool-properties }
+
+A `tool` object may contain a property named `properties`, whose value is property bag.
+This allows tools to include information about the themselves that is not explicitly specified in the SARIF format.
+
 ## `file` object { #file }
 
 ### General { #file-General }
@@ -451,9 +437,8 @@ This allows tools to include information about the run that is not explicitly sp
 A `file` object represents a single file. In some cases, this file might be nested within another file,
 referred to as the "containing file."
 
-If the `file` object does not represent a nested file, none of the properties
-`pathFromParent` (&sect;[#file-pathFromParent]), `offsetFromParent` (&sect;[#file-offsetFromParent]),
-or `length` (&sect;[#file-length]) shall be present.
+If the `file` object does not represent a nested file, neither of the properties
+`pathFromParent` (&sect;[#file-pathFromParent]) or `offsetFromParent` (&sect;[#file-offsetFromParent]) shall be present.
 
 If the location of a nested file can be expressed either by means of a path within the containing file
 or by means of a byte offset from the start of the containing file, then either `pathFromParent`
@@ -481,11 +466,8 @@ then the `offsetFromParent` property shall be absent.
 
 ### `length` property { #file-length }
 
-If the `offsetFromParent` property (&sect;[#file-offsetFromParent]) is present,
-then the `file` object may contain a property named `length`
+A `file` object may contain a property named `length`
 whose value is an integer specifying the length of the file in bytes.
-
-If the `offsetFromParent` property is absent, then the `length` property shall be absent. 
 
 ### `mimeType` property { #file-mimeType }
 
@@ -1108,7 +1090,7 @@ which provides additional information about the file specified by `uri`.
 ```
 {
   "version": "1.0",
-  "runLogs": [
+  "runs": [
     {
       "run": {
         "files": {
