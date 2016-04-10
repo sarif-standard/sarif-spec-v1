@@ -45,8 +45,8 @@ of zero or more `configuredRule` objects (&sect;[#configuredRule]).
 ### General { #configuredRule-general }
 
 An `configuredRule` object specifies a rule that the static analysis tool was configured
-to execute for the run described by the current `runLog` (&sect;[#runLog]).
-The `runLog` need not contain any `result` objects (&sect;[#result]) for this rule,
+to execute for the run described by the current `run` (&sect;[#run]).
+The `run` need not contain any `result` objects (&sect;[#result]) for this rule,
 and indeed it will not if the tool detected no violations of the rule.
 The purpose of the `configuredRule` object is to allow verification that the tool
 was correctly configured with the appropriate set of rules.
