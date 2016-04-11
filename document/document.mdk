@@ -29,10 +29,6 @@ Copyright © 2015 Microsoft Corporation. All rights reserved.
 
 [INCLUDE=CoreFormat]
 
-[INCLUDE=ResultManagementProfile]
-
-[INCLUDE=RuleMetadataProfile]
-
 [INCLUDE=ToolOrchestrationProfile]
 
 [INCLUDE=AnnexA]

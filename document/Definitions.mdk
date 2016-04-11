@@ -89,9 +89,6 @@ baseline
   ~ set of results produced by a single run of a set of static analysis tools on a set of programming artifacts
   ~ NOTE: A result management system can compare the results of a subsequent run to a baseline to determine whether new results have been introduced.
 
-flow analysis
-  ~ process used by some static analysis tools to detect problems by simulating the flow of execution through a portion of the program without actually executing the program
-
 code flow
   ~ sequence of program locations that specify a possible execution path through the code
 
