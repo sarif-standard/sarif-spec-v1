@@ -20,41 +20,41 @@ in the log file itself.
 The Rule Metadata Profile defines additional optional elements of the SARIF format
 that are intended for use in this scenario.
 
-## `runLog` object { #rule-metadata-profile-runLog }
+## `run` object { #rule-metadata-profile-run }
 
-### General { #rule-metadata-profile-runLog-general }
+### General { #rule-metadata-profile-run-general }
 
-The Rule Metadata Profile defines one additional property in the `runLog` object (&sect;[#runLog]).
+The Rule Metadata Profile defines one additional property in the `run` object (&sect;[#run]).
 
-### `ruleInfo` property { #ruleInfo }
+### `rules` property { #rules }
 
-A `runLog` object (&sect;[#runLog]) may contain a property named `ruleInfo`
-whose value is an array of `ruleDescriptor` (&sect;[#ruleDescriptor]) objects.
+A `run` object (&sect;[#run]) may contain a property named `rules`
+whose value is an array of `rule` objects (&sect;[#rule]) .
 
-## `ruleDescriptor` object { #ruleDescriptor }
+## `rule` object { #rule }
 
-### General { #ruleDescriptor-General }
+### General { #rule-General }
 
-A `ruleDescriptor` object contains information that describes a rule.
+A `rule` object contains information that describes a rule.
 
 ### Constraints
 
-Either the `shortDescription` property (&sect;[#ruleDescriptor-shortDescription])
-or the `fullDescription` property (&sect;[#ruleDescriptor-fullDescription])
+Either the `shortDescription` property (&sect;[#rule-shortDescription])
+or the `fullDescription` property (&sect;[#rule-fullDescription])
 or both must be present.
 
-### `id` property { #ruleDescriptor-id }
+### `id` property { #rule-id }
 
-A `ruleDescriptor` object shall contain a property named `id` whose value is a string containing
+A `rule` object shall contain a property named `id` whose value is a string containing
 a stable, opaque identifier for the rule.
 
 ~ IsoExample
 `"CA2101"`
 ~
 
-### `name` property { #ruleDescriptor-name }
+### `name` property { #rule-name }
 
-A `ruleDescriptor` object may contain a property named `name` whose value is a string containing
+A `rule` object may contain a property named `name` whose value is a string containing
 a rule identifier that is understandable to an end user.
 If `name` contains implementation details that change over time,
 a tool author might alter a rule's `name` (while leaving
@@ -69,9 +69,9 @@ lack of stability is not a concern.
 `"SpecifyMarshalingForPInvokeStringArguments"`
 ~
 
-### `shortDescription` property { #ruleDescriptor-shortDescription }
+### `shortDescription` property { #rule-shortDescription }
 
-A `ruleDescriptor` object may contain a property named `shortDescription` whose value is a string containing
+A `rule` object may contain a property named `shortDescription` whose value is a string containing
 a concise description of the rule. The `shortDescription` property should be a single sentence that is understandable
 when displayed in user interface contexts where the available space is limited to a single line of text.
 
@@ -79,9 +79,9 @@ when displayed in user interface contexts where the available space is limited t
 `"Specify marshaling for P/Invoke string arguments"`
 ~
 
-### `fullDescription` property { #ruleDescriptor-fullDescription}
+### `fullDescription` property { #rule-fullDescription}
 
-An `ruleDescriptor` object should contain a property named `fullDescription` whose value is a string that describes the rule.
+An `rule` object should contain a property named `fullDescription` whose value is a string that describes the rule.
 
 The `fullDescription` property should, as far as possible, provide details sufficient to enable resolution of any problem indicated by the result. 
 
@@ -92,31 +92,31 @@ Tools that do not construct `fullDescription` in this way should provide a value
 because otherwise, the initial portion of `fullDescription` that a viewer displays where available space is limited
 might not be understandable.
 
-### `options` property { #ruleDescriptor-options }
+### `options` property { #rule-options }
 
-A `ruleDescriptor` object may contain a property named `options`, whose value is a JSON object
+A `rule` object may contain a property named `options`, whose value is a JSON object
 consisting of a set of name/value pairs with arbitrary names.
 The `options` objects shall describe the set of configurable options supported by the rule.
 
 The value within each name/value pair shall be a string, which may be the empty string.
 The value shall not be a JSON array or sub-object.
 
-### `formatSpecifiers` property { #ruleDescriptor-formatSpecifiers }
+### `messageFormats` property { #rule-messageFormats }
 
-A `ruleDescriptor` object may contain a property named `formatSpecifiers`, whose value is a JSON object
+A `rule` object may contain a property named `messageFormats`, whose value is a JSON object
 consisting of a set of name/value pairs with arbitrary names.
 
 The value within each name/value pair shall be a string that can be passed to a
 string formatting function (_e.g._, the C language `printf` function) to construct a formatted message in combination with
 an arbitrary number of additional function arguments.
 
-The set of names appearing in the `formatSpecifiers` property shall contain at least the set of strings
-which occur as values of the `result.formattedMessage.specifierId` property in the result log.
-The `formatSpecifiers` property may contain additional name/value pairs whose names do not appear
-as the value of the `result.formattedMessage.specifierId` property for any result in the result log.
+The set of names appearing in the `messageFormats` property shall contain at least the set of strings
+which occur as values of the `result.formattedMessage.formatId` property in the result log.
+The `messageFormats` property may contain additional name/value pairs whose names do not appear
+as the value of the `result.formattedMessage.formatId` property for any result in the result log.
 
 ~IsoNote
-Additional name/value pairs are permitted in the `formatSpecifiers` property
+Additional name/value pairs are permitted in the `messageFormats` property
 for the convenience of tool vendors, who might find it easier to emit the entire set of messages
 supported by a rule, rather than restricting it to those messages that happen to appear in the
 result log.
@@ -136,9 +136,9 @@ result log.
 ````
 ~
 
-### `helpUri` property { #ruleDescriptor-helpUri }
+### `helpUri` property { #rule-helpUri }
 
-A `ruleDescriptor` object may contain a property named `helpUri`, whose value is a string
+A `rule` object may contain a property named `helpUri`, whose value is a string
 containing the URI where the primary documentation for the rule can be found.
 
 ~ IsoNote
@@ -146,9 +146,9 @@ The documentation might include examples, contact information for the rule autho
 and links to additional information about the rule.
 ~
 
-### `properties` property { #ruleDescriptor-properties }
+### `properties` property { #rule-properties }
 
-A `ruleDescriptor` object may contain a property named `properties`, whose value is a JSON object
+A `rule` object may contain a property named `properties`, whose value is a JSON object
 consisting of a set of name/value pairs with arbitrary names.
 This allows tools to include information about the rule that is not explicitly specified in the SARIF format.
 
@@ -176,13 +176,13 @@ shall not be present.
 
 ### General { #formattedMessage-General }
 
-A `formattedMessage` object contains information that can be used to construct a fully formatted message that describes an issue.
+A `formattedMessage` object contains information that can be used to construct a fully formatted message that describes a result.
 
-### `specifierId` property { #formattedMessage-id }
-A `formattedMessage` object must contain a property named `specifierId`, whose value is a string that identifies the format string
+### `formatId` property { #formattedMessage-id }
+A `formattedMessage` object must contain a property named `formatId`, whose value is a string that identifies the format string
 used to format the message that describes this result.
-The value of `specifierId` must correspond to one of the names in the set of name/value pairs contained in the `formatSpecifiers` property (&sect;[#ruleDescriptor-formatSpecifiers])
-of the `ruleInfo` object (&sect;[#ruleDescriptor]) whose `id` property (&sect;[#ruleDescriptor-id]) matches the `ruleId` property (&sect;[#result-ruleId]) of this issue.
+The value of `formatId` must correspond to one of the names in the set of name/value pairs contained in the `messageFormats` property (&sect;[#rule-messageFormats])
+of the `rule` object (&sect;[#rule]) whose `id` property (&sect;[#rule-id]) matches the `ruleId` property (&sect;[#result-ruleId]) of this result.
 
 ### `arguments` property { #formattedMessage-arguments }
 A `formattedMessage` object may contain a property named `arguments`,

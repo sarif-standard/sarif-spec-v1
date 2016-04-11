@@ -10,15 +10,15 @@ test tools, and deployment tools.
 The Tool Orchestration Profile defines additional optional elements of the SARIF format
 that are intended for use in this scenario.
 
-## `runInfo` object { #tool-orchestration-profile-runInfo }
+## `run` object { #tool-orchestration-profile-run }
 
-### General { #tool-orchestration-profile-runInfo-general }
+### General { #tool-orchestration-profile-run-general }
 
-The Tool Orchestration Profile defines four additional properties on the `runInfo` object (&sect;[#runInfo]).
+The Tool Orchestration Profile defines four additional properties on the `run` object (&sect;[#run]).
 
-### `correlationId` property { #tool-orchestration-profile-runInfo-correlationId }
+### `correlationId` property { #tool-orchestration-profile-run-correlationId }
 
-A `runInfo` object may contain a property named `correlationId` whose value is a string
+A `run` object may contain a property named `correlationId` whose value is a string
 that allows the run to be associated with other artifacts produced by a larger automation process.
 
 ~ IsoExample
@@ -27,9 +27,9 @@ automated build process, the "build id" might serve as the `correlationId`,
 allowing the tool run to be associated with other artifacts produced by the build.
 ~
 
-### `architecture` property { #tool-orchestration-profile-runInfo-architecture }
+### `architecture` property { #tool-orchestration-profile-run-architecture }
 
-A `runInfo` object may contain a property named `architecture` that specifies the hardware
+A `run` object may contain a property named `architecture` that specifies the hardware
 architecture at which the analysis targets are targeted.
 
 This need not be the same as the architecture on which the static analysis tool is executed.
@@ -43,14 +43,14 @@ The tool might set the `architecture` property for the first run to `"x86"`,
 and for the second run to `"AMD64"`.
 ~
 
-### `runStartTime` property { #tool-orchestration-profile-runInfo-runStartTime }
+### `startTime` property { #tool-orchestration-profile-run-startTime }
 
-A `runInfo` object may contain a property named `runStartTime` whose value is a string
+A `run` object may contain a property named `startTime` whose value is a string
 specifying the date and time at which the run started.
 The string shall be in the format specified by (&sect;[#fileFormat-dateTime]).
 
-### `runEndTime` property { #tool-orchestration-profile-runInfo-runEndTime }
+### `endTime` property { #tool-orchestration-profile-run-endTime }
 
-A `runInfo` object may contain a property named `runEndTime` whose value is a string
+A `run` object may contain a property named `endTime` whose value is a string
 specifying the date and time at which the run ended.
 The string shall be in the format specified by (&sect;[#fileFormat-dateTime]).

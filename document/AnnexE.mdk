@@ -21,8 +21,8 @@ But how is the auditor to know what those rule ids mean?
 
 The first step is to locate the rule metadata, which can be done in various ways
 (see [Annex D](#Annex-D), Locating rule metadata).
-The `ruleDescriptor` (&sect;[#ruleDescriptor]) for this rule
-might include a `shortDescription` (&sect;[#ruleDescriptor-shortDescription])
+The `rule` object (&sect;[#rule]) for this rule
+might include a `shortDescription` (&sect;[#rule-shortDescription])
 such as "Do not dereference a null pointer."
 If the description is clear enough and the auditor well-enough informed about
 software development, that might suffice, but it would be best not to rely on that.
@@ -31,16 +31,16 @@ Ideally, there would exist a global, extensible set of criteria for correctness,
 similar to the Common Weakness Enumeration ([https://cwe.mitre.org/](https://cwe.mitre.org/)).
 Each correctness criterion would have a URI.
 
-In that case, a future version of the SARIF format could add a property `ruleUri` to the
-`ruleDescriptor` object.
+In that case, a future version of the SARIF format could add a `uri` property to the
+`rule` object.
 Also in that case, a "policy" could be conceptually defined as the set of rule URIs to
 which a software system must conform
 (perhaps with additional refinements such as the maximum number of permissible violations
 of each rule).
 
 With that infrastructure in place, an auditor could verify policy compliance by
-examining the set of `executedRules` (&sect;[#complianceInfo-executedRules]) in the
-`complianceInfo` (&sect;[#complianceInfo]),
+examining the set of `executedRules` (&sect;[#compliance-executedRules]) in the
+`compliance` object (&sect;[#compliance]),
 using the rule metadata to map the `ruleId` (&sect;[#executedRule-ruleId])
 of each `executedRule` (&sect;[#executedRule]) to the URI of the corresponding correctness criterion,
 and comparing the resulting set of correctness criteria to the applicable policy.

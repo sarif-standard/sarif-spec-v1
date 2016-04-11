@@ -5,12 +5,6 @@ This repo contains an early draft of the specification document for the Static A
 
 Please read the LICENSE file in the repo root directory, which explains the conditions for participating in the review of this draft specification.
 
-## Version
-
-The spec currently specifies that the `version` property of the top-level `issueLog` object shall be `0.1`.
-We will increment this gradually as the spec evolves, and the first version of the resulting standard will
-specify `1.0`.
-
 ## Document source format
 
 This document is written in [Madoko](https://www.madoko.net/),
