@@ -737,13 +737,13 @@ This is an example of a `shortMessage`:
 
 ### `formattedMessage` property { #result-formattedMessage }
 
-An `result` object (&sect;[#result]) may contain a property named `formattedMessage` whose value is
+A `result` object (&sect;[#result]) may contain a property named `formattedMessage` whose value is
 a `formattedMessage` object (&sect;[#formattedMessage]) that can be used to construct
-a fully formatted message that describes the result.
+a formatted message that describes the result.
 
-If the `formattedMessage` property is present on an `result`, the `fullMessage` property (&sect;[#result-fullMessage])
+If the `formattedMessage` property is present on a `result`, the `fullMessage` property (&sect;[#result-fullMessage])
 shall not be present.
-If the `fullMessage` property is present on an `result`, the `formattedMessage` property
+If the `fullMessage` property is present on a `result`, the `formattedMessage` property
 shall not be present.
 
 ### `locations` property { #result-locations }
@@ -764,7 +764,7 @@ then the result cannot be associated with a file.
 ~
 
 The `locations` array shall not contain more than one element unless the problem indicated by the result, if any, can only be corrected
-by making a change at all of the locations specified by the array elements.
+by making a change every location specified in the array.
 
 ~ IsoNumberedExample
 In programming languages that support partial classes,
@@ -1510,6 +1510,8 @@ which represents a 0-based index into the list of arguments.
 When a viewer or other program displays a message whose format is specified by a
 message format, it shall replace every occurrence of the placeholder `{`_n_`}`
 with the string value at index _n_ in the list of arguments.
+Within a message format, the characters "`{`" and "`}`" shall be represented by
+the character sequences "`{{`" and "`}}`" respectively.
 
 ~ IsoExample
 Given a message format:
