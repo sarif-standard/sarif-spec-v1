@@ -6,10 +6,9 @@ In this Annex, the words "should" and "may" are used non-normatively,
 purely to express that guidance.
 ~
 
-The Rule Metadata Profile (&sect;[#rule-metadata-profile]) defines a format
-for including rule metadata in a SARIF log file.
-Compliance with the Rule Metadata Profile is optional; that is, a SARIF log
-file need not include any rule metadata.
+The SARIF format allows rule metadata to be included in a SARIF log file
+(see &sect;[#run-rules] and &sect;[#rule]).
+A SARIF log file need not include any rule metadata.
 This raises the questions of when rule metadata should be included in a log file,
 and how to locate the rule metadata if it is not included in the log file.
 

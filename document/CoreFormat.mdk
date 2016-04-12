@@ -347,6 +347,11 @@ each of which represents a single result produced in the course of a run.
 
 The `results` array shall be empty if the run that produced the `run` object did not produce any results.
 
+### `rules` property { #run-rules }
+
+A `run` object (&sect;[#run]) may contain a property named `rules`
+whose value is an array of `rule` objects (&sect;[#rule]) .
+
 ### `tags` property { #run-tags }
 
 A `run` object may contain a property named `tags`, whose value is a tag set.
@@ -716,7 +721,7 @@ This is an example of a `fullMessage`:
 ```
 ~
 
-### `shortMessage` property
+### `shortMessage` property { #result-shortMessage }
 
 A `result` object may contain a property named `shortMessage` whose value is a string that describes the result.
 The `shortMessage` property should be a single sentence that is understandable
@@ -729,6 +734,17 @@ This is an example of a `shortMessage`:
     of 'y'."
 ```
 ~
+
+### `formattedMessage` property { #result-formattedMessage }
+
+A `result` object (&sect;[#result]) may contain a property named `formattedMessage` whose value is
+a `formattedMessage` object (&sect;[#formattedMessage]) that can be used to construct
+a formatted message that describes the result.
+
+If the `formattedMessage` property is present on a `result`, the `fullMessage` property (&sect;[#result-fullMessage])
+shall not be present.
+If the `fullMessage` property is present on a `result`, the `formattedMessage` property
+shall not be present.
 
 ### `locations` property { #result-locations }
 
@@ -748,7 +764,7 @@ then the result cannot be associated with a file.
 ~
 
 The `locations` array shall not contain more than one element unless the problem indicated by the result, if any, can only be corrected
-by making a change at all of the locations specified by the array elements.
+by making a change every location specified in the array.
 
 ~ IsoNumberedExample
 In programming languages that support partial classes,
@@ -1408,6 +1424,167 @@ A `annotatedCodeLocation` object may contain a property named `tags`, whose valu
 
 An `annotatedCodeLocation` object may contain a property named `properties`, whose value is a property bag.
 This allows tools to include information about the entry that is not explicitly specified in the SARIF format.
+
+## `rule` object { #rule }
+
+### General { #rule-General }
+
+A `rule` object contains information that describes a rule.
+
+### Constraints
+
+Either the `shortDescription` property (&sect;[#rule-shortDescription])
+or the `fullDescription` property (&sect;[#rule-fullDescription])
+or both must be present.
+
+### `id` property { #rule-id }
+
+A `rule` object shall contain a property named `id` whose value is a string containing
+a stable, opaque identifier for the rule.
+
+~ IsoExample
+`"CA2101"`
+~
+
+### `name` property { #rule-name }
+
+A `rule` object may contain a property named `name` whose value is a string containing
+a rule identifier that is understandable to an end user.
+If `name` contains implementation details that change over time,
+a tool author might alter a rule's `name` (while leaving
+the stable `id` property unchanged).
+
+~IsoNote
+A rule `name` is suitable in contexts where a readable identifier is preferable and where the
+lack of stability is not a concern.
+~
+
+~ IsoExample
+`"SpecifyMarshalingForPInvokeStringArguments"`
+~
+
+### `shortDescription` property { #rule-shortDescription }
+
+A `rule` object may contain a property named `shortDescription` whose value is a string containing
+a concise description of the rule. The `shortDescription` property should be a single sentence that is understandable
+when displayed in user interface contexts where the available space is limited to a single line of text.
+
+~ IsoExample
+`"Specify marshaling for P/Invoke string arguments"`
+~
+
+### `fullDescription` property { #rule-fullDescription}
+
+An `rule` object should contain a property named `fullDescription` whose value is a string that describes the rule.
+
+The `fullDescription` property should, as far as possible, provide details sufficient to enable resolution of any problem indicated by the result. 
+
+The first sentence of the `fullDescription` property should provide a concise description of the rule,
+suitable for display in cases where available space is limited.
+Tools that construct `fullDescription` in this way need not provide a value for the `shortDescription` property.
+Tools that do not construct `fullDescription` in this way should provide a value for the `shortDescription` property,
+because otherwise, the initial portion of `fullDescription` that a viewer displays where available space is limited
+might not be understandable.
+
+### `options` property { #rule-options }
+
+A `rule` object may contain a property named `options`, whose value is a JSON object
+consisting of a set of name/value pairs with arbitrary names.
+The `options` objects shall describe the set of configurable options supported by the rule.
+
+The value within each name/value pair shall be a string, which may be the empty string.
+The value shall not be a JSON array or sub-object.
+
+### `messageFormats` property { #rule-messageFormats }
+
+A `rule` object may contain a property named `messageFormats`, whose value is a JSON object
+consisting of a set of name/value pairs with arbitrary names.
+
+The value within each name/value pair shall be a string, which we refer to as a "message format,"
+that can be used to construct a formatted message in combination with
+an arbitrary number of additional strings, which we refer to as "arguments" (see &sect;[#formattedMessage-arguments]).
+
+A message format shall consist of plain text interspersed with zero or more placeholders.
+Each placeholder shall be of the form "`{`_n_`}`", where _n_ is a non-negative integer
+which represents a 0-based index into the list of arguments.
+When a viewer or other program displays a message whose format is specified by a
+message format, it shall replace every occurrence of the placeholder `{`_n_`}`
+with the string value at index _n_ in the list of arguments.
+Within a message format, the characters "`{`" and "`}`" shall be represented by
+the character sequences "`{{`" and "`}}`" respectively.
+
+~ IsoExample
+Given a message format:
+```
+The variable "{0}" defined on line {1} is never used. Consider removing "{0}".
+```
+together with the arguments "`x`" and "`12`", a viewer would display the formatted string
+```
+The variable "x" defined on line 12 is never used. Consider removing "x".
+```
+~
+
+The set of names appearing in the `messageFormats` property shall contain at least the set of strings
+which occur as values of the `result.formattedMessage.formatId` property in the result log.
+The `messageFormats` property may contain additional name/value pairs whose names do not appear
+as the value of the `result.formattedMessage.formatId` property for any result in the result log.
+
+~IsoNote
+Additional name/value pairs are permitted in the `messageFormats` property
+for the convenience of tool vendors, who might find it easier to emit the entire set of messages
+supported by a rule, rather than restricting it to those messages that happen to appear in the
+result log.
+~
+
+~ IsoExample
+
+````
+{
+    "objectCreation" : "{0} creates a new instance of {1} which is never used.
+	                    Pass the instance as an argument to another method, assign the instance to a variable,
+						or remove the object creation if it is unnecessary.",  
+    "stringReturnValue" : "{0} calls {1} but does not use the new string instance that the method returns.
+	                       Pass the instance as an argument to another method, assign the instance to a variable,
+						  or remove the call if it is unnecessary."        
+}
+````
+~
+
+### `helpUri` property { #rule-helpUri }
+
+A `rule` object may contain a property named `helpUri`, whose value is a string
+containing the URI where the primary documentation for the rule can be found.
+
+~ IsoNote
+The documentation might include examples, contact information for the rule authors,
+and links to additional information about the rule.
+~
+
+### `tags` property { #rule-tags }
+
+A `rule` object may contain a property named `tags`, whose value is a tag set.
+
+### `properties` property { #rule-properties }
+
+A `rule` object may contain a property named `properties`, whose value a property bag.
+This allows tools to include information about the rule that is not explicitly specified in the SARIF format.
+
+## `formattedMessage` object { #formattedMessage }
+
+### General { #formattedMessage-General }
+
+A `formattedMessage` object contains information that can be used to construct a formatted message that describes a result.
+
+### `formatId` property { #formattedMessage-id }
+A `formattedMessage` object must contain a property named `formatId`, whose value is a string that identifies the message format
+used to format the message that describes this result.
+The value of `formatId` must correspond to one of the names in the set of name/value pairs contained in the `messageFormats` property (&sect;[#rule-messageFormats])
+of the `rule` object (&sect;[#rule]) whose `id` property (&sect;[#rule-id]) matches the `ruleId` property (&sect;[#result-ruleId]) of this result.
+
+### `arguments` property { #formattedMessage-arguments }
+A `formattedMessage` object may contain a property named `arguments`,
+whose value is an array of string values that will be used, in combination with a message format,
+to construct a result message.
 
 ## `fix` object { #fix }
 
