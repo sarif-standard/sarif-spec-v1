@@ -725,7 +725,7 @@ This is an example of a `fullMessage`:
 
 A `result` object may contain a property named `shortMessage` whose value is a string that describes the result.
 The `shortMessage` property should be a single sentence that is understandable
-when displayed in user interface contexts where the available space is limited to a single line of text.
+when visible space is limited to a single line of text.
 
 ~ IsoExample
 This is an example of a `shortMessage`:
@@ -794,7 +794,7 @@ since fixing some but not all of the references would cause a compilation error.
 ### `toolFingerprint` property { #result-toolFingerprint }
 
 A `result` object may contain a property named `toolFingerprint` whose value is a string
-that contributes to the process of uniquely identifying the result.
+that contributes to the unique identity of the result.
 [Annex A](#Annex-A) explains how a result management system can use this value.
 
 ### `codeFlows` property { #result-codeFlows }
@@ -1467,7 +1467,7 @@ lack of stability is not a concern.
 
 A `rule` object may contain a property named `shortDescription` whose value is a string containing
 a concise description of the rule. The `shortDescription` property should be a single sentence that is understandable
-when displayed in user interface contexts where the available space is limited to a single line of text.
+when visible space is limited to a single line of text.
 
 ~ IsoExample
 `"Specify marshaling for P/Invoke string arguments"`
