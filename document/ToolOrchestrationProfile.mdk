@@ -19,7 +19,7 @@ The Tool Orchestration Profile defines four additional properties on the `run` o
 ### `correlationId` property { #tool-orchestration-profile-run-correlationId }
 
 A `run` object may contain a property named `correlationId` whose value is a string
-that allows the run to be associated with other artifacts produced by a larger automation process.
+that allows the run to be correlated with other artifacts produced by a larger automation process.
 
 ~ IsoExample
 In an environment where a static analysis tool is executed as part of a larger
