@@ -342,10 +342,14 @@ run: {
 
 ### `results` property { #run-results }
 
-A `run` object shall contain a property named `results` whose value is an array containing zero or more `result` objects (&sect;[#result]),
-each of which represents a single result produced in the course of a run.
+If the static analysis tool was run with the intent of scanning files and producing results, then
+the `run` object shall contain a property named `results` whose value is an array containing zero or more `result` objects (&sect;[#result]),
+each of which represents a single result produced in the course of the run.
 
 The `results` array shall be empty if the run that produced the `run` object did not produce any results.
+
+If the tool was run solely for the purpose of exporting rule metadata (see &sect;[#run-rules]),
+the `results` property shall either be absent, or shall be an empty array.
 
 ### `rules` property { #run-rules }
 
