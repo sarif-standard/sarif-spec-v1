@@ -389,10 +389,10 @@ the post-processing tool should not alter any part of the `tool` object.
 ```
 {
     "name": "CodeScanner",                                       # see \(&sect;[#tool-name]\)
-    "fullName": "CodeScanner 2.0, Developer Preview (en-US)",    # see \(&sect;[#tool-fullName]\)
-    "semanticVersion": "2.0.0-beta.1",                           # see \(&sect;[#tool-semanticVersion]\)
-    "version": "2.0 Beta 1 x86 (en-US)                           # see \(&sect;[#tool-version]\)
-    "fileVersion": "2.0.1502.2"                                  # see \(&sect;[#tool-fileVersion]\)
+    "fullName": "CodeScanner 1.1, Developer Preview (en-US)",    # see \(&sect;[#tool-fullName]\)
+    "semanticVersion": "1.1.2-beta.12",                          # see \(&sect;[#tool-semanticVersion]\)
+    "version": "1.1.2b12,                                        # see \(&sect;[#tool-version]\)
+    "fileVersion": "1.1.1502.2"                                  # see \(&sect;[#tool-fileVersion]\)
 }
 ```
 ~
@@ -411,7 +411,7 @@ A `tool` object may contain a property named `fullName` whose value is a string 
 along with its version and any other useful identifying information, such as its locale.
 
 ~ IsoExample
-`"CodeScanner 2.0, Developer Preview (en-US)"`
+`"CodeScanner 1.1, Developer Preview (en-US)"`
 ~
 
 ### `semanticVersion` property { #tool-semanticVersion }
@@ -420,7 +420,7 @@ In a log file produced by a static analysis tool, a `tool` object shall contain 
 whose value is a string containing the tool version in the format specified by Semantic Versioning 2.0.0 ("SemVer").
 
 ~ IsoNumberedExample { @IsoNumberedExample=1 }
-`"2.0.0-beta.1"`
+`"1.1.2-beta.12"`
 ~
 
 ~ IsoNumberedNote { @IsoNumberedNote=1 }
@@ -439,9 +439,9 @@ Suppose an analysis tool natively presents its version string as `"2.0"`
 ~
 
 ~ IsoNumberedExample
-Suppose an analysis tool natively presents its version string as `"2.0 Beta 1"`
+Suppose an analysis tool natively presents its version string as `"1.1.2b12"`
 (the "pre-release" information is not in SemVer format).
-The tool would synthesize a SemVer string `"2.0.0-beta.1"`.
+The tool would synthesize a SemVer string `"1.1.2-beta.12"`.
 ~
 
 In a log file produced by a conversion tool, the `semanticVersion` property shall be absent.
