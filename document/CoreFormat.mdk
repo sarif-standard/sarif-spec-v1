@@ -349,7 +349,7 @@ each of which represents a single result produced in the course of the run.
 The `results` array shall be empty if the run that produced the `run` object did not produce any results.
 
 If the tool was run solely for the purpose of exporting rule metadata (see &sect;[#run-rules]),
-the `results` property shall either be absent, or shall be an empty array.
+the `results` property shall be absent.
 
 ### `rules` property { #run-rules }
 
