@@ -350,7 +350,18 @@ The `results` array shall be empty if the run that produced the `run` object did
 ### `rules` property { #run-rules }
 
 A `run` object (&sect;[#run]) may contain a property named `rules`
-whose value is an array of `rule` objects (&sect;[#rule]) .
+whose value is a JSON object, each of whose properties represents an analysis rule.
+
+Each property name in the `rules` object shall be the id of an analysis rule.
+
+Each property value in the `rules` object shall be a `rule` object (&sect;[#rule]) whose
+`id` property (&sect;[#rule-id]) is equal to the property name.
+
+~ IsoNote
+This property is a dictionary, rather than simply an array of `rule` objects,
+to facilitate looking up the rule associated with each `result` object (&sect;[#result])
+by means of the `result`'s `ruleId` property (&sect;[#result-ruleId]).
+~
 
 ### `tags` property { #run-tags }
 
