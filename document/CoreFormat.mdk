@@ -389,9 +389,10 @@ the post-processing tool should not alter any part of the `tool` object.
 ```
 {
     "name": "CodeScanner",                                       # see \(&sect;[#tool-name]\)
-    "fullName": "CodeScanner 2.0, Developer Preview (en-US)",    # see \(&sect;[#tool-fullName]\)
-    "version": "2.0.0-beta",                                     # see \(&sect;[#tool-version]\)
-    "fileVersion": "2.0.1502.2"                                  # see \(&sect;[#tool-fileVersion]\)
+    "fullName": "CodeScanner 1.1, Developer Preview (en-US)",    # see \(&sect;[#tool-fullName]\)
+    "semanticVersion": "1.1.2-beta.12",                          # see \(&sect;[#tool-semanticVersion]\)
+    "version": "1.1.2b12,                                        # see \(&sect;[#tool-version]\)
+    "fileVersion": "1.1.1502.2"                                  # see \(&sect;[#tool-fileVersion]\)
 }
 ```
 ~
@@ -410,28 +411,61 @@ A `tool` object may contain a property named `fullName` whose value is a string 
 along with its version and any other useful identifying information, such as its locale.
 
 ~ IsoExample
-`"CodeScanner 2.0, Developer Preview (en-US)"`
+`"CodeScanner 1.1, Developer Preview (en-US)"`
+~
+
+### `semanticVersion` property { #tool-semanticVersion }
+
+In a log file produced by a static analysis tool, a `tool` object shall contain a property named `semanticVersion`
+whose value is a string containing the tool version in the format specified by Semantic Versioning 2.0.0 ("SemVer").
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+`"1.1.2-beta.12"`
+~
+
+~ IsoNumberedNote { @IsoNumberedNote=1 }
+Semantic versions have the property of being sortable in chronological order of release.
+The presence of the `semanticVersion` property allows results management systems to (for example)
+restrict the results they display to versions newer than a specified version,
+or to restrict the results to a particular major version.
+~
+
+If the tool does not natively present its version string in SemVer format,
+it shall synthesize a SemVer string to populate the `semanticVersion` property. 
+
+~ IsoNumberedExample
+Suppose an analysis tool natively presents its version string as `"2.0"`
+(no "patch level" is available). The tool would synthesize a SemVer string `"2.0.0"`.
+~
+
+~ IsoNumberedExample
+Suppose an analysis tool natively presents its version string as `"1.1.2b12"`
+(the "pre-release" information is not in SemVer format).
+The tool would synthesize a SemVer string `"1.1.2-beta.12"`.
+~
+
+In a log file produced by a conversion tool, the `semanticVersion` property shall be absent.
+
+~ IsoNumberedNote
+The rationale is that a static analysis tool knows whether its version string is intended to be
+interpreted according to SemVer.
+A converter will in general not know this, even if the tool's version string conforms to the
+pattern specified by SemVer.
 ~
 
 ### `version` property { #tool-version }
 
-A `tool` object should contain a property named `version` whose value is a string containing the tool version.
-If present, the string should be in the format specified by Semantic Versioning 2.0.0.
+In a log file produced by a static analysis tool, a `tool` object may contain a property named `version`
+whose value is a string containing the tool version in whatever format the tool natively provides.
 
-~ IsoNote
-Semantic versions have the property of being sortable in chronological order of release.
-~
-
-~ IsoExample
-`"1.0.0-beta"`
-~
+In a log file produced by a converter, the `version` property shall be present.
 
 ### `fileVersion` property { #tool-fileVersion }
 
 If the operating system on which the tool runs provides a value for the file version of the tool's primary executable file,
 then the `tool` object may contain a property named `fileVersion` whose value is
 a string representation of that file version.
-If the operating system does not provide such a value, the `fileVersion` property shall not be present.
+If the operating system does not provide such a value, the `fileVersion` property shall be absent.
 
 ~ IsoExample
 On the Windows platform, this information is available in the `FILEVERSION` member of the `VERSIONINFO` structure.
@@ -753,9 +787,9 @@ a `formattedMessage` object (&sect;[#formattedMessage]) that can be used to cons
 a formatted message that describes the result.
 
 If the `formattedMessage` property is present on a `result`, the `fullMessage` property (&sect;[#result-fullMessage])
-shall not be present.
+shall be absent.
 If the `fullMessage` property is present on a `result`, the `formattedMessage` property
-shall not be present.
+shall be absent.
 
 ### `locations` property { #result-locations }
 
