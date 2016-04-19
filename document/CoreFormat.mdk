@@ -340,6 +340,48 @@ run: {
 ```
 ~
 
+### `logicalLocations` property { #run-logicalLocations }
+
+A `run` object should contain a property named `logicalLocations` whose value is a dictionary,
+each of whose properties represents the logical location of one or more results produced in the course of the run.
+
+With one exception described in &sect;[#location-logicalLocationKey], each property name in the `logicalLocations` object shall be
+a string representing the logical location where the result was produced, in a format consistent with
+the programming language in which the programmatic construct specified by that logical location was expressed.
+We refer to this string as a "fully qualified logical name".
+See &sect;[#location-fullyQualifiedLogicalName] for examples.
+
+Each value in the `logicalLocation` object shall be
+an array of one or more `logicalLocationComponent` objects (&sect;[#logicalLocationComponent]).
+This allows reference to results which occur in nested logical components, for example,
+a member nested within a type which is in turn nested within a namespace.
+When a result occurs in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
+the outermost construct,
+the next element shall refer to a construct nested immediately within the first construct,
+and so on, with the last element referring to the most deeply nested construct.
+
+~ IsoExample
+
+```
+"logicalLocations": {
+  "namespaceA::namespaceB::classC": [
+    {
+      "name": "namespaceA",
+      "kind": "namespace"
+    },
+    {
+      "name": "namespaceB",
+      "kind": "namespace"
+    },
+    {
+      "name": "classC",
+      "kind": "type"
+    }
+  ]
+}
+```
+~
+
 ### `results` property { #run-results }
 
 If the static analysis tool was run with the intent of scanning files and producing results, then
@@ -491,6 +533,8 @@ This allows tools to include information about the themselves that is not explic
 A `file` object represents a single file. In some cases, this file might be nested within another file,
 referred to as the "containing file."
 
+`file` objects occur as members of arrays within the `run.files` object (&sect;[#run-files]). 
+
 If the `file` object does not represent a nested file, neither of the properties
 `pathFromParent` (&sect;[#file-pathFromParent]) or `offsetFromParent` (&sect;[#file-offsetFromParent]) shall be present.
 
@@ -507,6 +551,43 @@ whose value is a string specifying that path.
 
 If the location of the file within its containing property cannot be expressed by means of a path,
 then the `pathFromParent` property shall be absent.
+
+If the `file` object occurs as the only member of an array within the `run.files` object (&sect;[#run-files]),
+then the `pathFromParent` property may be absent.
+If it is present, it must be equal to the corresponding property name within the `run.files` object,
+
+~ IsoNote
+In this case, it might be interpreted as a path from a "null" parent.
+~
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+
+In this example, the array of `file` objects has only one element, and `pathFromParent` is omitted.
+```
+"files": {
+  "file:///C:/Code/x.c": [
+    {
+      "mimeType": "x-c"
+    }
+  ]
+}
+```
+~
+
+~ IsoNumberedExample
+
+In this example, the array of `file` objects has only one element, and `pathFromParent` is equal to the property name.
+```
+"files": {
+  "file:///C:/Code/x.c": [
+    {
+      "pathFromParent": "file:///C:/Code/x.c",
+      "mimeType": "x-c"
+    }
+  ]
+}
+```
+~
 
 ### `offsetFromParent` property { #file-offsetFromParent }
 
@@ -996,7 +1077,10 @@ This allows tools to include information about the result that is not explicitly
 
 A `location` object specifies the location where a static analysis tool produced a result.
 A `location` object should specify the physical location (&sect;[#physicalLocation]) of the result,
-and it may also specify the logical location (&sect;[#location-logicalLocation]) of the result.
+and it may also specify the logical location (&sect;[#location-fullyQualifiedLogicalName]) of the result.
+
+A logical location specifies a programmatic construct, for example, a class name or a function name,
+without specifying the programming artifact within which that construct occurs.
 
 ### Constraints { #location-Constraints }
 
@@ -1066,10 +1150,6 @@ The conversion tool should set the `resultFile` property to `b.h`,
 and it should not set the `analysisTarget` property. 
 ~
 
-Within any one location object, the `logicalLocation` property (&sect;[#location-logicalLocation])
-and the `fullyQualifiedLogicalName` property (&sect;[#location-fullyQualifiedLogicalName])
-shall either both be present or both be absent.
-
 ### `analysisTarget` property { #location-analysisTarget }
 
 A `location` object may contain a property named `analysisTarget` whose value is a `physicalLocation` object (&sect;[#physicalLocation])
@@ -1087,28 +1167,13 @@ that identifies the file where the static analysis tool produced the result.
 Whether `resultFile` is present depends on the information available to the tool that produces the log file
 (see &sect;[#location-Constraints]).
 
-### `logicalLocation` property { #location-logicalLocation }
-
-A `location` object may contain a property named `logicalLocation`,
-which specifies the logical location where the static analysis tool detected the result.
-
-A logical location specifies a programmatic construct, for example, a class name or a function name,
-without specifying the programming artifact within which that construct occurs.
-
-The value of the `logicalLocation` property shall be
-an array of `logicalLocationComponent` objects (&sect;[#logicalLocationComponent]).
-This allows reference to results which occur in nested logical components, for example,
-a method nested within a class which is in turn nested within a namespace.
-When a result occurs in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
-the outermost construct,
-the next element shall refer to a construct nested immediately within the first construct,
-and so on, with the last element referring to the most deeply nested construct.
-
 ### `fullyQualifiedLogicalName` property { #location-fullyQualifiedLogicalName }
 
 A `location` object may contain a property named `fullyQualifiedLogicalName` whose value is a string
-which summarizes the information in the `logicalLocationComponent` array (&sect;[#logicalLocationComponent])
-in a format consistent with the programming language in which the programming constructs specified by that array were expressed.
+which specifies the fully qualified name of the logical location where the analysis tool produced the result.
+
+The format of the `fullyQualifiedLogicalName` string shall be consistent with the programming language
+in which the programmatic construct specified by that logical location was expressed.
 
 ~ IsoNumberedExample { @IsoNumberedExample=1 }
 C: `create_process`
@@ -1120,9 +1185,76 @@ C++: `Namespace::Class::Method(int, double) const &&`
 C#: `Namespace1.Namespace2.Class.Method(System.String, int[])`
 ~
 
+If the `run.logicalLocations` property (&sect;[#run-logicalLocations]) is present,
+the value of the `fullyQualifiedLogicalName` property should be equal to the name of one of the properties on the `run.logicalLocations` object,
+with one exception, described in &sect;[#location-logicalLocationKey].
+
 ~ IsoNote
 The intent of this property is to allow a result log viewer to display the logical location
 in a way that is easily understood by an end user.
+~
+
+### `logicalLocationKey` { #location-logicalLocationKey }
+
+The `location` object may contain a property named `logicalLocationKey` whose value is a string.
+If present, this string shall be equal to the name of one of the properties on the `run.logicalLocations` object (&sect;[#run-logicalLocations]),
+which provides additional information about the logical location specified by `fullyQualifiedLogicalName` (&sect;[#location-fullyQualifiedLogicalName]).
+
+`logicalLocationKey` is only necessary if, in the course of a run, the tool produces results in two or more
+distinct logical locations with the same `fullyQualifiedLogicalName`.
+In that case, the tool shall synthesize a unique name by appending a suffix to `fullyQualifiedLogicalName`,
+assign the resulting string to `logicalLocationKey`, and use that string as the key into the `run.logicalLocations` dictionary.
+
+~ IsoExample
+Suppose a tool analyzes two C++ source files:
+
+```
+// file1.cpp
+namespace A {
+    class B {
+    }
+}
+
+// file2.cpp
+namespace A {
+    namespace B {
+        class C {
+        }
+    }
+} 
+```
+
+(These could not coexist in the same compilation, but there is no reason two such source files could not exist.)
+
+If the tool produced one result in class `B` in file1.cpp, and another result in namespace `B` in file2.cpp,
+the `fullyQualifiedLogicalName` for both would be `A::B`.
+In that case, the tool might set the `logicalLocationKey` property of the `location` in either one of the results to `A::B-0`,
+and it might populate the `logicalLocations` property as follows:
+
+```
+"logicalLocations": {
+  "A::B": [
+    {
+      "name": "A",
+      "kind": "namespace"
+    },
+    {
+      "name": "B",
+      "kind": "namespace"
+    }
+  ],
+  "A::B-0": [
+    {
+      "name": "A",
+      "kind": "namespace"
+    },
+    {
+      "name": "B",
+      "kind": "type"
+    }
+  ]
+}
+```
 ~
 
 ### `tags` property { #location-tags }
@@ -1146,8 +1278,8 @@ A physical location specifies a reference to a programming artifact together wit
 A `physicalLocation` object shall contain a property named `uri` whose value is a string that represents
 the location of the file as a valid URI.
 
-The value of the `uri` property should be equal to the name of one of the properties on the
-`run.files` object (&sect;[#run-files]),
+If the `run.files` property (&sect;[#run-files]) is present, the value of the `uri` property should be equal to
+the name of one of the properties on the `run.files` object,
 which provides additional information about the file specified by `uri`.
 
 ~ IsoExample
@@ -1419,6 +1551,8 @@ and represents an insertion point at the end of the file.
 
 A `logicalLocationComponent` object describes a component of a logical location.
 
+`logicalLocationComponent` objects occur as members of arrays within the `run.logicalLocations` object (&sect;[#run-logicalLocations]).
+
 ### `name` property { #logicalLocationComponent-name }
 
 A `logicalLocationComponent` object shall contain a property named `name`, whose value shall be a string that identifies
@@ -1432,12 +1566,61 @@ A C++ analysis tool might emit the `name` property of a function as the "decorat
 which encodes the function signature in a manner that is compiler-dependent and not easily readable.
 ~
 
+
+If the `logicalLocationComponent` object occurs as the only member of an array within
+the `run.logicalLocations` object (&sect;[#run-logicalLocations]),
+and if the `name` property would be equal to the name of the corresponding property, then the `name` property may be absent.
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+In this example, the array of `logicalLocationComponent` objects has only one element, and `name` is omitted.
+```
+"logicalLocations": {
+  "functionF": [
+    {
+      "kind": "function"
+    }
+  ]
+}
+```
+~
+
+~ IsoNumberedExample
+In this example, the array of `logicalLocationComponent` objects has only one element, and `name` is equal to the property name.
+```
+"logicalLocations": {
+  "functionF": [
+    {
+      "pathFromParent": "functionF",
+      "kind": "function"
+    }
+  ]
+}
+```
+~
+
+~ IsoNumberedExample
+In this example, the array of `logicalLocationComponent` objects has only one element,
+but `name` is not equal to the property name, so it cannot be omitted.
+```
+"logicalLocations": {
+  "functionF-0": [
+    {
+      "pathFromParent": "functionF",
+      "kind": "function"
+    }
+  ]
+}
+```
+~
+
 ### `kind` property { #logicalLocationComponent-kind }
 
 A `logicalLocationComponent` object should contain a property named `kind`, whose value shall be one of the following strings,
 if any of those strings accurately describes the construct identified by this object:
 
-*	`method`
+*   `declaration`
+*   `function`
+*   `member`
 *	`module`
 *	`namespace`
 *	`package`
