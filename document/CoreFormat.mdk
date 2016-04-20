@@ -1635,6 +1635,7 @@ if any of those strings accurately describes the construct identified by this ob
 *   `declaration`
 *   `function`
 *   `member`
+*   `method`
 *	`module`
 *	`namespace`
 *	`package`
