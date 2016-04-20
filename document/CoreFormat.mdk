@@ -382,6 +382,19 @@ and so on, with the last element referring to the most deeply nested construct.
 ```
 ~
 
+~ IsoNote
+There are two reasons why the more detailed information in `logicalLocations` is useful,
+even though much of the information it contains is captured in the `location.fullyQualifiedLogicalName` property:
+
+1. It allows results management systems and other programs to organize
+    analysis results, for example, by asking questions such as "How many results were
+    found in the class `NamespaceA.NamespaceB.ClassC`?".
+    Programs can ask these questions without having to know how to parse the `fullyQualifiedLogicalName` string.
+
+2. In rare cases, `fullyQualifiedLogicalName` might not be unique.
+    See &sect;[#location-logicalLocationKey] for more information.
+~
+
 ### `results` property { #run-results }
 
 If the analysis tool was run with the intent of scanning files and producing results, then
@@ -1082,14 +1095,14 @@ without specifying the programming artifact within which that construct occurs.
 There are two reasons to include logical locations in the SARIF format in addition to physical locations:
 
 1. Logical location information is an important contributor to fingerprinting scenarios,
-    because it is more resilient to changes in source code than are line locations.
+    because it is typically more resilient to changes in source code than are line locations.
     See Annex A for more information about fingerprinting.
     The `fullyQualifiedLogicalName` property (&sect;[#location-fullyQualifiedLogicalName])
     is particularly convenient for fingerprinting.
     
 2. In the absence of symbol information, binary analysis tools might not have source code locations available,
     so information about line and column numbers might not be present in the log file.
-    In this case, code editors can use logical location to navigate from a result to the correct
+    In this case, code editors, other programs, or end users can use logical location to navigate from a result to the correct
     source code location.
 ~
 
@@ -1201,11 +1214,19 @@ the value of the `fullyQualifiedLogicalName` property should be equal to the nam
 with one exception, described in &sect;[#location-logicalLocationKey].
 
 ~ IsoNote
-The reason the `fullyQualifiedLogicalName` property exists,
-even though the information it contains is presented in more detail in the `run.logicalLocations` property,
-is to allow a result log viewer to display the logical location in a way that is easily understood by users.
-As mentioned in &sect;[#location-General], `fullyQualifiedLogicalName` is also particularly convenient
+There are a few reasons the `fullyQualifiedLogicalName` property exists,
+even though the information it contains is presented in more detail in the `run.logicalLocations` property.
+
+1. It allows a result log viewer to display the logical location in a way that is easily understood by users.
+
+2. As mentioned in &sect;[#location-General], `fullyQualifiedLogicalName` is also particularly convenient
 for fingerprinting, although the more detailed information in `run.logicalLocations` could be used instead.
+
+3. It relieves viewers from having to format the logical location from the more detailed
+information in `run.logicalLocations`.
+
+4. It is useful for producing readable in-source suppressions (for example, "suppress all instance of rule `CA2101`
+    in the class `NamespaceA.NamespaceB.ClassC`").
 ~
 
 ### `logicalLocationKey` { #location-logicalLocationKey }

@@ -47,3 +47,12 @@ and the converter (and its version) in deciding how to synthesize any remaining 
 By design, to avoid this added complexity, the SARIF standard does not define an element to hold the converter version.
 This, together with the guidance that converter implementers should not attempt to synthesize missing elements,
 allows viewer implementers to assume that all files from the same version of the same tool are identical in structure.
+
+This general guidance is embodied in various sections of the specification. For example:
+
+* A converter that knows which file a result was produced in, but not which file the analysis tool
+    was originally instructed to scan, should populate the `location.resultFile` property,
+    but should not attempt to populate `location.analysisTarget` (see &sect;[#location-Constraints]).
+    
+* A converter should not attempt to guess whether the analysis tool's version string is intended
+    to be interpreted as a Semantic Version 2.0.0 version string (see &sect;[#tool-semanticVersion]).
