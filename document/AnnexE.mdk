@@ -1,7 +1,7 @@
 # Annex E (informative) Relationships among rules, correctness criteria, and policies { - #Annex-E }
 
 As defined in the Terms and Definitions section (&sect;[#terms-and-definitions]),
-a rule is a specific criterion for correctness verified by a static analysis tool,
+a rule is a specific criterion for correctness verified by an analysis tool,
 and a rule id is a unique, stable identifier that a tool associates with a rule.
 In this Annex, we limit our discussion to tools that associate a rule id with each rule;
 not all tools do so.

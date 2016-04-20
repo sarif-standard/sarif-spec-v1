@@ -2,7 +2,7 @@
 
 ## General { #policy-compliance-profile-general }
 
-It is sometimes desirable to use the output of a static analysis tool to help determine
+It is sometimes desirable to use the output of an analysis tool to help determine
 whether a project is in compliance with applicable policies.
 For example, a policy might state that "the code shall contain no null-dereference errors."
 To determine whether their code base complies with this policy,
@@ -44,7 +44,7 @@ of zero or more `configuredRule` objects (&sect;[#configuredRule]).
 
 ### General { #configuredRule-general }
 
-An `configuredRule` object specifies a rule that the static analysis tool was configured
+An `configuredRule` object specifies a rule that the analysis tool was configured
 to execute for the run described by the current `run` (&sect;[#run]).
 The `run` need not contain any `result` objects (&sect;[#result]) for this rule,
 and indeed it will not if the tool detected no violations of the rule.

@@ -7,9 +7,9 @@ purely to express that guidance.
 ~
 
 There are two broad categories of tools that can produce output in the SARIF format.
-Static analysis tools produce SARIF as a result of performing a scan on a set of analysis targets.
+Analysis tools produce SARIF as a result of performing a scan on a set of analysis targets.
 Converters translate existing data from a non-SARIF format into the SARIF format.
-That data might come from a static analysis tool that produces output in a non-SARIF format,
+That data might come from an analysis tool that produces output in a non-SARIF format,
 from a bug database, or from any other source.
 
 Converters should populate those elements of the SARIF format
@@ -38,7 +38,7 @@ The reason is that the viewer itself might examine the analysis tool and its ver
 and attempt to synthesize missing elements.
 
 Now suppose a converter made a bad choice in synthesizing a missing element, and then fixed the problem in an update.
-As a result, two log files claiming to have been produced by the same version of the same static analysis tools
+As a result, two log files claiming to have been produced by the same version of the same analysis tools
 might have different elements filled in, or the same elements filled in differently.
 For that matter, two different converters might make different choices in how to synthesize missing elements.
 As a result, the viewer would have to take into account both the analysis tool (and its version)
@@ -47,3 +47,12 @@ and the converter (and its version) in deciding how to synthesize any remaining 
 By design, to avoid this added complexity, the SARIF standard does not define an element to hold the converter version.
 This, together with the guidance that converter implementers should not attempt to synthesize missing elements,
 allows viewer implementers to assume that all files from the same version of the same tool are identical in structure.
+
+This general guidance is embodied in various sections of the specification. For example:
+
+* A converter that knows which file a result was produced in, but not which file the analysis tool
+    was originally instructed to scan, should populate the `location.resultFile` property,
+    but should not attempt to populate `location.analysisTarget` (see &sect;[#location-Constraints]).
+    
+* A converter should not attempt to guess whether the analysis tool's version string is intended
+    to be interpreted as a Semantic Version 2.0.0 version string (see &sect;[#tool-semanticVersion]).
