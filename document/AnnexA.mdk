@@ -1,6 +1,6 @@
 # Annex A (informative) Use of fingerprints by result management systems { - #Annex-A }
 
-On large software projects, a single run of a set of static analysis tools can produce hundreds of thousands of results or more.
+On large software projects, a single run of a set of analysis tools can produce hundreds of thousands of results or more.
 To deal with such a large number of results, some software development teams adopt a strategy whereby they first
 prevent the introduction of new problems into their code, and then work to address the existing problems.
 
@@ -24,7 +24,7 @@ For example, consider a tool which checks documentation for words that are cultu
 The word would most likely occur only in the `fullMessage` property, for example:
 `"The word xxx should not be used in documentation."`
 
-The SARIF format provides the `toolFingerprint` property to allow static analysis tools to provide additional information
+The SARIF format provides the `toolFingerprint` property to allow analysis tools to provide additional information
 which a result management system can incorporate into the fingerprint that it constructs for each result.
 In this example, the tool might set the value of `toolFingerprint` to the prohibited word.
 

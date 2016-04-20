@@ -1,6 +1,6 @@
 # Annex B (informative) Use of SARIF by result log viewers { - #Annex-B }
 
-It is frequently useful for an end user to view the results produced by a static analysis tool
+It is frequently useful for an end user to view the results produced by an analysis tool
 in the context of the programming artifacts in which they occur.
 A result log viewer is a program that allows an end user to do this.
 
@@ -19,7 +19,7 @@ then the viewer needs to know the file type of the container so that it can extr
 There are various ways that a viewer might obtain file type information.
 In the SARIF format, the `mimeType` property of the `physicalLocationComponent` object provides this information.
 In the absence of the `mimeType` property, a viewer can fall back to examining the filename extension, for example "`.zip`".
-It is recommended that the static analysis tool provide the `mimeType` property
+It is recommended that the analysis tool provide the `mimeType` property
 (which it must know, because it was able to interpret the file in which it produced the result),
 rather than forcing the viewer to rely on a file name extension.
 
