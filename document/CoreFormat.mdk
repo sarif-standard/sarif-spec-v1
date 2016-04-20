@@ -383,16 +383,12 @@ and so on, with the last element referring to the most deeply nested construct.
 ~
 
 ~ IsoNote
-There are two reasons why the more detailed information in `logicalLocations` is useful,
-even though much of the information it contains is captured in the `location.fullyQualifiedLogicalName` property:
-
-1. It allows results management systems and other programs to organize
-    analysis results, for example, by asking questions such as "How many results were
-    found in the class `NamespaceA.NamespaceB.ClassC`?".
-    Programs can ask these questions without having to know how to parse the `fullyQualifiedLogicalName` string.
-
-2. In rare cases, `fullyQualifiedLogicalName` might not be unique.
-    See &sect;[#location-logicalLocationKey] for more information.
+The reason that the detailed information in `logicalLocations` is useful,
+even though much of the information it contains is captured in the `location.fullyQualifiedLogicalName` property (&sect;[#location-fullyQualifiedLogicalName]),
+is that it allows results management systems and other programs to organize
+analysis results, for example, by asking questions such as "How many results were
+found in the class `NamespaceA.NamespaceB.ClassC`?".
+Programs can ask these questions without having to know how to parse the `fullyQualifiedLogicalName` string.
 ~
 
 ### `results` property { #run-results }
@@ -1093,17 +1089,17 @@ without specifying the programming artifact within which that construct occurs.
 
 ~ IsoNote
 There are two reasons to include logical locations in the SARIF format in addition to physical locations:
+    
+1. In the absence of symbol information, binary analysis tools might not have source code locations available,
+    so information about line and column numbers might not be present in the log file.
+    In this case, code editors, other programs, or end users can use logical location to navigate from a result to the correct
+    source code location.
 
-1. Logical location information is an important contributor to fingerprinting scenarios,
+2. Logical location information is an important contributor to fingerprinting scenarios,
     because it is typically more resilient to changes in source code than are line locations.
     See Annex A for more information about fingerprinting.
     The `fullyQualifiedLogicalName` property (&sect;[#location-fullyQualifiedLogicalName])
     is particularly convenient for fingerprinting.
-    
-2. In the absence of symbol information, binary analysis tools might not have source code locations available,
-    so information about line and column numbers might not be present in the log file.
-    In this case, code editors, other programs, or end users can use logical location to navigate from a result to the correct
-    source code location.
 ~
 
 ### Constraints { #location-Constraints }
