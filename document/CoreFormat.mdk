@@ -553,25 +553,36 @@ or `offsetFromParent` (&sect;[#file-offsetFromParent]) or both shall be present;
 
 ### `uri` property { #file-uri }
 
-If the location of a nested file with respect to its containing file can be expressed
-only by means of a path within its containing file,
-then the `file` object shall contain a property named `uri`
-whose value is a string specifying that path.
+Depending on the circumstances, a `file` object either shall or may contain a property named `uri`
+whose value is a string.
 
-If the location of the file within its containing property cannot be expressed by means of a path,
+If the `file` object represents a top-level file (that is, a file that is not nested within another file),
+then the `uri` property may be present.
+If present, it shall be equal to the name of the property within `run.files` (&sect;[#run-files])
+within which the `file` object occurs, but with any URI fragment removed.
+If absent, it shall be interpreted as being equal to the value it would be required to have if it were present.
+
+If the `file` object represents a nested file, and if the location of the nested file
+within its containing file can be expressed by means of a path within its containing file,
+then the `uri` property may be present, and its value shall be a valid relative URI expressing that path.
+
+If the location of the nested file within its containing file cannot be expressed by means of a path,
 then the `uri` property shall be absent.
 
-If the `file` object occurs as the only member of an array within the `run.files` object (&sect;[#run-files]),
-then the `uri` property may be absent.
-If it is present, it must be equal to the corresponding property name within the `run.files` object,
-which must be an absolute URI.
-~ IsoNumberedExample { @IsoNumberedExample=1 }
-
-In this example, the array of `file` objects has only one element, and `uri` is omitted.
+~ IsoNumberedExample { @IsoNumberedExample = 1 }
+The property name includes a fragment.
+The `uri` for the top-level file (the first array element) repeats the property name without the fragment.
+The `uri` for the nested file (the second array element) specifies the relative URI of the nested file
+with respect to its parent.
 ```
 "files": {
-  "file:///C:/Code/x.c": [
+  "http://www.example.com/a.zip#/src/file.c": [
     {
+      "uri": "http://www.example.com/a.zip",
+      "mimeType": "application/zip"
+    },
+    {
+      "uri": "/src/file.c",
       "mimeType": "x-c"
     }
   ]
@@ -580,14 +591,43 @@ In this example, the array of `file` objects has only one element, and `uri` is 
 ~
 
 ~ IsoNumberedExample
-
-In this example, the array of `file` objects has only one element, and `uri` is equal to the property name, which is an absolute URI.
+The top-level `uri` is omitted. It is interpreted as `"http://www.example.com/a.zip"`.
 ```
 "files": {
-  "file:///C:/Code/x.c": [
+  "http://www.example.com/a.zip#/src/file.c": [
     {
-      "uri": "file:///C:/Code/x.c",
+      "mimeType": "application/zip"
+    },
+    {
+      "uri": "/src/file.c",
       "mimeType": "x-c"
+    }
+  ]
+}
+```
+~
+
+The value of the `uri` property for a nested file need not match the value of the fragment
+portion of the URI specified in the property name.
+This allows multiple levels of nesting to be represented.
+
+~ IsoNumberedExample
+There are two levels of nesting.
+Neither of the `uri` properties representing the nested files
+(the second and third array elements) match the fragment portion of the URI specified in the property name.
+```
+"files": {
+  "http://www.example.com/a.zip#/media/b.zip/images/c.png": [
+    {
+      "mimeType": "application/zip"
+    },
+    {
+      "uri": "/media/b.zip",
+      "mimeType": "application/zip"
+    },
+    {
+      "uri": "/images/c.png",
+      "mimeType": "image/png"
     }
   ]
 }
@@ -596,13 +636,16 @@ In this example, the array of `file` objects has only one element, and `uri` is 
 
 ### `offsetFromParent` property { #file-offsetFromParent }
 
-If the location of a nested file with respect to its containing file can be expressed
+If the location of a nested file within its containing file can be expressed
 only by means of a byte offset from the start of the containing file,
 then the `file` object shall contain a property named `offsetFromParent`
 whose value is an integer specifying that offset.
 
-If the location of the file within its containing property cannot be expressed by means of a byte offset,
-then the `offsetFromParent` property shall be absent. 
+If the location of the file within its containing file can be expressed both by means of a path
+and by means of a byte offset, then the `offsetFromParent` property may be present.
+
+If the location of the file within its containing file cannot be expressed by means of a byte offset,
+then the `offsetFromParent` property shall be absent.
 
 ### `length` property { #file-length }
 
@@ -1643,7 +1686,6 @@ but `name` is not equal to the property name, so it cannot be omitted.
 A `logicalLocationComponent` object should contain a property named `kind`, whose value shall be one of the following strings,
 if any of those strings accurately describes the construct identified by this object:
 
-*   `declaration`
 *   `function`
 *   `member`
 *   `method`
