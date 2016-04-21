@@ -934,18 +934,12 @@ that contributes to the unique identity of the result.
 
 ### `codeFlows` property { #result-codeFlows }
 
-A `result` object may contain a property named `codeFlows` whose value is an array of arrays of
-`annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
-For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as a `codeFlow` object;
-hence we may say that the value of the `codeFlows` property is an array of `codeFlow` objects.
+A `result` object may contain a property named `codeFlows` whose value is an array of
+`codeFlow` objects (&sect;[#codeFlow]).
 The `codeFlows` property is intended for use by analysis tools that provide execution path
 details that illustrate a possible problem in the code.
-
+We refer to this execution path as a code flow.
 Each `codeFlow` object in the `codeFlows` array shall describe a single code flow.
-A code flow is a sequence of locations that specify a possible execution path through the code.
-A code flow is represented by an array of `annotatedCodeLocation` objects.
-This array need not include every location visited by the tool,
-but the entries that are present shall occur in the order that the tool visited them.
 
 ~ IsoNote
 The SARIF file format allows multiple code flows within a single `result` object
@@ -1661,6 +1655,41 @@ if any of those strings accurately describes the construct identified by this ob
 
 If none of those strings accurately describes the construct, `kind` may contain any value specified by the analysis tool.
 
+## `codeFlow` object { #codeFlow }
+
+### General { #codeFlow-General }
+
+A code flow is a sequence of locations that specify a possible execution path through the code.
+
+### `message` property { #annotatedCodeLocation-message }
+
+A `codeFlow` object may contain a property named `message` whose value is a string containing
+a message relevant to the code flow.
+
+### `locations` property { #codeFlow-locations }
+
+A `codeFlow` object shall contain a property named `locations` whose value is an array of
+one or more `annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
+Each element of the array shall represent a single location visited by the tool
+in the course of producing the result.
+This array need not include every location visited by the tool,
+but the elements that are present shall occur in the order that the tool visited them.
+The elements need not be unique.
+
+~ IsoNote
+The `locations` array might include multiple identical elements if, for example,
+the analysis tool simulated the execution of a loop in the course of producing the result.
+~
+
+### `tags` property { #codeFlow-tags }
+
+A `codeFlow` object may contain a property named `tags`, whose value is a tag set.
+
+### `properties` property { #codeFlow-properties }
+
+A `codeFlow` object may contain a property named `properties`, whose value is a property bag.
+This allows tools to include information about the code flow that is not explicitly specified in the SARIF format.
+
 ## `annotatedCodeLocation` object { #annotatedCodeLocation }
 
 ### General { #annotatedCodeLocation-General }
@@ -1682,12 +1711,12 @@ For example, if the `annotatedCodeLocation` refers to an `if` statement, the `me
 
 ### `tags` property { #annotatedCodeLocation-tags }
 
-A `annotatedCodeLocation` object may contain a property named `tags`, whose value is a tag set.
+An `annotatedCodeLocation` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #annotatedCodeLocation-properties }
 
 An `annotatedCodeLocation` object may contain a property named `properties`, whose value is a property bag.
-This allows tools to include information about the entry that is not explicitly specified in the SARIF format.
+This allows tools to include information about the location that is not explicitly specified in the SARIF format.
 
 ## `rule` object { #rule }
 
