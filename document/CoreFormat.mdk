@@ -11,6 +11,9 @@ that is, it shall consist of a comma-separated sequence of name/value pairs, enc
 as described in the JSON specification.
 We refer to the object represented by this top-level value as the `sarifLog` object (&sect;[#sarifLog]).
 
+Because SARIF conforms to the JSON format, all integer values shall be expressed in decimal notation.
+Hexadecimal or octal notation shall not be used.
+
 Every JSON property name defined by the SARIF format shall be a camelCase name.
 Because the names of properties defined in property bags (&sect;[#property-bag-properties]) such as `result.properties` (&sect;[#result-properties]),
 are not defined by the SARIF format, they are not subject to this requirement.
