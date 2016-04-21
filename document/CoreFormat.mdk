@@ -567,7 +567,7 @@ If absent, it shall be interpreted as being equal to the value it would be requi
 
 If the `file` object represents a nested file, and if the location of the nested file
 within its containing file can be expressed by means of a path within its containing file,
-then the `uri` property may be present, and its value shall be a valid relative URI expressing that path.
+then the `uri` property shall be present, and its value shall be a valid relative URI expressing that path.
 
 If the location of the nested file within its containing file cannot be expressed by means of a path,
 then the `uri` property shall be absent.
