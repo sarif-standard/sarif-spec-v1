@@ -11,6 +11,9 @@ that is, it shall consist of a comma-separated sequence of name/value pairs, enc
 as described in the JSON specification.
 We refer to the object represented by this top-level value as the `sarifLog` object (&sect;[#sarifLog]).
 
+Because SARIF conforms to the JSON format, all integer values shall be expressed in decimal notation.
+Hexadecimal or octal notation shall not be used.
+
 Every JSON property name defined by the SARIF format shall be a camelCase name.
 Because the names of properties defined in property bags (&sect;[#property-bag-properties]) such as `result.properties` (&sect;[#result-properties]),
 are not defined by the SARIF format, they are not subject to this requirement.
@@ -553,25 +556,36 @@ or `offsetFromParent` (&sect;[#file-offsetFromParent]) or both shall be present;
 
 ### `uri` property { #file-uri }
 
-If the location of a nested file with respect to its containing file can be expressed
-only by means of a path within its containing file,
-then the `file` object shall contain a property named `uri`
-whose value is a string specifying that path.
+Depending on the circumstances, a `file` object either shall or may contain a property named `uri`
+whose value is a string.
 
-If the location of the file within its containing property cannot be expressed by means of a path,
+If the `file` object represents a top-level file (that is, a file that is not nested within another file),
+then the `uri` property may be present.
+If present, it shall be equal to the name of the property within `run.files` (&sect;[#run-files])
+within which the `file` object occurs, but with any URI fragment removed.
+If absent, it shall be interpreted as being equal to the value it would be required to have if it were present.
+
+If the `file` object represents a nested file, and if the location of the nested file
+within its containing file can be expressed by means of a path within its containing file,
+then the `uri` property shall be present, and its value shall be a valid relative URI expressing that path.
+
+If the location of the nested file within its containing file cannot be expressed by means of a path,
 then the `uri` property shall be absent.
 
-If the `file` object occurs as the only member of an array within the `run.files` object (&sect;[#run-files]),
-then the `uri` property may be absent.
-If it is present, it must be equal to the corresponding property name within the `run.files` object,
-which must be an absolute URI.
-~ IsoNumberedExample { @IsoNumberedExample=1 }
-
-In this example, the array of `file` objects has only one element, and `uri` is omitted.
+~ IsoNumberedExample { @IsoNumberedExample = 1 }
+The property name includes a fragment.
+The `uri` for the top-level file (the first array element) repeats the property name without the fragment.
+The `uri` for the nested file (the second array element) specifies the relative URI of the nested file
+with respect to its parent.
 ```
 "files": {
-  "file:///C:/Code/x.c": [
+  "http://www.example.com/a.zip#/src/file.c": [
     {
+      "uri": "http://www.example.com/a.zip",
+      "mimeType": "application/zip"
+    },
+    {
+      "uri": "/src/file.c",
       "mimeType": "x-c"
     }
   ]
@@ -580,14 +594,43 @@ In this example, the array of `file` objects has only one element, and `uri` is 
 ~
 
 ~ IsoNumberedExample
-
-In this example, the array of `file` objects has only one element, and `uri` is equal to the property name, which is an absolute URI.
+The top-level `uri` is omitted. It is interpreted as `"http://www.example.com/a.zip"`.
 ```
 "files": {
-  "file:///C:/Code/x.c": [
+  "http://www.example.com/a.zip#/src/file.c": [
     {
-      "uri": "file:///C:/Code/x.c",
+      "mimeType": "application/zip"
+    },
+    {
+      "uri": "/src/file.c",
       "mimeType": "x-c"
+    }
+  ]
+}
+```
+~
+
+The value of the `uri` property for a nested file need not match the value of the fragment
+portion of the URI specified in the property name.
+This allows multiple levels of nesting to be represented.
+
+~ IsoNumberedExample
+There are two levels of nesting.
+Neither of the `uri` properties representing the nested files
+(the second and third array elements) match the fragment portion of the URI specified in the property name.
+```
+"files": {
+  "http://www.example.com/a.zip#/media/b.zip/images/c.png": [
+    {
+      "mimeType": "application/zip"
+    },
+    {
+      "uri": "/media/b.zip",
+      "mimeType": "application/zip"
+    },
+    {
+      "uri": "/images/c.png",
+      "mimeType": "image/png"
     }
   ]
 }
@@ -596,13 +639,16 @@ In this example, the array of `file` objects has only one element, and `uri` is 
 
 ### `offsetFromParent` property { #file-offsetFromParent }
 
-If the location of a nested file with respect to its containing file can be expressed
+If the location of a nested file within its containing file can be expressed
 only by means of a byte offset from the start of the containing file,
 then the `file` object shall contain a property named `offsetFromParent`
 whose value is an integer specifying that offset.
 
-If the location of the file within its containing property cannot be expressed by means of a byte offset,
-then the `offsetFromParent` property shall be absent. 
+If the location of the file within its containing file can be expressed both by means of a path
+and by means of a byte offset, then the `offsetFromParent` property may be present.
+
+If the location of the file within its containing file cannot be expressed by means of a byte offset,
+then the `offsetFromParent` property shall be absent.
 
 ### `length` property { #file-length }
 
@@ -934,18 +980,12 @@ that contributes to the unique identity of the result.
 
 ### `codeFlows` property { #result-codeFlows }
 
-A `result` object may contain a property named `codeFlows` whose value is an array of arrays of
-`annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
-For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as a `codeFlow` object;
-hence we may say that the value of the `codeFlows` property is an array of `codeFlow` objects.
+A `result` object may contain a property named `codeFlows` whose value is an array of
+`codeFlow` objects (&sect;[#codeFlow]).
 The `codeFlows` property is intended for use by analysis tools that provide execution path
 details that illustrate a possible problem in the code.
-
+We refer to this execution path as a code flow.
 Each `codeFlow` object in the `codeFlows` array shall describe a single code flow.
-A code flow is a sequence of locations that specify a possible execution path through the code.
-A code flow is represented by an array of `annotatedCodeLocation` objects.
-This array need not include every location visited by the tool,
-but the entries that are present shall occur in the order that the tool visited them.
 
 ~ IsoNote
 The SARIF file format allows multiple code flows within a single `result` object
@@ -1649,7 +1689,6 @@ but `name` is not equal to the property name, so it cannot be omitted.
 A `logicalLocationComponent` object should contain a property named `kind`, whose value shall be one of the following strings,
 if any of those strings accurately describes the construct identified by this object:
 
-*   `declaration`
 *   `function`
 *   `member`
 *   `method`
@@ -1660,6 +1699,41 @@ if any of those strings accurately describes the construct identified by this ob
 *	`type`
 
 If none of those strings accurately describes the construct, `kind` may contain any value specified by the analysis tool.
+
+## `codeFlow` object { #codeFlow }
+
+### General { #codeFlow-General }
+
+A code flow is a sequence of locations that specify a possible execution path through the code.
+
+### `message` property { #annotatedCodeLocation-message }
+
+A `codeFlow` object may contain a property named `message` whose value is a string containing
+a message relevant to the code flow.
+
+### `locations` property { #codeFlow-locations }
+
+A `codeFlow` object shall contain a property named `locations` whose value is an array of
+one or more `annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
+Each element of the array shall represent a single location visited by the tool
+in the course of producing the result.
+This array need not include every location visited by the tool,
+but the elements that are present shall occur in the order that the tool visited them.
+The elements need not be unique.
+
+~ IsoNote
+The `locations` array might include multiple identical elements if, for example,
+the analysis tool simulated the execution of a loop in the course of producing the result.
+~
+
+### `tags` property { #codeFlow-tags }
+
+A `codeFlow` object may contain a property named `tags`, whose value is a tag set.
+
+### `properties` property { #codeFlow-properties }
+
+A `codeFlow` object may contain a property named `properties`, whose value is a property bag.
+This allows tools to include information about the code flow that is not explicitly specified in the SARIF format.
 
 ## `annotatedCodeLocation` object { #annotatedCodeLocation }
 
@@ -1682,12 +1756,12 @@ For example, if the `annotatedCodeLocation` refers to an `if` statement, the `me
 
 ### `tags` property { #annotatedCodeLocation-tags }
 
-A `annotatedCodeLocation` object may contain a property named `tags`, whose value is a tag set.
+An `annotatedCodeLocation` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #annotatedCodeLocation-properties }
 
 An `annotatedCodeLocation` object may contain a property named `properties`, whose value is a property bag.
-This allows tools to include information about the entry that is not explicitly specified in the SARIF format.
+This allows tools to include information about the location that is not explicitly specified in the SARIF format.
 
 ## `rule` object { #rule }
 
