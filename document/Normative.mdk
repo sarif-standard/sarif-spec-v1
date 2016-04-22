@@ -11,7 +11,15 @@ Available from &lt;<http://ecma-international.org/publications/files/ECMA-ST/ECM
 FIPS PUB 180-4, Secure Hash Standard (SHS).
 Available from &lt;<http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf>&gt;
 
+ISO 8601:2004, _Data elements and interchange formats -- Information interchange -- Representation of dates and times_.
+Available from  &lt;<http://www.iso.org/iso/catalogue_detail?csnumber=40874>&gt;
+
+JSON Schema: core definitions and terminology \[viewed 2016-04-22\]. Available from &lt;<http://json-schema.org/latest/json-schema-core.html>&gt;
+
 RFC 2045, Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies.
 Available from &lt;<http://www.ietf.org/rfc/rfc2045.txt>&gt;
+
+RFC 3986, Uniform Resource Identifier (URI): Generic Syntax.
+Available from &lt;<https://tools.ietf.org/html/rfc3986>&gt;
 
 Semantic Versioning 2.0.0 \[viewed 2015-06-02\]. Available from &lt;<http://semver.org>&gt;

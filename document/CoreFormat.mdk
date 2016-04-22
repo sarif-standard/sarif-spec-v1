@@ -57,7 +57,7 @@ nor are hyphen, underscore, or tilde.
 * In the host component, registered names and hexadecimal addresses use lower-case.
 ~
 
-## Tag set properties
+## Tag set properties { #tag-set-properties }
 
 Certain properties in this specification are defined to be "tag sets".
 A tag set is a JSON array containing zero or more arbitrary strings;
@@ -105,6 +105,14 @@ Here `YYYY` is a 4-digit year,
 2016-02-08T16:08:25.943Z
 ```
 ~
+
+## Array properties with unique values { #unique-array-properties }
+
+Certain properties in this specification whose values are JSON arrays are described as having
+"unique" elements.
+When a property is so described, it shall mean that no two elements of the array shall have equal values.
+For purposes of this specification, two array elements are considered equal when they satisfy the
+condition for equality described in _JSON Schema: core definitions and terminology_, &sect;3.6, "JSON value equality".
 
 ## `sarifLog` object { #sarifLog }
 
@@ -397,7 +405,7 @@ Programs can ask these questions without having to know how to parse the `fullyQ
 ### `results` property { #run-results }
 
 If the analysis tool was run with the intent of scanning files and producing results, then
-the `run` object shall contain a property named `results` whose value is an array containing zero or more `result` objects (&sect;[#result]),
+the `run` object shall contain a property named `results` whose value is an array containing zero or more unique (&sect;[#unique-array-properties]) `result` objects (&sect;[#result]),
 each of which represents a single result produced in the course of the run.
 
 The `results` array shall be empty if the run that produced the `run` object did not produce any results.
@@ -662,7 +670,7 @@ the MIME type (RFC 2045) of the file.
 
 ### `hashes` property { #file-hashes }
 
-A `file` object may contain a property named `hashes` whose value is an array of `hash` objects (&sect;[#hash]),
+A `file` object may contain a property named `hashes` whose value is an array of unique (&sect;[#unique-array-properties]) `hash` objects (&sect;[#hash]),
 each of which specifies a hashed value for the file specified by the `file` object,
 along with the name of the algorithm used to compute the hash.
 
@@ -930,7 +938,7 @@ shall be absent.
 ### `locations` property { #result-locations }
 
 A `result` object should contain a property named `locations` whose value is an array
-of one or more `location` objects (&sect;[#location]), each of which specifies a location where the result occurred.
+of one or more unique (&sect;[#unique-array-properties]) `location` objects (&sect;[#location]), each of which specifies a location where the result occurred.
 
 ~ IsoNote
 In rare circumstances, it might not be possible to specify a location for a result.
@@ -981,7 +989,7 @@ that contributes to the unique identity of the result.
 ### `codeFlows` property { #result-codeFlows }
 
 A `result` object may contain a property named `codeFlows` whose value is an array of
-`codeFlow` objects (&sect;[#codeFlow]).
+unique (&sect;[#unique-array-properties]) `codeFlow` objects (&sect;[#codeFlow]).
 The `codeFlows` property is intended for use by analysis tools that provide execution path
 details that illustrate a possible problem in the code.
 We refer to this execution path as a code flow.
@@ -1022,7 +1030,7 @@ for which location information is not available, which in turn calls back into a
 ### `relatedLocations` property { #result-relatedLocations }
 
 A `result` object may contain a property named `relatedLocations` whose value is an array
-of one or more `annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]),
+of one or more unique (&sect;[#unique-array-properties]) `annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]),
 each of which represents a location relevant to understanding the result.
 
 ~ IsoExample
@@ -1105,7 +1113,7 @@ The `#pragma` warning construct in C# is such a syntactic construct.
 
 ### `fixes` property { #result-fixes }
 
-A `result` object may contain a property names `fixes`, whose value is a JSON array of zero or more `fix` objects (&sect;[#fix]).
+A `result` object may contain a property names `fixes`, whose value is a JSON array of zero or more unique (&sect;[#unique-array-properties]) `fix` objects (&sect;[#fix]).
 
 ### `tags` property { #result-tags }
 
