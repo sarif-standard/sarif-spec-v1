@@ -1003,28 +1003,14 @@ relevant to a single result.
 
 ### `stacks` property { #result-callStacks }
 
-A `result` object may contain a property named `stacks` whose value is an array of arrays of
-`annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
-For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as a `stack` object;
-hence we may say that the value of the `stacks` property is an array of `stack` objects.
+A `result` object may contain a property named `stacks` whose value is an array of unique (&sect;[#unique-array-properties])
+`stack` objects (&sect;[#stack]).
 The `stacks` property is intended for use by analysis tools that collects call stack information 
 in the process of producing results.
 
-Each `stack` object in the stacks array shall describe a single call stack.
-A call stack is a sequence of nested function calls.
-A stack is in turn represented by an array of `annotatedCodeLocation` objects.
-This array shall include every function call in the stack for which the tool has information,
-and the entries that are present shall occur in order with the innermost call first and the outermost call last.
-
-~ IsoNumberedNote { @IsoNumberedNote=1}
+~ IsoNote
 The SARIF file format allows multiple call stacks within a single `result` object
 to allow for the possibility that more than one call stack might be relevant to a single result.
-~
-
-~ IsoNumberedNote
-It is possible that the analysis tool will not have location information for every call in the call stack.
-This might happen, for example, if application code for which location information is available calls into operating system code
-for which location information is not available, which in turn calls back into application code.
 ~
 
 ### `relatedLocations` property { #result-relatedLocations }
@@ -1743,13 +1729,30 @@ A `codeFlow` object may contain a property named `tags`, whose value is a tag se
 A `codeFlow` object may contain a property named `properties`, whose value is a property bag.
 This allows tools to include information about the code flow that is not explicitly specified in the SARIF format.
 
+## `stack` object { #stack }
+
+A `stack` object shall describe a single call stack.
+A call stack is a sequence of nested function calls, each of which is referred to as a stack frame.
+
+~ IsoNote
+It is possible that the analysis tool will not have location information for every frame in the call stack.
+This might happen if, for example, application code for which location information is available calls into operating system code
+for which location information is not available, which in turn calls back into application code.
+~
+
+### `frames` property { #stack-frames }
+
+A `stack` object shall contain a property named `frames` whose value is an array of one or more `stackFrame` objects (&sect;[#stackFrame]).
+This array shall include every function call in the stack for which the tool has information,
+and the entries that are present shall occur in order with the innermost call first and the outermost call last.
+The entries in this array need not be unique.
+It is possible for the same frame to occur multiple times if the calls stack includes a recursion. 
+
 ## `annotatedCodeLocation` object { #annotatedCodeLocation }
 
 ### General { #annotatedCodeLocation-General }
 
-An `annotatedCodeLocation` object is an element of an `codeFlow` object (&sect;[#result-codeFlows]),
-a `stack` object (&sect;[#result-callStacks]),
-or the `relatedLocations` array (&sect;[#result-relatedLocations]).
+An `annotatedCodeLocation` object is an element of the `result.relatedLocations` array (&sect;[#result-relatedLocations]).
 
 ### `physicalLocation` property { #annotatedCodeLocation-physicalLocation }
 
