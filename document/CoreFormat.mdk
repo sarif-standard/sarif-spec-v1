@@ -1003,28 +1003,14 @@ relevant to a single result.
 
 ### `stacks` property { #result-callStacks }
 
-A `result` object may contain a property named `stacks` whose value is an array of arrays of
-`annotatedCodeLocation` objects (&sect;[#annotatedCodeLocation]).
-For convenience, in this context we refer to an array of `annotatedCodeLocation` objects as a `stack` object;
-hence we may say that the value of the `stacks` property is an array of `stack` objects.
+A `result` object may contain a property named `stacks` whose value is an array of one or more
+unique (&sect;[#unique-array-properties]) `stack` objects (&sect;[#stack]).
 The `stacks` property is intended for use by analysis tools that collects call stack information 
 in the process of producing results.
 
-Each `stack` object in the stacks array shall describe a single call stack.
-A call stack is a sequence of nested function calls.
-A stack is in turn represented by an array of `annotatedCodeLocation` objects.
-This array shall include every function call in the stack for which the tool has information,
-and the entries that are present shall occur in order with the innermost call first and the outermost call last.
-
-~ IsoNumberedNote { @IsoNumberedNote=1}
+~ IsoNote
 The SARIF file format allows multiple call stacks within a single `result` object
 to allow for the possibility that more than one call stack might be relevant to a single result.
-~
-
-~ IsoNumberedNote
-It is possible that the analysis tool will not have location information for every call in the call stack.
-This might happen, for example, if application code for which location information is available calls into operating system code
-for which location information is not available, which in turn calls back into application code.
 ~
 
 ### `relatedLocations` property { #result-relatedLocations }
@@ -1743,13 +1729,120 @@ A `codeFlow` object may contain a property named `tags`, whose value is a tag se
 A `codeFlow` object may contain a property named `properties`, whose value is a property bag.
 This allows tools to include information about the code flow that is not explicitly specified in the SARIF format.
 
+## `stack` object { #stack }
+
+A `stack` object describes a single call stack.
+A call stack is a sequence of nested function calls, each of which is referred to as a stack frame.
+
+### `message` property { #stack-message }
+
+A `stack` object may contain a property named `message` whose value is a string
+containing a message relevant to this call stack.
+
+### `frames` property { #stack-frames }
+
+A `stack` object shall contain a property named `frames` whose value is an array of one or more `stackFrame` objects (&sect;[#stackFrame]).
+This array shall include every function call in the stack for which the tool has information,
+and the entries that are present shall occur in chronological order with the most recent (innermost) call first and the least recent (outermost) call last.
+The entries in this array need not be unique.
+It is possible for the same frame to occur multiple times if the call stack includes a recursion. 
+
+~ IsoNote
+It is possible that the analysis tool will not have location information for every frame in the call stack.
+This might happen if, for example, application code for which location information is available calls into operating system code
+for which location information is not available, which in turn calls back into application code.
+~
+
+### `tags` property { #stack-tags }
+
+A `stack` object may contain a property named `tags`, whose value is a tag set.
+
+### `properties` property { #stack-properties }
+
+A `stack` object may contain a property named `properties`, whose value is a property bag.
+This allows tools to include information about the stack that is not explicitly specified in the SARIF format.
+
+## `stackFrame` object { #stackFrame }
+
+### General { #stackFrame-General }
+
+A `stackFrame` object describes a single stack frame within a call stack (&sect;[#stack]).
+
+### `message` property { #stackFrame-message }
+
+A `stackFrame` object may contain a property named `message` whose value is a string
+containing a message relevant to this stack frame.
+
+### `uri` property { #stackFrame-uri }
+
+A `stackFrame` object may contain a property named `uri` whose value is a string
+containing the URI of the source code file to which this stack frame refers.
+
+### `line` property { #stackFrame-line }
+
+A `stackFrame` object may contain a property named `line` whose value is an integer
+containing the line number within the file specified by `uri` (&sect;[#stackFrame-uri])
+to which this stack frame refers.
+
+If the `uri` property is absent, the `line` property shall be absent.
+
+### `column` property { #stackFrame-column }
+
+A `stackFrame` object may contain a property named `column` whose value is an integer
+representing the column number within the line specified by `line` (&sect;[#stackFrame-line])
+to which this stack frame refers.
+
+If the `line` property is absent, the `column` property shall be absent.
+
+### `module` property { #stackFrame-module }
+
+A `stackFrame` object may contain a property named `module` whose value is a string
+containing the name of the module that contains the location to which this stack frame refers.
+
+### `fullyQualifiedLogicalName` property { #stackFrame-fullyQualifiedLogicalName }
+
+A `stackFrame` object may contain a property named `fullyQualifiedLogicalName` whose value
+is a string containing the fully qualified name of the method to which this stack frame refers.
+See &sect;[#location-fullyQualifiedLogicalName] for examples.
+
+### `logicalLocationKey` property { #stackFrame-logicalLocationKey }
+
+A `stackFrame` object may contain a property named `logicalLocationKey` whose value is a string.
+If present, this string shall be equal to the name of one of the properties on the `run.logicalLocations` object (&sect;[#run-logicalLocations]),
+which provides additional information about the logical location specified by `fullyQualifiedLogicalName` (&sect;[#stackFrame-fullyQualifiedLogicalName]).
+For more information about the purpose of this property, see &sect;[#location-fullyQualifiedLogicalName].
+
+### `address` { #stackFrame-address }
+
+A `stackFrame` object may contain a property named `address` whose value is an integer
+containing the address in memory of the location represented by this stack frame.
+
+### `offset` { #stackFrame-offset }
+
+A `stackFrame` object may contain a property named `offset` whose value is an integer
+containing the byte offset of the location represented by this stack frame from the start
+of the method represented by this stack frame.
+
+### `parameters` { #stackFrame-parameters }
+
+A `stackFrame` object may contain a property named `parameters` whose value is an array of strings
+representing the parameters of the function call represented by this stack frame.
+
+### `tags` property { #stackFrame-tags }
+
+A `stackFrame` object may contain a property named `tags`, whose value is a tag set.
+
+### `properties` property { #stackFrame-properties }
+
+A `stackFrame` object may contain a property named `properties`, whose value is a property bag.
+This allows tools to include information about the stack frame that is not explicitly specified in the SARIF format.
+
 ## `annotatedCodeLocation` object { #annotatedCodeLocation }
 
 ### General { #annotatedCodeLocation-General }
 
-An `annotatedCodeLocation` object is an element of an `codeFlow` object (&sect;[#result-codeFlows]),
-a `stack` object (&sect;[#result-callStacks]),
-or the `relatedLocations` array (&sect;[#result-relatedLocations]).
+An `annotatedCodeLocation` object represents a physical location together with additional information
+relevant to the use of the location in a particular context.
 
 ### `physicalLocation` property { #annotatedCodeLocation-physicalLocation }
 
@@ -1759,8 +1852,14 @@ An `annotatedCodeLocation` object must contain a property named `physicalLocatio
 ### `message` property { #annotatedCodeLocation-message }
 
 An `annotatedCodeLocation` object may contain a property named `message` whose value is a string that describes
-the significance of this entry within the overall code flow.
-For example, if the `annotatedCodeLocation` refers to an `if` statement, the `message` property might contain the string "take true branch".
+the significance of this location within a particular context.
+
+~ IsoExample
+Suppose an analysis tool produces a result which states that a piece of data from an insecure source
+has been used at a particular location.
+The tool might provide a "related location" (&sect;[#result-relatedLocations]) whose value is
+an `annotatedCodeLocation` object with the message "Insecure data entered the system here". 
+~
 
 ### `tags` property { #annotatedCodeLocation-tags }
 
@@ -1769,7 +1868,7 @@ An `annotatedCodeLocation` object may contain a property named `tags`, whose val
 ### `properties` property { #annotatedCodeLocation-properties }
 
 An `annotatedCodeLocation` object may contain a property named `properties`, whose value is a property bag.
-This allows tools to include information about the location that is not explicitly specified in the SARIF format.
+This allows tools to include additional information about the use of the location in this context that is not explicitly specified in the SARIF format.
 
 ## `rule` object { #rule }
 
