@@ -1931,15 +1931,6 @@ Tools that do not construct `fullDescription` in this way should provide a value
 because otherwise, the initial portion of `fullDescription` that a viewer displays where available space is limited
 might not be understandable.
 
-### `options` property { #rule-options }
-
-A `rule` object may contain a property named `options`, whose value is a JSON object
-consisting of a set of name/value pairs with arbitrary names.
-The `options` objects shall describe the set of configurable options supported by the rule.
-
-The value within each name/value pair shall be a string, which may be the empty string.
-The value shall not be a JSON array or sub-object.
-
 ### `messageFormats` property { #rule-messageFormats }
 
 A `rule` object may contain a property named `messageFormats`, whose value is a JSON object
