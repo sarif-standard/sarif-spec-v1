@@ -1743,9 +1743,9 @@ containing a message relevant to this call stack.
 
 A `stack` object shall contain a property named `frames` whose value is an array of one or more `stackFrame` objects (&sect;[#stackFrame]).
 This array shall include every function call in the stack for which the tool has information,
-and the entries that are present shall occur in order with the innermost call first and the outermost call last.
+and the entries that are present shall occur in chronological order with the most recent (innermost) call first and the least recent (outermost) call last.
 The entries in this array need not be unique.
-It is possible for the same frame to occur multiple times if the calls stack includes a recursion. 
+It is possible for the same frame to occur multiple times if the call stack includes a recursion. 
 
 ~ IsoNote
 It is possible that the analysis tool will not have location information for every frame in the call stack.
@@ -1778,12 +1778,6 @@ containing a message relevant to this stack frame.
 A `stackFrame` object may contain a property named `uri` whose value is a string
 containing the URI of the source code file to which this stack frame refers.
 
-~ IsoNote
-
-The `uri` property will be absent if the analysis tool does not have information
-that maps execution addresses to source code files.
-~
-
 ### `line` property { #stackFrame-line }
 
 A `stackFrame` object may contain a property named `line` whose value is an integer
@@ -1791,11 +1785,6 @@ containing the line number within the file specified by `uri` (&sect;[#stackFram
 to which this stack frame refers.
 
 If the `uri` property is absent, the `line` property shall be absent.
-
-~ IsoNote
-The `line` and `column` (&sect;[#stackFrame-column]) properties will be absent if the
-analysis tool does not have information that maps execution addresses to source code lines.
-~
 
 ### `column` property { #stackFrame-column }
 
@@ -1816,12 +1805,6 @@ A `stackFrame` object may contain a property named `fullyQualifiedLogicalName` w
 is a string containing the fully qualified name of the method to which this stack frame refers.
 See &sect;[#location-fullyQualifiedLogicalName] for examples.
 
-~ IsoNote
-The `fullyQualifiedLogicalName` property will be absent in the analysis tool does not
-have symbol information for this stack frame, for example, if this stack frame represents
-a call into an internal operating system function.
-~
-
 ### `logicalLocationKey` property { #stackFrame-logicalLocationKey }
 
 A `stackFrame` object may contain a property named `logicalLocationKey` whose value is a string.
@@ -1832,8 +1815,7 @@ For more information about the purpose of this property, see &sect;[#location-fu
 ### `address` { #stackFrame-address }
 
 A `stackFrame` object may contain a property named `address` whose value is an integer
-containing the byte offset of the location represented by this stack frame from the start
-of the module containing this location.
+containing the address in memory of the location represented by this stack frame.
 
 ### `offset` { #stackFrame-offset }
 
