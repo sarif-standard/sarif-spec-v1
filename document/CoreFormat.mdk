@@ -2458,12 +2458,3 @@ There is commonly no more than one inner exception.
 This property is an array to accommodate platforms that provide a mechanism for aggregating exceptions,
 such as the `System.AggregateException` class from the .NET Framework.
 ~
-
-### `tags` property { #exception-tags }
-
-An `exception` object may contain a property named `tags`, whose value is a tag set.
-
-### `properties` property { #exception-properties }
-
-An `exception` object may contain a property named `properties`, whose value is property bag.
-This allows tools to include information about the exception that is not explicitly specified in the SARIF format.
