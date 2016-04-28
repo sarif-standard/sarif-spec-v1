@@ -425,6 +425,8 @@ that the run failed.
 The information in `toolNotifications` is primarily intended for the developers of the analysis tool,
 to aid them in diagnosing bugs in the tool.
 This is in contrast to the information in `results`, which is intended for the developers of the code being analyzed.
+However, viewers may still present tool notifications to users, so users are aware of any tool problems.
+At a minimum, viewers should make users aware of tool notifications whose `level` property is `error`.
 ~
 
 ~ IsoNumberedNote
@@ -447,9 +449,11 @@ The presence within this array of any `notification` object whose `level` proper
 that the run failed.
 
 ~ IsoNumberedNote { @IsoNumberedNote=1 }
-The information in `toolNotifications` is primarily intended for the engineers who configure the analysis tool,
+The information in `configurationNotifications` is primarily intended for the engineers who configure the analysis tool,
 to aid them in diagnosing errors in the configuration.
 This is in contrast to the information in `results`, which is intended for the developers of the code being analyzed.
+However, viewers may still present configuration notifications to users, so users are aware of any configuration problems.
+At a minimum, viewers should make users aware of configuration notifications whose `level` property is `error`.
 ~
 
 ~ IsoNumberedNote
@@ -469,7 +473,7 @@ continue to run, reporting results for the rules that are correctly configured.
         "id": "UnknownRule",
         "ruleId": "ABC0001",
         "level": "warning",
-        "message": "The configuration file specifies that an unknown rule \"ABC0001\" is to be disabled." 
+        "message": "Could not disable rule \"ABC0001\" because there is no rule with that id." 
     }
 ]
 ```
@@ -1992,8 +1996,8 @@ a stable, opaque identifier for the rule.
 ~ IsoNote
 Rule identifiers must be stable for two reasons:
 
-1. So specific checks can be disabled in build automation scripts, without the risks
-of the scripts breaking if a rule id changes.
+1. So build automation scripts can refer to specific checks, for example, to disable them,
+without the risk of a script breaking if a rule id changes.
 2. So result management systems can compare results from one run to the next,
 without erroneously designating results as "new" because a rule id has changed.
 
