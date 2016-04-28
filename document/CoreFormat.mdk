@@ -1989,6 +1989,23 @@ a stable, opaque identifier for the rule.
 `"CA2101"`
 ~
 
+~ IsoNote
+Rule identifiers must be stable for two reasons:
+
+1. So specific checks can be disabled in build automation scripts, without the risks
+of the scripts breaking if a rule id changes.
+2. So result management systems can compare results from one run to the next,
+without erroneously designating results as "new" because a rule id has changed.
+
+Rule identifiers should be opaque -- that is, they should not convey information to
+a user -- because a rule's implementation might change over time.
+Suppose a rule id is `"DoNotDoXOrY"`, suppose circumstances change so that
+"Y" is now acceptable, and suppose the implementation of the rule changes accordingly.
+Because the rule id must not change, the string `"DoNotDoXOrY"` will continue to be persisted to logs,
+where it will convey outdated guidance to users in a way that an opaque identifier
+such as `"CA2101"` would not.
+~
+
 ### `name` property { #rule-name }
 
 A `rule` object may contain a property named `name` whose value is a string containing
@@ -2336,7 +2353,17 @@ Conditions relevant to files being analyzed by a tool are represented by `result
 ### `id` property { #notification-id }
 
 A `notification` object may contain a property named `id` whose value is a string containing
-an opaque stable identifier for the condition that was encountered.
+an identifier for the condition that was encountered.
+
+~ IsoNote
+In contrast to rule identifiers (see `rule.id`, &sect;[#rule-id]), which must be stable and opaque,
+notification identifiers need not be either stable or opaque,
+because the reasoning that leads to those requirements for rule ids does not apply to tool notifications.
+A tool notification with level `"error"` should always be treated as a failure,
+and tools should not allow them to be disabled.
+And tool authors are free to change the notification ids at any time, so there is no reason
+for them to be opaque; to the contrary, they are more useful if they convey information to the user.
+~
 
 ### `ruleId` property { #notification-ruleId }
 
