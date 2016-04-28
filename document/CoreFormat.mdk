@@ -294,7 +294,7 @@ as long as no two of the resulting property names are equivalent as defined in &
 ~ IsoNumberedNote
 It need not be possible to use this URI to navigate directly to the nested scanned file.
 The information necessary to do that is specified in the `uri` property (&sect;[#file-uri]),
-or in the `offsetFromParent` (&sect;[#file-offsetFromParent]) and `length` (&sect;[#file-length]) properties,
+or in the `offset` (&sect;[#file-offset]) and `length` (&sect;[#file-length]) properties,
 of the `file` objects in the array .
 ~
 
@@ -341,7 +341,7 @@ run: {
                 "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             },
             {
-                "offsetFromParent": 17522,
+                "offset": 17522,
                 "length": 4050,
                 "mimeType": "application/x-shockwave-flash"
             }
@@ -649,11 +649,11 @@ referred to as the "containing file."
 `file` objects occur as members of arrays within the `run.files` object (&sect;[#run-files]). 
 
 If the `file` object does not represent a nested file, neither of the properties
-`uri` (&sect;[#file-uri]) or `offsetFromParent` (&sect;[#file-offsetFromParent]) shall be present.
+`uri` (&sect;[#file-uri]) or `offset` (&sect;[#file-offset]) shall be present.
 
 If the location of a nested file can be expressed either by means of a path within the containing file
 or by means of a byte offset from the start of the containing file, then either `uri`
-or `offsetFromParent` (&sect;[#file-offsetFromParent]) or both shall be present; they shall not both be absent.
+or `offset` (&sect;[#file-offset]) or both shall be present; they shall not both be absent.
 
 ### `uri` property { #file-uri }
 
@@ -738,18 +738,18 @@ Neither of the `uri` properties representing the nested files
 ```
 ~
 
-### `offsetFromParent` property { #file-offsetFromParent }
+### `offset` property { #file-offset }
 
 If the location of a nested file within its containing file can be expressed
 only by means of a byte offset from the start of the containing file,
-then the `file` object shall contain a property named `offsetFromParent`
+then the `file` object shall contain a property named `offset`
 whose value is an integer specifying that offset.
 
 If the location of the file within its containing file can be expressed both by means of a path
-and by means of a byte offset, then the `offsetFromParent` property may be present.
+and by means of a byte offset, then the `offset` property may be present.
 
 If the location of the file within its containing file cannot be expressed by means of a byte offset,
-then the `offsetFromParent` property shall be absent.
+then the `offset` property shall be absent.
 
 ### `length` property { #file-length }
 
