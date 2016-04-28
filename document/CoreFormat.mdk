@@ -310,7 +310,7 @@ file:///C:/Code/presentation.zip#/docs/intro.docx/Flash1
 ~
 
 If the fragment contains any characters which cannot occur in a fragment as specified in RFC 3986,
-those character must be percent-encoded as specified in RFC 3986.
+those character shall be percent-encoded as specified in RFC 3986.
 
 ~ IsoNumberedExample
 Suppose a compressed container contains a file named `/docs/chapter#1.doc`.
@@ -421,14 +421,21 @@ Each element of the array represents a runtime condition detected by the tool.
 The presence within this array of any `notification` object whose `level` property (&sect;[#notification-level]) is `error` shall mean
 that the run failed.
 
-~ IsoNote
+~ IsoNumberedNote { @IsoNumberedNote=1 }
+The information in `toolNotifications` is primarily intended for the developers of the analysis tool,
+to aid them in diagnosing bugs in the tool.
+This is in contrast to the information in `results`, which is intended for the developers of the code being analyzed.
+~
+
+~ IsoNumberedNote
 Depending on the nature of the error, a tool that encounters a runtime error might or might not be able to continue running.
 
 If the error occurs in the course of evaluating a rule, the tool might report the error in `toolNotifications`, disable the rule,
 and continue to execute the remaining rules.
 
 If the error occurs outside of the evaluation of a rule, the tool might report
-the error in `toolNotifications` and then halt. The tool might also just exit, either normally or abnormally.
+the error in `toolNotifications` and then halt.
+If the tool exits abnormally, it might not have the opportunity to report the error.
 ~
 
 ### `configurationNotifications` { #run-configurationNotifications }
@@ -439,16 +446,64 @@ Each element of the array represents a condition relevant to the tool's configur
 The presence within this array of any `notification` object whose `level` property (&sect;[#notification-level]) is `error` shall mean
 that the run failed.
 
-~ IsoNote
+~ IsoNumberedNote { @IsoNumberedNote=1 }
+The information in `toolNotifications` is primarily intended for the engineers who configure the analysis tool,
+to aid them in diagnosing errors in the configuration.
+This is in contrast to the information in `results`, which is intended for the developers of the code being analyzed.
+~
+
+~ IsoNumberedNote
 Many tools can be parameterized with information about which rules to run, and how they should be configured.
 In some cases, if the configuration information is invalid, the tool can ignore the invalid information
 and continue to run.
 ~
 
-~ IsoExample
-Suppose a tool is invoked with a configuration file which specifies that the tool should disable rule X.
-If there is no such rule as rule X, then the tool should report it in `configurationNotifications`. The tool might
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+A tool is invoked with a configuration file which specifies that the tool should disable rule `ABC0001`,
+but there is no rule whose `id` is `ABC0001`.
+The tool should report the problem in `configurationNotifications`. The tool might
 continue to run, reporting results for the rules that are correctly configured.
+```
+"configurationNotifications": [
+    {
+        "id": "UnknownRule",
+        "ruleId": "ABC0001",
+        "level": "warning",
+        "message": "The configuration file specifies that an unknown rule \"ABC0001\" is to be disabled." 
+    }
+]
+```
+~
+
+~ IsoNumberedExample
+A tool is invoked with an unknown command-line argument.
+The tool should report the problem in `configurationNotifications`.
+The tool might report the problem as a warning and continue to run,
+or it might report the problem as an error and terminate.
+```
+"configurationNotifications": [
+    {
+        "id": "UnknownCommandLineArgument",
+        "level": "error",
+        "message": "Command line argument \"/X\" is unknown."
+    }
+]
+```
+~
+
+~ IsoNumberedExample
+A tool is invoked with a command-line argument that specifies the name of the log file,
+but the user who invoked the tool does not have permission to create the file.
+The tool should report the problem as an error in `configurationNotifications` and then terminate.
+```
+"configurationNotifications": [
+    {
+        "id": "CannotCreateLogFile",
+        "level": "error",
+        "message": "Cannot create log file \"C:/Windows/out.sarif\": Cannot write to directory \"C:/Windows\"."
+    }
+]
+```
 ~
 
 ### `rules` property { #run-rules }
@@ -598,7 +653,7 @@ If the `file` object does not represent a nested file, neither of the properties
 
 If the location of a nested file can be expressed either by means of a path within the containing file
 or by means of a byte offset from the start of the containing file, then either `uri`
-or `offsetFromParent` (&sect;[#file-offsetFromParent]) or both shall be present; they must not both be absent.
+or `offsetFromParent` (&sect;[#file-offsetFromParent]) or both shall be present; they shall not both be absent.
 
 ### `uri` property { #file-uri }
 
@@ -1556,7 +1611,7 @@ represent the three characters `cde`.
 This is the case whether or not the line ends with a newline sequence.
 ~
 
-To include a newline sequence in a region, `endLine` must be greater than `startLine`.
+To include a newline sequence in a region, `endLine` shall be greater than `startLine`.
 
 ~ IsoExample
 Suppose a text file contains the following lines, starting on line 5:
@@ -1766,6 +1821,8 @@ This allows tools to include information about the code flow that is not explici
 
 ## `stack` object { #stack }
 
+### General { #stack-General }
+
 A `stack` object describes a single call stack.
 A call stack is a sequence of nested function calls, each of which is referred to as a stack frame.
 
@@ -1780,9 +1837,12 @@ A `stack` object shall contain a property named `frames` whose value is an array
 This array shall include every function call in the stack for which the tool has information,
 and the entries that are present shall occur in chronological order with the most recent (innermost) call first and the least recent (outermost) call last.
 The entries in this array need not be unique.
-It is possible for the same frame to occur multiple times if the call stack includes a recursion. 
 
-~ IsoNote
+~ IsoNumberedNote { @IsoNumberedNote=1 }
+It is possible for the same frame to occur multiple times if the call stack includes a recursion. 
+~
+
+~ IsoNumberedNote
 It is possible that the analysis tool will not have location information for every frame in the call stack.
 This might happen if, for example, application code for which location information is available calls into operating system code
 for which location information is not available, which in turn calls back into application code.
@@ -1881,7 +1941,7 @@ relevant to the use of the location in a particular context.
 
 ### `physicalLocation` property { #annotatedCodeLocation-physicalLocation }
 
-An `annotatedCodeLocation` object must contain a property named `physicalLocation` whose value is a `physicalLocation` object
+An `annotatedCodeLocation` object shall contain a property named `physicalLocation` whose value is a `physicalLocation` object
 (&sect;[#physicalLocation]) that specifies the file location to which the `annotatedCodeLocation` object refers.
 
 ### `message` property { #annotatedCodeLocation-message }
@@ -1915,7 +1975,7 @@ A `rule` object contains information that describes a rule.
 
 Either the `shortDescription` property (&sect;[#rule-shortDescription])
 or the `fullDescription` property (&sect;[#rule-fullDescription])
-or both must be present.
+or both shall be present.
 
 ### `id` property { #rule-id }
 
@@ -2047,9 +2107,9 @@ This allows tools to include information about the rule that is not explicitly s
 A `formattedMessage` object contains information that can be used to construct a formatted message that describes a result.
 
 ### `formatId` property { #formattedMessage-id }
-A `formattedMessage` object must contain a property named `formatId`, whose value is a string that identifies the message format
+A `formattedMessage` object shall contain a property named `formatId`, whose value is a string that identifies the message format
 used to format the message that describes this result.
-The value of `formatId` must correspond to one of the names in the set of name/value pairs contained in the `messageFormats` property (&sect;[#rule-messageFormats])
+The value of `formatId` shall correspond to one of the names in the set of name/value pairs contained in the `messageFormats` property (&sect;[#rule-messageFormats])
 of the `rule` object (&sect;[#rule]) whose `id` property (&sect;[#rule-id]) matches the `ruleId` property (&sect;[#result-ruleId]) of this result.
 
 ### `arguments` property { #formattedMessage-arguments }
