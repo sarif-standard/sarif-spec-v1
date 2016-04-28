@@ -2425,10 +2425,11 @@ This allows tools to include information about the encountered condition that is
 ### General { #exception-General }
 
 An `exception` object describes a runtime exception encountered in the course of executing an analysis tool.
+This includes signals in operating systems such as POSIX.
 
 ### `type` property { #exception-type }
 
-An `exception` object shall contain a property named `type` whose value is a string containing the fully qualified
+An `exception` object should contain a property named `type` whose value is a string containing the fully qualified
 type name of the exception.
 
 ~ IsoNumberedExample { @IsoNumberedExample=1 }
@@ -2439,9 +2440,35 @@ C++: `"std::runtime_error"`
 C#: `"System.ArgumentNullException"`
 ~
 
+If the tool does not have access to information about the object that was thrown, the `type` property shall be absent.
+
+~ IsoNote
+This will be the case in C++ programs that throw objects that do not derive from `std::exception`:
+
+```
+throw 2;
+```
+~
+
+If the `exception` object represents a signal, `type` should contain a the symbolic name for the signal number.
+
+~ IsoNumberedExample
+`"SIGFPE"`
+~
+
 ### `message` property { #exception-message }
 
-An `exception` object shall contain a property named `message` whose value is a string that describes the exception.
+An `exception` object should contain a property named `message` whose value is a string that describes the exception.
+
+If the tool does not have access to an appropriate property of the thrown object, the `message` property shall be absent.
+
+~ IsoNumberedExample
+C++: The tool would populate `message` from the string returned from the `what()` method of any object derived from `std::exception`.
+~
+
+~ IsoNumberedExample
+C#: The tool would populate `message` from the value of the `Message` property of any object derived from `System.Exception`.
+~
 
 ### `stack` property { #exception-stack }
 
