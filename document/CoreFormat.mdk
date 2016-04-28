@@ -294,7 +294,7 @@ as long as no two of the resulting property names are equivalent as defined in &
 ~ IsoNumberedNote
 It need not be possible to use this URI to navigate directly to the nested scanned file.
 The information necessary to do that is specified in the `uri` property (&sect;[#file-uri]),
-or in the `offsetFromParent` (&sect;[#file-offsetFromParent]) and `length` (&sect;[#file-length]) properties,
+or in the `offset` (&sect;[#file-offset]) and `length` (&sect;[#file-length]) properties,
 of the `file` objects in the array .
 ~
 
@@ -310,7 +310,7 @@ file:///C:/Code/presentation.zip#/docs/intro.docx/Flash1
 ~
 
 If the fragment contains any characters which cannot occur in a fragment as specified in RFC 3986,
-those character must be percent-encoded as specified in RFC 3986.
+those character shall be percent-encoded as specified in RFC 3986.
 
 ~ IsoNumberedExample
 Suppose a compressed container contains a file named `/docs/chapter#1.doc`.
@@ -341,7 +341,7 @@ run: {
                 "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             },
             {
-                "offsetFromParent": 17522,
+                "offset": 17522,
                 "length": 4050,
                 "mimeType": "application/x-shockwave-flash"
             }
@@ -412,6 +412,103 @@ The `results` array shall be empty if the run that produced the `run` object did
 
 If the tool was run solely for the purpose of exporting rule metadata (see &sect;[#run-rules]),
 the `results` property shall be absent.
+
+### `toolNotifications` { #run-toolNotifications }
+
+A `run` object may contain a property named `toolNotifications`
+whose value is an array of zero or more `notification` objects (&sect;[#notification]).
+Each element of the array represents a runtime condition detected by the tool.
+The presence within this array of any `notification` object whose `level` property (&sect;[#notification-level]) is `error` shall mean
+that the run failed.
+
+~ IsoNumberedNote { @IsoNumberedNote=1 }
+The information in `toolNotifications` is primarily intended for the developers of the analysis tool,
+to aid them in diagnosing bugs in the tool.
+This is in contrast to the information in `results`, which is intended for the developers of the code being analyzed.
+However, viewers may still present tool notifications to users, so users are aware of any tool problems.
+At a minimum, viewers should make users aware of tool notifications whose `level` property is `error`.
+~
+
+~ IsoNumberedNote
+Depending on the nature of the error, a tool that encounters a runtime error might or might not be able to continue running.
+
+If the error occurs in the course of evaluating a rule, the tool might report the error in `toolNotifications`, disable the rule,
+and continue to execute the remaining rules.
+
+If the error occurs outside of the evaluation of a rule, the tool might report
+the error in `toolNotifications` and then halt.
+If the tool exits abnormally, it might not have the opportunity to report the error.
+~
+
+### `configurationNotifications` { #run-configurationNotifications }
+
+A `run` object may contain a property named `configurationNotifications`
+whose value is an array of zero or more `notification` objects (&sect;[#notification]).
+Each element of the array represents a condition relevant to the tool's configuration.
+The presence within this array of any `notification` object whose `level` property (&sect;[#notification-level]) is `error` shall mean
+that the run failed.
+
+~ IsoNumberedNote { @IsoNumberedNote=1 }
+The information in `configurationNotifications` is primarily intended for the engineers who configure the analysis tool,
+to aid them in diagnosing errors in the configuration.
+This is in contrast to the information in `results`, which is intended for the developers of the code being analyzed.
+However, viewers may still present configuration notifications to users, so users are aware of any configuration problems.
+At a minimum, viewers should make users aware of configuration notifications whose `level` property is `error`.
+~
+
+~ IsoNumberedNote
+Many tools can be parameterized with information about which rules to run, and how they should be configured.
+In some cases, if the configuration information is invalid, the tool can ignore the invalid information
+and continue to run.
+~
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+A tool is invoked with a configuration file which specifies that the tool should disable rule `ABC0001`,
+but there is no rule whose `id` is `ABC0001`.
+The tool should report the problem in `configurationNotifications`. The tool might
+continue to run, reporting results for the rules that are correctly configured.
+```
+"configurationNotifications": [
+    {
+        "id": "UnknownRule",
+        "ruleId": "ABC0001",
+        "level": "warning",
+        "message": "Could not disable rule \"ABC0001\" because there is no rule with that id." 
+    }
+]
+```
+~
+
+~ IsoNumberedExample
+A tool is invoked with an unknown command-line argument.
+The tool should report the problem in `configurationNotifications`.
+The tool might report the problem as a warning and continue to run,
+or it might report the problem as an error and terminate.
+```
+"configurationNotifications": [
+    {
+        "id": "UnknownCommandLineArgument",
+        "level": "error",
+        "message": "Command line argument \"/X\" is unknown."
+    }
+]
+```
+~
+
+~ IsoNumberedExample
+A tool is invoked with a command-line argument that specifies the name of the log file,
+but the user who invoked the tool does not have permission to create the file.
+The tool should report the problem as an error in `configurationNotifications` and then terminate.
+```
+"configurationNotifications": [
+    {
+        "id": "CannotCreateLogFile",
+        "level": "error",
+        "message": "Cannot create log file \"C:/Windows/out.sarif\": Cannot write to directory \"C:/Windows\"."
+    }
+]
+```
+~
 
 ### `rules` property { #run-rules }
 
@@ -556,11 +653,11 @@ referred to as the "containing file."
 `file` objects occur as members of arrays within the `run.files` object (&sect;[#run-files]). 
 
 If the `file` object does not represent a nested file, neither of the properties
-`uri` (&sect;[#file-uri]) or `offsetFromParent` (&sect;[#file-offsetFromParent]) shall be present.
+`uri` (&sect;[#file-uri]) or `offset` (&sect;[#file-offset]) shall be present.
 
 If the location of a nested file can be expressed either by means of a path within the containing file
 or by means of a byte offset from the start of the containing file, then either `uri`
-or `offsetFromParent` (&sect;[#file-offsetFromParent]) or both shall be present; they must not both be absent.
+or `offset` (&sect;[#file-offset]) or both shall be present; they shall not both be absent.
 
 ### `uri` property { #file-uri }
 
@@ -645,18 +742,18 @@ Neither of the `uri` properties representing the nested files
 ```
 ~
 
-### `offsetFromParent` property { #file-offsetFromParent }
+### `offset` property { #file-offset }
 
 If the location of a nested file within its containing file can be expressed
 only by means of a byte offset from the start of the containing file,
-then the `file` object shall contain a property named `offsetFromParent`
+then the `file` object shall contain a property named `offset`
 whose value is an integer specifying that offset.
 
 If the location of the file within its containing file can be expressed both by means of a path
-and by means of a byte offset, then the `offsetFromParent` property may be present.
+and by means of a byte offset, then the `offset` property may be present.
 
 If the location of the file within its containing file cannot be expressed by means of a byte offset,
-then the `offsetFromParent` property shall be absent.
+then the `offset` property shall be absent.
 
 ### `length` property { #file-length }
 
@@ -775,26 +872,31 @@ A `result` object describes a single result produced by an analysis tool.
 
 ### `ruleId` property { #result-ruleId }
 
-A `result` object should contain a property named `ruleId` whose value is a string containing
+Depending on the circumstances, a `rule` object either shall, may, or shall not contain
+a property named `ruleId` whose value is a string containing
 the stable, opaque identifier for the rule that was evaluated to produce the result.
 
 ~ IsoExample
 `"CA2101"`
 ~
 
-Analysis tools that produce the SARIF format shall provide a `ruleId` for each `result`
-(with the possible exception of `result`s whose `kind` property is `note`; see (&sect;[#result-kind]).
+If the log was created by an analysis tool (as opposed to a conversion tool), and if the `level` property (&sect;[#result-level]) is anything other than `note`,
+then `ruleId` shall be present.
+
+If the `level` property of the `result` object is `note`,
+then the `ruleId` property may be present.
 
 Not all existing analysis tools emit the equivalent of a `ruleId` in their output.
 A conversion tool which converts the output of such an analysis tool to the SARIF format
-shall omit `ruleId` from the `result`s.
+shall not set the `ruleId` property, and in particular, it shall not attempt to
+synthesize it from other information available in the original analysis tool's output.
 
-### `kind` property { #result-kind }
+### `level` property { #result-level }
 
-A `result` object may contain a property named `kind` whose value is one of a fixed set of strings
-that specify the category of the result.
+A `result` object may contain a property named `level` whose value is one of a fixed set of strings
+that specify the severity level of the result.
 
-If present, the `kind` property shall have one of the following values, with the specified meanings:
+If present, the `level` property shall have one of the following values, with the specified meanings:
 
 * `pass`: The rule specified by the `ruleId` property (&sect;[#result-ruleId]) was evaluated, and no problem was found.
 
@@ -805,83 +907,91 @@ If present, the `kind` property shall have one of the following values, with the
 * `notApplicable`: The rule specified by the `ruleId` property was not evaluated, because it does not apply to the
 file specified by `analysisTarget` (&sect;[#location-analysisTarget]).
 
-~ IsoExample
-A binary checker might have a rule that applies to 32-bit binaries only.
-Such a tool would produce a `notApplicable` result if it were run on a 64-bit binary.
-~
-
-* `configurationError`: The tool encountered a rule configuration error.
-
-    The `ruleId` property for a `result` object whose `kind` property is `configurationError` should be
-    set to a unique value, distinct from the id of all other rules known to that tool, which indicates that
-    an error occurred while reading rule configuration information.
-
-~ IsoNote
-Many tools can be parameterized with information about which rules to run, and how they should be configured.
-In some cases, if the configuration information is invalid, the tool can ignore the invalid information
-and continue to run.
-~
-
-~ IsoExample
-Suppose a tool is invoked with a configuration file which specifies that the tool should disable rule X.
-If there is no such rule as rule X, then the tool should report a `configurationError`. The tool might
-continue to run, reporting results for the rules that are correctly configured.
-~
-
-* `internalError`: The tool encountered an internal error that prevented it from performing a complete analysis.
-
-    If the error occurred in the course of evaluating a specific rule, the `ruleId` property should either specify that rule,
-    or it should specify a unique value, distinct from the id of all other rules known to that tool, which indicates that
-    an error occurred during rule evaluation.
-
-    If the error did not occur in the course of evaluating a specific rule, the `ruleId` property should be set to a unique value,
-    distinct from the id of all other rules known to that tool, which indicates that an internal tool error occurred.
-
-~ IsoNote
-Depending on the nature of the error, the tool might or might not be able to continue running.
-In all cases, the presence of a `result` object whose `kind` property is set to `internalError` indicates
-that the run failed, because it could could not successfully run all specified rules on all specified
-analysis targets.
-
-If a tool encounters an error in the course of evaluating a rule, the tool might report the error, disable the rule,
-and continue to execute the remaining rules.
-
-If a tool encounters an error outside of the evaluation of a rule, the tool might report
-the error to the log and halt. (The tool might also just exit, either normally or abnormally.)
-~
-
-* `note`: A purely informational log entry, not related to any condition in the code being analyzed.
-
-   The `ruleId` property for a `result` object whose `kind` property is `note` may be present, if the
-   note relates to a particular rule; otherwise `ruleId` may be absent.
-   
-~ IsoExample
-The first informational log entry relates to a specific rule, the second does not:
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+In this example, a binary checker has a rule that applies to 32-bit binaries only.
+It produces a `notApplicable` result if it is run on a 64-bit binary:
 ```
-    ...
     "results": [
         {
             "ruleId": "ABC0001",
-            "kind": "note",
-            "fullMessage": "A new version of rule ABC0001 is available."
-        },
-        {
-            "kind": "note",
-            "fullMessage": "Version 11.0 of SuperLint is now available."
+            "level": "notApplicable",
+            "message": "\"MyTool64.exe\" was not evaluated for rule ABC0001 because it is not a 32-bit binary."
+            "locations": [
+                {
+                    "analysisTarget": {
+                        "uri": "file://C:/bin/MyTool64.exe"
+                    }
+                }
+            ]
         }
     ]
-    ...
 ```
 ~
 
-If the `kind` property is not present, it shall be considered equivalent to the value `warning`.
+* `note`: A purely informational log entry.
 
-### `fullMessage` property { #result-fullMessage }
+   The `ruleId` property for a `result` object whose `kind` property is `note` may be present, if the
+   note relates to a particular rule; otherwise `ruleId` may be absent.
 
-A `result` object shall contain a property named `fullMessage` whose value is a string that describes the result.
+~ IsoNumberedExample
+In this example, the tool reports an observation about the code that does not
+represent a problem.
+```
+    "results": [
+        {
+            "ruleId": "ABC0002",
+            "level": "note",
+            "message": "Consider using 'nameof(start)' instead of hard-coding the parameter name 'start'."
+            "locations": [
+                {
+                    "analysisTarget": {
+                        "uri": "file:///C:/code/a.cs",
+                        "region": {
+                            "startLine": 6
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+```
+~
 
-The `fullMessage` property should provide sufficient details to allow an end user to resolve any problem that the result might indicate.
-In particular, `fullMessage` shall include all of the following information that is available and relevant to the result:
+~ IsoNumberedExample
+In this example, the tool reports information that is relevant to a particular rule,
+but does not represent an observation about the code.
+```
+    "results": [
+        {
+            "ruleId": "ABC0003",
+            "level": "note",
+            "message": "A new version of rule ABC0001 is available."
+        }
+    ]
+```
+~
+
+~ IsoNumberedExample
+In this example, the tool reports information that is not related to any particular rule,
+and is not an observation about the code.
+```
+    "results": [
+        {
+            "level": "note",
+            "message": "Version 11.0 of SuperLint is now available."
+        }
+    ]
+```
+~
+
+If the `level` property is not present, it shall be considered equivalent to the value `warning`.
+
+### `message` property { #result-message }
+
+A `result` object shall contain a property named `message` whose value is a string that describes the result.
+
+The `message` property should provide sufficient details to allow an end user to resolve any problem that the result might indicate.
+In particular, `message` shall include all of the following information that is available and relevant to the result:
 
 *	Information sufficient to identify the analysis target, and the location within the target where the problem occurred.
 
@@ -892,47 +1002,34 @@ In particular, `fullMessage` shall include all of the following information that
 *	The full range of responses to the problem that the end user could take
 (including the definition of conditions where it might be appropriate not to fix the problem, or to conclude that the result is a false positive).
 
-The first sentence of the `fullMessage` property should provide a useful summary of the result,
+The first sentence of the `message` property should provide a useful summary of the result,
 suitable for display in cases where UI is limited.
-Tools that construct `fullMessage` in this way need not provide a value for the `shortMessage` property.
-Tools that do not construct `fullMessage` in this way should provide a value for the `shortMessage` property,
-because otherwise, the initial portion of `fullMessage` that a viewer displays where UI space is limited
+
+~ IsoNote
+If a tool does not construct `message` in this way, the initial portion of `message` that a viewer displays where UI space is limited
 might not be understandable.
+~
 
 ~ IsoExample
-This is an example of a `fullMessage`:
+This is an example of a `message`:
 ```
-    "Deleting object members may compromise performance when subsequently accessing the object.
-    Consider setting object member 'x' to null instead, unless this object is a dictionary
+    "Deleting member 'x' of variable 'y' may compromise performance on subsequent accesses
+    of 'y'. Consider setting object member 'x' to null instead, unless this object is a dictionary
     or if runtime semantics otherwise dictate that the existence of a null member is distinct
     from one that is not present at all. This violation can also be ignored for infrequently
     called code paths."
 ```
 ~
 
-### `shortMessage` property { #result-shortMessage }
+### `formattedRuleMessage` property { #result-formattedRuleMessage }
 
-A `result` object may contain a property named `shortMessage` whose value is a string that describes the result.
-The `shortMessage` property should be a single sentence that is understandable
-when visible space is limited to a single line of text.
-
-~ IsoExample
-This is an example of a `shortMessage`:
-```
-    "Deleting member 'x' of variable 'y' may compromise performance on subsequent accesses
-    of 'y'."
-```
-~
-
-### `formattedMessage` property { #result-formattedMessage }
-
-A `result` object (&sect;[#result]) may contain a property named `formattedMessage` whose value is
+A `result` object (&sect;[#result]) may contain a property named `formattedRuleMessage` whose value is
 a `formattedMessage` object (&sect;[#formattedMessage]) that can be used to construct
 a formatted message that describes the result.
 
-If the `formattedMessage` property is present on a `result`, the `fullMessage` property (&sect;[#result-fullMessage])
+If the `formattedRuleMessage` property is present on a `result`, the `message` property (&sect;[#result-message])
 shall be absent.
-If the `fullMessage` property is present on a `result`, the `formattedMessage` property
+If the `message` property is present on a `result`, the `formattedRuleMessage` property
 shall be absent.
 
 ### `locations` property { #result-locations }
@@ -1032,8 +1129,8 @@ The result might appear in the log file like this:
 results: [
     {
         "ruleId": "JS3056",
-        "kind": "error",
-        "shortMessage": "Name 'index' cannot be used in this scope because it would give a different meaning to 'index'.",
+        "level": "error",
+        "message": "Name 'index' cannot be used in this scope because it would give a different meaning to 'index'.",
 
         "locations": [
             {
@@ -1367,7 +1464,7 @@ which provides additional information about the file specified by `uri`.
       "results": [
         {
           "ruleId": "CA2101",
-          "kind": "error",
+          "level": "error",
           "locations": [
             {
               "resultFile": {
@@ -1521,7 +1618,7 @@ represent the three characters `cde`.
 This is the case whether or not the line ends with a newline sequence.
 ~
 
-To include a newline sequence in a region, `endLine` must be greater than `startLine`.
+To include a newline sequence in a region, `endLine` shall be greater than `startLine`.
 
 ~ IsoExample
 Suppose a text file contains the following lines, starting on line 5:
@@ -1731,6 +1828,8 @@ This allows tools to include information about the code flow that is not explici
 
 ## `stack` object { #stack }
 
+### General { #stack-General }
+
 A `stack` object describes a single call stack.
 A call stack is a sequence of nested function calls, each of which is referred to as a stack frame.
 
@@ -1745,9 +1844,12 @@ A `stack` object shall contain a property named `frames` whose value is an array
 This array shall include every function call in the stack for which the tool has information,
 and the entries that are present shall occur in chronological order with the most recent (innermost) call first and the least recent (outermost) call last.
 The entries in this array need not be unique.
-It is possible for the same frame to occur multiple times if the call stack includes a recursion. 
 
-~ IsoNote
+~ IsoNumberedNote { @IsoNumberedNote=1 }
+It is possible for the same frame to occur multiple times if the call stack includes a recursion. 
+~
+
+~ IsoNumberedNote
 It is possible that the analysis tool will not have location information for every frame in the call stack.
 This might happen if, for example, application code for which location information is available calls into operating system code
 for which location information is not available, which in turn calls back into application code.
@@ -1846,7 +1948,7 @@ relevant to the use of the location in a particular context.
 
 ### `physicalLocation` property { #annotatedCodeLocation-physicalLocation }
 
-An `annotatedCodeLocation` object must contain a property named `physicalLocation` whose value is a `physicalLocation` object
+An `annotatedCodeLocation` object shall contain a property named `physicalLocation` whose value is a `physicalLocation` object
 (&sect;[#physicalLocation]) that specifies the file location to which the `annotatedCodeLocation` object refers.
 
 ### `message` property { #annotatedCodeLocation-message }
@@ -1880,7 +1982,7 @@ A `rule` object contains information that describes a rule.
 
 Either the `shortDescription` property (&sect;[#rule-shortDescription])
 or the `fullDescription` property (&sect;[#rule-fullDescription])
-or both must be present.
+or both shall be present.
 
 ### `id` property { #rule-id }
 
@@ -1889,6 +1991,23 @@ a stable, opaque identifier for the rule.
 
 ~ IsoExample
 `"CA2101"`
+~
+
+~ IsoNote
+Rule identifiers must be stable for two reasons:
+
+1. So build automation scripts can refer to specific checks, for example, to disable them,
+without the risk of a script breaking if a rule id changes.
+2. So result management systems can compare results from one run to the next,
+without erroneously designating results as "new" because a rule id has changed.
+
+Rule identifiers should be opaque -- that is, they should not convey information to
+a user -- because a rule's implementation might change over time.
+Suppose a rule id is `"DoNotDoXOrY"`, suppose circumstances change so that
+"Y" is now acceptable, and suppose the implementation of the rule changes accordingly.
+Because the rule id must not change, the string `"DoNotDoXOrY"` will continue to be persisted to logs,
+where it will convey outdated guidance to users in a way that an opaque identifier
+such as `"CA2101"` would not.
 ~
 
 ### `name` property { #rule-name }
@@ -2012,9 +2131,9 @@ This allows tools to include information about the rule that is not explicitly s
 A `formattedMessage` object contains information that can be used to construct a formatted message that describes a result.
 
 ### `formatId` property { #formattedMessage-id }
-A `formattedMessage` object must contain a property named `formatId`, whose value is a string that identifies the message format
+A `formattedMessage` object shall contain a property named `formatId`, whose value is a string that identifies the message format
 used to format the message that describes this result.
-The value of `formatId` must correspond to one of the names in the set of name/value pairs contained in the `messageFormats` property (&sect;[#rule-messageFormats])
+The value of `formatId` shall correspond to one of the names in the set of name/value pairs contained in the `messageFormats` property (&sect;[#rule-messageFormats])
 of the `rule` object (&sect;[#rule]) whose `id` property (&sect;[#rule-id]) matches the `ruleId` property (&sect;[#result-ruleId]) of this result.
 
 ### `arguments` property { #formattedMessage-arguments }
@@ -2225,3 +2344,117 @@ of the resulting UTF-8 byte sequence.
 
 * TODO: Relationship between original file encoding, offset, and UTF-8 byte sequence.
 * TODO: Explain responsibility of viewer/editor to match encoding.
+
+## `notification` object { #notification }
+
+### General { #notification-General }
+
+A `notification` object describes a condition encountered in the course of running an analysis tool
+which is relevant to the operation of the tool itself,
+as opposed to being relevant to a file being analyzed by the tool.
+Conditions relevant to files being analyzed by a tool are represented by `result` objects (&sect;[#result]).
+
+### `id` property { #notification-id }
+
+A `notification` object may contain a property named `id` whose value is a string containing
+an identifier for the condition that was encountered.
+
+~ IsoNote
+In contrast to rule identifiers (see `rule.id`, &sect;[#rule-id]), which must be stable and opaque,
+notification identifiers need not be either stable or opaque,
+because the reasoning that leads to those requirements for rule ids does not apply to tool notifications.
+A tool notification with level `"error"` should always be treated as a failure,
+and tools should not allow them to be disabled.
+And tool authors are free to change the notification ids at any time, so there is no reason
+for them to be opaque; to the contrary, they are more useful if they convey information to the user.
+~
+
+### `ruleId` property { #notification-ruleId }
+
+If the condition described by the `notification` object is relevant to a particular analysis rule,
+the `notification` property should contain a property named `ruleId` whose value is the stable,
+unique identifier of the rule (&sect;[#rule-id]).
+
+### `message` property { #notification-message }
+
+A `notification` object shall contain a property named `message` whose value is a string that describes the condition that was encountered.
+
+### `level` property { #notification-level }
+
+A `notification` object may contain a property named `level` whose value is one of a fixed set of strings
+that specify the severity level of the notification.
+
+If present, the `level` property shall have one of the following values, with the specified meanings:
+
+* `error`: A serious problem was found.
+The condition encountered by the tool resulted in the analysis being halted,
+or caused the results to be incorrect or incomplete. 
+
+* `warning`: A problem that is not considered to be serious was found.
+The condition encountered by the tool is such that it is uncertain whether a problem occurred,
+or is such that the analysis might be incomplete but the results that were generated are probably valid.
+
+* `note`: The notification is purely informational. There is no required action.
+
+If the `level` property is absent, it shall be considered equivalent to the value `warning`.
+
+### `time` property { #notification-time }
+
+A `notification` object may contain a property named `time` whose value is a string
+specifying the date and time at which the analysis tool generated the notification.
+The string shall be in the format specified by (&sect;[#fileFormat-dateTime]).
+
+### `exception` property { #notification-exception }
+
+If the notification is a result of a runtime exception, the `notification` object may contain a property named `exception`
+whose value is an `exception` object (&sect;[#exception]).
+
+If the notification is not the result of a runtime exception, the `exception` property shall be absent.
+
+### `tags` property { #notification-tags }
+
+A `notification` object may contain a property named `tags`, whose value is a tag set.
+
+### `properties` property { #notification-properties }
+
+A `notification` object may contain a property named `properties`, whose value is property bag.
+This allows tools to include information about the encountered condition that is not explicitly specified in the SARIF format.
+
+## `exception` object { #exception }
+
+### General { #exception-General }
+
+An `exception` object describes a runtime exception encountered in the course of executing an analysis tool.
+
+### `type` property { #exception-type }
+
+An `exception` object shall contain a property named `type` whose value is a string containing the fully qualified
+type name of the exception.
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+C++: `"std::runtime_error"`
+~
+
+~ IsoNumberedExample
+C#: `"System.ArgumentNullException"`
+~
+
+### `message` property { #exception-message }
+
+An `exception` object shall contain a property named `message` whose value is a string that describes the exception.
+
+### `stack` property { #exception-stack }
+
+An `exception` object may contain a property named `stack` whose value is a `stack` object (&sect;[#stack])
+that describes the sequence of function calls leading to the exception.
+
+### `innerExceptions` property { #exception-innerExceptions }
+
+An `exception` object may contain a property named `innerExceptions` whose value is an array of `exception` objects,
+each of which is considered to be a cause of the containing `exception`.
+
+~ IsoNote
+There is commonly no more than one inner exception.
+This property is an array to accommodate platforms that provide a mechanism for aggregating exceptions,
+such as the `System.AggregateException` class from the .NET Framework.
+~
