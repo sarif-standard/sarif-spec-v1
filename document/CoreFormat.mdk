@@ -868,20 +868,24 @@ A `result` object describes a single result produced by an analysis tool.
 
 ### `ruleId` property { #result-ruleId }
 
-If the `level` property (&sect;[#result-level]) of a `result` object is anything other than `note`,
-then the `result` object shall contain a property named `ruleId` whose value is a string containing
+Depending on the circumstances, a `rule` object either shall, may, or shall not contain
+a property named `ruleId` whose value is a string containing
 the stable, opaque identifier for the rule that was evaluated to produce the result.
 
 ~ IsoExample
 `"CA2101"`
 ~
 
+If the log was created by an analysis tool (as opposed to a conversion tool), and if the `level` property (&sect;[#result-level]) is anything other than `note`,
+then `ruleId` shall be present.
+
 If the `level` property of the `result` object is `note`,
-then the `ruleId` property may be absent.
+then the `ruleId` property may be present.
 
 Not all existing analysis tools emit the equivalent of a `ruleId` in their output.
 A conversion tool which converts the output of such an analysis tool to the SARIF format
-shall omit `ruleId` from the `result`s.
+shall not set the `ruleId` property, and in particular, it shall not attempt to
+synthesize it from other information available in the original analysis tool's output.
 
 ### `level` property { #result-level }
 
@@ -907,7 +911,7 @@ It produces a `notApplicable` result if it is run on a 64-bit binary:
         {
             "ruleId": "ABC0001",
             "level": "notApplicable",
-            "message": "MyTool64.exe is a 64-bit binary, so this rule does not apply to it."
+            "message": "\"MyTool64.exe\" was not evaluated for rule ABC0001 because it is not a 32-bit binary."
             "locations": [
                 {
                     "analysisTarget": {
@@ -919,7 +923,6 @@ It produces a `notApplicable` result if it is run on a 64-bit binary:
     ]
 ```
 ~
-
 
 * `note`: A purely informational log entry.
 
@@ -2333,7 +2336,7 @@ Conditions relevant to files being analyzed by a tool are represented by `result
 ### `id` property { #notification-id }
 
 A `notification` object may contain a property named `id` whose value is a string containing
-the stable, opaque identifier for the condition that was encountered.
+an opaque stable identifier for the condition that was encountered.
 
 ### `ruleId` property { #notification-ruleId }
 
@@ -2353,10 +2356,14 @@ that specify the severity level of the notification.
 If present, the `level` property shall have one of the following values, with the specified meanings:
 
 * `error`: A serious problem was found.
+The condition encountered by the tool resulted in the analysis being halted,
+or caused the results to be incorrect or incomplete. 
 
 * `warning`: A problem that is not considered to be serious was found.
+The condition encountered by the tool is such that it is uncertain whether a problem occurred,
+or is such that the analysis might be incomplete but the results that were generated are probably valid.
 
-* `note`: The notification is purely informational.
+* `note`: The notification is purely informational. There is no required action.
 
 If the `level` property is absent, it shall be considered equivalent to the value `warning`.
 
@@ -2368,10 +2375,10 @@ The string shall be in the format specified by (&sect;[#fileFormat-dateTime]).
 
 ### `exception` property { #notification-exception }
 
-If the issue is a result of a runtime exception, the `notification` object may contain a property named `exception`
+If the notification is a result of a runtime exception, the `notification` object may contain a property named `exception`
 whose value is an `exception` object (&sect;[#exception]).
 
-If the issue is not the result of a runtime exception, the `exception` property shall be absent.
+If the notification is not the result of a runtime exception, the `exception` property shall be absent.
 
 ### `tags` property { #notification-tags }
 
@@ -2417,8 +2424,8 @@ each of which is considered to be a cause of the containing `exception`.
 
 ~ IsoNote
 There is commonly no more than one inner exception.
-This property is an array to accommodate the `System.AggregateException` class from the .NET Framework,
-which has an `InnerExceptions` property.
+This property is an array to accommodate platforms that provide a mechanism for aggregating exceptions,
+such as the `System.AggregateException` class from the .NET Framework.
 ~
 
 ### `tags` property { #exception-tags }
