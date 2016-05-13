@@ -15,7 +15,7 @@ Because SARIF conforms to the JSON format, all integer values shall be expressed
 Hexadecimal or octal notation shall not be used.
 
 Every JSON property name defined by the SARIF format shall be a camelCase name.
-Because the names of properties defined in property bags (&sect;[#property-bag-properties]) such as `result.properties` (&sect;[#result-properties]),
+Because the names of properties defined in property bags (&sect;[#property-bags]) such as `result.properties` (&sect;[#result-properties]),
 are not defined by the SARIF format, they are not subject to this requirement.
 These property names should also be camelCase, but see [Annex C](#Annex-C) for exceptions.
 
@@ -57,22 +57,22 @@ nor are hyphen, underscore, or tilde.
 * In the host component, registered names and hexadecimal addresses use lower-case.
 ~
 
-## Tag set properties { #tag-set-properties }
+## Property bags { #property-bags }
 
-Certain properties in this specification are defined to be "tag sets".
-A tag set is a JSON array containing zero or more arbitrary strings;
-no element of the array shall be a number, an array, or an object.
-No two of the strings shall be the same.
-Two strings shall be considered the same if they consist of the same
-sequence of Unicode code points.
-
-## Property bag properties { #property-bag-properties }
+### General { #property-bags-General }
 
 Certain properties in this specification are defined to be "property bags".
-A property bag is a JSON object.
-The names of the properties within this JSON object should be camelCase strings,
-but see [Annex C](#Annex-C) for exceptions.
-The values of the properties shall be arbitrary strings; they shall not be numbers, arrays, or sub-objects.
+A property bag is a JSON object containing an arbitrary set of properties.
+The values of the properties may be of any JSON type, including strings, numbers, arrays, and objects.
+The names of the properties should be camelCase strings, but see [Annex C](#Annex-C) for exceptions.
+
+### Tags { #property-bags-tags }
+
+If a property bag contains a property with the name `tags`,
+then the value of that property shall be an array containing zero or more arbitrary strings,
+no two of which shall be the same.
+Two strings shall be considered the same if they consist of the same
+sequence of Unicode code points.
 
 ## Date/time properties { #fileFormat-dateTime }
 
@@ -526,10 +526,6 @@ to facilitate looking up the rule associated with each `result` object (&sect;[#
 by means of the `result`'s `ruleId` property (&sect;[#result-ruleId]).
 ~
 
-### `tags` property { #run-tags }
-
-A `run` object may contain a property named `tags`, whose value is a tag set.
-
 ### `properties` property { #run-properties }
 
 A `run` object may contain a property named `properties`, whose value is property bag.
@@ -633,10 +629,6 @@ If the operating system does not provide such a value, the `fileVersion` propert
 ~ IsoExample
 On the Windows platform, this information is available in the `FILEVERSION` member of the `VERSIONINFO` structure.
 ~
-
-### `tags` property { #tool-tags }
-
-A `tool` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #tool-properties }
 
@@ -796,10 +788,6 @@ The user would then configure the tool to produce hashes using the algorithms re
 Analysis tools that are configurable to produce hashes with a variety of commonly used algorithms
 will interoperate most easily with such systems.
 ~
-
-### `tags` property { #file-tags }
-
-A `file` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #file-properties }
 
@@ -1198,10 +1186,6 @@ The `#pragma` warning construct in C# is such a syntactic construct.
 
 A `result` object may contain a property names `fixes`, whose value is a JSON array of zero or more unique (&sect;[#unique-array-properties]) `fix` objects (&sect;[#fix]).
 
-### `tags` property { #result-tags }
-
-A `result` object may contain a property named `tags`, whose value is a tag set.
-
 ### `properties` property { #result-properties }
 
 A `result` object may contain a property named `properties`, whose value is property bag.
@@ -1418,10 +1402,6 @@ and it might populate the `logicalLocations` property as follows:
 }
 ```
 ~
-
-### `tags` property { #location-tags }
-
-A `location` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #location-properties }
 
@@ -1817,10 +1797,6 @@ The `locations` array might include multiple identical elements if, for example,
 the analysis tool simulated the execution of a loop in the course of producing the result.
 ~
 
-### `tags` property { #codeFlow-tags }
-
-A `codeFlow` object may contain a property named `tags`, whose value is a tag set.
-
 ### `properties` property { #codeFlow-properties }
 
 A `codeFlow` object may contain a property named `properties`, whose value is a property bag.
@@ -1854,10 +1830,6 @@ It is possible that the analysis tool will not have location information for eve
 This might happen if, for example, application code for which location information is available calls into operating system code
 for which location information is not available, which in turn calls back into application code.
 ~
-
-### `tags` property { #stack-tags }
-
-A `stack` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #stack-properties }
 
@@ -1930,10 +1902,6 @@ of the method represented by this stack frame.
 A `stackFrame` object may contain a property named `parameters` whose value is an array of strings
 representing the parameters of the function call represented by this stack frame.
 
-### `tags` property { #stackFrame-tags }
-
-A `stackFrame` object may contain a property named `tags`, whose value is a tag set.
-
 ### `properties` property { #stackFrame-properties }
 
 A `stackFrame` object may contain a property named `properties`, whose value is a property bag.
@@ -1962,10 +1930,6 @@ has been used at a particular location.
 The tool might provide a "related location" (&sect;[#result-relatedLocations]) whose value is
 an `annotatedCodeLocation` object with the message "Insecure data entered the system here". 
 ~
-
-### `tags` property { #annotatedCodeLocation-tags }
-
-An `annotatedCodeLocation` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #annotatedCodeLocation-properties }
 
@@ -2114,10 +2078,6 @@ containing the URI where the primary documentation for the rule can be found.
 The documentation might include examples, contact information for the rule authors,
 and links to additional information about the rule.
 ~
-
-### `tags` property { #rule-tags }
-
-A `rule` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #rule-properties }
 
@@ -2410,10 +2370,6 @@ If the notification is a result of a runtime exception, the `notification` objec
 whose value is an `exception` object (&sect;[#exception]).
 
 If the notification is not the result of a runtime exception, the `exception` property shall be absent.
-
-### `tags` property { #notification-tags }
-
-A `notification` object may contain a property named `tags`, whose value is a tag set.
 
 ### `properties` property { #notification-properties }
 
