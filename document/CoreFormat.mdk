@@ -678,17 +678,12 @@ If the tool that produced the log relied on another software component to genera
 then the `tool` object should contain a property named `sarifLoggerVersion`, whose value is
 a string specifying the version of the logging component.
 
-If this property is present, then it shall contain the Semantic Version 2.0.0 version
-for the logging component, if available; otherwise, this property shall contain the
-logging component's version in whatever format is available.
-
 ~ IsoNote
 This information is useful, for example, when a tool produces invalid output, and
 the author of the tool wishes to file a bug report with the author of the logging
 component.
 In this case, it is helpful to the author of the logging component to know
-the version number of the logging component that produced the invalid output.
-
+the precise version number of the logging component that produced the invalid output.
 ~
 
 
