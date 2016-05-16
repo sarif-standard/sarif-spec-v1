@@ -161,16 +161,16 @@ if new versions are defined in the future.
 
 ### `$schema` property { #sarifLog-dollarSchema }
 
-A `sarifLog` object may contain a proeprty named `$schema` whose value is a string containing a valid
+A `sarifLog` object may contain a property named `$schema` whose value is a string containing a valid
 URI from which a JSON schema describing the version of the SARIF format to which this log file conforms
-may be obtained.
+can be obtained.
 
 If the `$schema` property is present, the JSON schema obtained from the specified URI must describe
 the version of the SARIF format specified by the `version` property (&sect;[#sarifLog-version]).
 
 ~ IsoNote
 The purpose of the `$schema` property is to allow JSON schema validation tools to locate an
-appropriate schema and validate the log file against it.
+appropriate schema against which to validate the log file.
 This is useful, for example, for tool authors who wish to ensure that the logs produced by
 their tools conform to the SARIF format.
 ~
