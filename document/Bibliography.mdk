@@ -9,5 +9,8 @@ ISO/IEC 23270, _Information technology - Programming languages - C#_
 RFC 2045, _Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies_.
 Available from &lt;<https://tools.ietf.org/html/rfc2045>&gt;
 
+RFC 3066, _Tags for the Identification of Languages_.
+Available from &lt;<https://www.ietf.org/rfc/rfc3066.txt>&gt;
+
 RFC 3629, _UTF-8, a transformation format of ISO 10646_.
 Available from &lt;<https://tools.ietf.org/html/rfc3629>&gt;

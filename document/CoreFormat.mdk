@@ -277,7 +277,7 @@ element, and the property name shall be the URI of the scanned file.
 If the absolute location of the scanned file is available, the URI should be an absolute URI;
 otherwise, the URI shall be a relative URI.
 
-~ IsoNumberedExample { @IsoNumberedExample=1}
+~ IsoNumberedExample { @IsoNumberedExample=1 }
 
 ```
 run: {
@@ -648,6 +648,44 @@ If the operating system does not provide such a value, the `fileVersion` propert
 ~ IsoExample
 On the Windows platform, this information is available in the `FILEVERSION` member of the `VERSIONINFO` structure.
 ~
+
+
+### `language` property { #tool-language }
+
+A tool object should contain a property named `language`, whose value is a string
+specifying the language of the messages produced by the tool, in the format specified by
+RFC 3066.
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+The tool language is English:
+```
+"tool": {
+  "language": "en"
+```
+~
+
+~ IsoNumberedExample
+The tool language is French as spoken in France:
+```
+"tool": {
+  "language": "fr-FR"
+```
+~
+
+### `sarifLoggerVersion` property { #tool-sarifLoggerVersion }
+
+If the tool that produced the log relied on another software component to generate the log,
+then the `tool` object should contain a property named `sarifLoggerVersion`, whose value is
+a string specifying the version of the logging component.
+
+~ IsoNote
+This information is useful, for example, when a tool produces invalid output, and
+the author of the tool wishes to file a bug report with the author of the logging
+component.
+In this case, it is helpful to the author of the logging component to know
+the precise version number of the logging component that produced the invalid output.
+~
+
 
 ### `properties` property { #tool-properties }
 
