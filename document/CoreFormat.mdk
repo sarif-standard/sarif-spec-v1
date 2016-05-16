@@ -141,19 +141,38 @@ An `sarifLog` object specifies the version of the file format and contains the o
 
 ### `version` property { #sarifLog-version }
 
-A `sarifLog` object shall contain a property named `version` whose value is the string `"1.0.0-beta.2"`.
+A `sarifLog` object shall contain a property named `version` whose value is a string designating the
+version of the SARIF format to which this log file conforms.
+This string must have the value `"1.0.0"`.
+
+~ IsoNote
+The value of this property, in the version of SARIF described by
+this document and in all future versions of the SARIF standard, will be in the format specified by Semantic
+Versioning 2.0.0.
+~
 
 Although the order in which the name/value pairs appear in a JSON object value is not semantically significant,
 the `version` property should appear first. 
+
 ~ IsoNote
 This will make it easier for parsers to handle multiple versions of the SARIF format,
 if new versions are defined in the future.
 ~
 
+### `$schema` property { #sarifLog-dollarSchema }
+
+A `sarifLog` object may contain a property named `$schema` whose value is a string containing a
+URI from which a JSON schema describing the version of the SARIF format to which this log file conforms
+can be obtained.
+
+If the `$schema` property is present, the JSON schema obtained from the specified URI must describe
+the version of the SARIF format specified by the `version` property (&sect;[#sarifLog-version]).
+
 ~ IsoNote
-The value of this property, in the version of SARIF described by
-this document and in all future versions of the SARIF standard, will be in the format specified by Semantic
-Versioning 2.0.0
+The purpose of the `$schema` property is to allow JSON schema validation tools to locate an
+appropriate schema against which to validate the log file.
+This is useful, for example, for tool authors who wish to ensure that logs produced by
+their tools conform to the SARIF format.
 ~
 
 ### `runs` property { #sarifLog-runs }
