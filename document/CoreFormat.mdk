@@ -57,6 +57,89 @@ nor are hyphen, underscore, or tilde.
 * In the host component, registered names and hexadecimal addresses use lower-case.
 ~
 
+## URI base id properties { #uriBaseIdProperties }
+
+Certain objects in this specification which have a URI-valued property (&sect;[#uriProperties])
+also have a property that is described as being a "URI base id".
+The value of such a property is a string which indirectly specifies the base URI for
+the file whose location is specified in the corresponding URI-valued property by a relative URI.
+If the URI-valued property contains an absolute URI, the URI base id property shall be absent.
+
+If the consumer of the log file requires an absolute URI (for example, to display
+the specified file to a user), then the consumer must have the necessary information
+to resolve the value of the URI base id property to an absolute URI, which can then be combined
+with the relative URI stored in the URI-valued property.
+
+The value of a URI base id property may be any string; it need not have any particular
+syntax or follow any particular naming convention.
+In particular, it need not designate a machine environment variable or similar value,
+although it may.
+The tool that produces the log file and any systems that consume the log file must agree on
+the meanings of any values for the URI base id property that appear in the log file.
+
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+In this example, the analysis tool has set the URI-valued property `result.resultFile.uri`
+(&sect;[#physicalLocation-uri]) to the relative URI of the file in which the result was detected.
+The tool has also set the value of the URI base id property `result.resultFile.uriBaseId`
+(&sect;[#physicalLocation-uriBaseId]) to `"src"`.
+By a convention agreed upon between the analysis tool and the log file consumers,
+this indicates that the relative URI is expressed relative to the root of the source tree
+in which the file appears.
+
+```
+"results": [
+  {
+    "resultFile": {
+      "uri": "drivers/video/hidef/driver.c",
+      "uriBaseId": "%srcroot%"
+    }
+  }
+]
+```
+~
+
+~ IsoNumberedExample
+In this example, the analysis tool has set the URI-valued property `result.analysisTarget.uri`
+(&sect;[#physicalLocation-uri]) to the relative URI of the file which the tool was instructed to scan.
+The tool has also set the value of the URI base id property `result.analysisTarget.uriBaseId`
+(&sect;[#physicalLocation-uriBaseId]) to `"bin"`.
+By a convention agreed upon between the analysis tool and the log file consumers,
+this indicates that the relative URI is expressed relative to the directory containing
+the binary files produced by a build.
+
+```
+"results": [
+  {
+    "analysisTarget": {
+      "uri": "hidef.dll",
+      "uriBaseId": "$bindrop"
+    }
+  }
+]
+```
+~
+
+~ IsoNumberedNote
+There are various reasons for providing URI base id properties:
+
+1. Portability: A log file that contains relative URIs together with URI base id properties
+can be interpreted on a machine where the files are located at a different absolute location.
+
+2. Determinism: A log file that uses URI base id properties has a better chance of being
+"deterministic"; that is, of being identical from run to run if none of its inputs have changed,
+even if those runs occur on machines where the files are located at a different absolute location.
+
+3. Security: The use of URI base id properties avoids the persistence of absolute path names
+in the log file. Absolute path names can reveal information that might be sensitive.
+
+4. Semantics: Assuming the reader of the log file (an end user or another tool) has the
+necessary context, they can understand the meaning of the location specified by the `"uri"`
+property, for example, "this is a source file".
+
+5. Brevity: The URI base id property might be shorter than the absolute path it represents.
+~
+
 ## Property bags { #property-bags }
 
 ### General { #property-bags-General }
@@ -373,10 +456,10 @@ run: {
 ### `logicalLocations` property { #run-logicalLocations }
 
 A `run` object should contain a property named `logicalLocations` whose value is a dictionary,
-each of whose properties represents the logical location of one or more results produced in the course of the run.
+each of whose properties represents the logical location of one or more results detected in the course of the run.
 
 With one exception described in &sect;[#location-logicalLocationKey], each property name in the `logicalLocations` object shall be
-a string representing the logical location where the result was produced, in a format consistent with
+a string representing the logical location where the result was detected, in a format consistent with
 the programming language in which the programmatic construct specified by that logical location was expressed.
 We refer to this string as a "fully qualified logical name".
 See &sect;[#location-fullyQualifiedLogicalName] for examples.
@@ -425,9 +508,9 @@ Programs can ask these questions without having to know how to parse the `fullyQ
 
 If the analysis tool was run with the intent of scanning files and producing results, then
 the `run` object shall contain a property named `results` whose value is an array containing zero or more unique (&sect;[#unique-array-properties]) `result` objects (&sect;[#result]),
-each of which represents a single result produced in the course of the run.
+each of which represents a single result detected in the course of the run.
 
-The `results` array shall be empty if the run that produced the `run` object did not produce any results.
+The `results` array shall be empty if the tool invocation that produced the `run` object did not detect any results.
 
 If the tool was run solely for the purpose of exporting rule metadata (see &sect;[#run-rules]),
 the `results` property shall be absent.
@@ -791,6 +874,16 @@ Neither of the `uri` properties representing the nested files
 ```
 ~
 
+### `uriBaseId` property { #file-uriBaseId }
+
+If the `uri` property (&sect;[#file-uri]) is present and contains a relative URI,
+then the `file` object may contain a property named `uriBaseId` whose value shall be
+a string containing a URI base id (see &sect;[#uriBaseIdProperties]) which indirectly specifies
+the absolute URI with respect to which `uri` shall be interpreted.
+
+If the `uri` property is absent or contains an absolute URI, then the `uriBaseId` property
+shall be absent.
+
 ### `offset` property { #file-offset }
 
 If the location of a nested file within its containing file can be expressed
@@ -913,7 +1006,7 @@ This shall be one of the following:
 
 ### General { #result-General }
 
-A `result` object describes a single result produced by an analysis tool.
+A `result` object describes a single result detected by an analysis tool.
 
 ### `ruleId` property { #result-ruleId }
 
@@ -1252,7 +1345,7 @@ This allows tools to include information about the result that is not explicitly
 
 ### General { #location-General }
 
-A `location` object specifies the location where an analysis tool produced a result.
+A `location` object specifies the location where an analysis tool detected a result.
 A `location` object should specify the physical location (&sect;[#physicalLocation]) of the result,
 and it may also specify the logical location (&sect;[#location-fullyQualifiedLogicalName]) of the result.
 
@@ -1354,7 +1447,7 @@ Whether `analysisTarget` is present depends on the information available to the 
 ### `resultFile` property { #location-resultFile }
 
 A `location` object may contain a property named `resultFile` whose value is a `physicalLocation` object (&sect;[#physicalLocation])
-that identifies the file where the analysis tool produced the result.
+that identifies the file where the analysis tool detected the result.
 
 Whether `resultFile` is present depends on the information available to the tool that produces the log file
 (see &sect;[#location-Constraints]).
@@ -1362,7 +1455,7 @@ Whether `resultFile` is present depends on the information available to the tool
 ### `fullyQualifiedLogicalName` property { #location-fullyQualifiedLogicalName }
 
 A `location` object may contain a property named `fullyQualifiedLogicalName` whose value is a string
-which specifies the fully qualified name of the logical location where the analysis tool produced the result.
+which specifies the fully qualified name of the logical location where the analysis tool detected the result.
 
 The format of the `fullyQualifiedLogicalName` string shall be consistent with the programming language
 in which the programmatic construct specified by that logical location was expressed.
@@ -1429,7 +1522,7 @@ namespace A {
 
 (These could not coexist in the same compilation, but there is no reason two such source files could not exist.)
 
-If the tool produced one result in class `B` in file1.cpp, and another result in namespace `B` in file2.cpp,
+If the tool detected one result in class `B` in file1.cpp, and another result in namespace `B` in file2.cpp,
 the `fullyQualifiedLogicalName` for both would be `A::B`.
 In that case, the tool might set the `logicalLocationKey` property in either one of the results to `A::B-0`,
 and it might populate the `logicalLocations` property as follows:
@@ -1519,10 +1612,19 @@ which provides additional information about the file specified by `uri`.
   ]
 }
 ```
-
 ~
 
-### `region` property { #physicalLocationComponent-region }
+### `uriBaseId` property { #physicalLocation-uriBaseId }
+
+If the `uri` property (&sect;[#physicalLocation-uri]) is present and contains a relative URI,
+then the `physicalLocation` object may contain a property named `uriBaseId` whose value shall be
+a string containing a URI base id (see &sect;[#uriBaseIdProperties]) which indirectly specifies
+the absolute URI with respect to which `uri` shall be interpreted.
+
+If the `uri` property is absent or contains an absolute URI, then the `uriBaseId` property
+shall be absent.
+
+### `region` property { #physicalLocation-region }
 
 A `physicalLocation` object may have a property named `region` whose value is a `region` object (&sect;[#region]),
 that represents the region within a file where the result was detected.
@@ -1909,6 +2011,16 @@ containing a message relevant to this stack frame.
 A `stackFrame` object may contain a property named `uri` whose value is a string
 containing the URI of the source code file to which this stack frame refers.
 
+### `uriBaseId` property { #stackFrame-uriBaseId }
+
+If the `uri` property (&sect;[#stackFrame-uri]) is present and contains a relative URI,
+then the `stackFrame` object may contain a property named `uriBaseId` whose value shall be
+a string containing a URI base id (see &sect;[#uriBaseIdProperties]) which indirectly specifies
+the absolute URI with respect to which `uri` shall be interpreted.
+
+If the `uri` property is absent or contains an absolute URI, then the `uriBaseId` property
+shall be absent.
+
 ### `line` property { #stackFrame-line }
 
 A `stackFrame` object may contain a property named `line` whose value is an integer
@@ -2243,6 +2355,16 @@ A `fileChange` object represents a change to a single file.
 
 A `fileChange` object shall contain a property named `uri` whose value is a string value that represents
 the location of the file as a valid URI.
+
+### `uriBaseId` property { #fileChange-uriBaseId }
+
+If the `uri` property (&sect;[#fileChange-uri]) is present and contains a relative URI,
+then the `fileChange` object may contain a property named `uriBaseId` whose value shall be
+a string containing a URI base id (see &sect;[#uriBaseIdProperties]) which indirectly specifies
+the absolute URI with respect to which `uri` shall be interpreted.
+
+If the `uri` property is absent or contains an absolute URI, then the `uriBaseId` property
+shall be absent.
 
 ### `replacements` property { #fileChange-replacements }
 
