@@ -72,6 +72,8 @@ with the relative URI stored in the URI-valued property.
 
 The value of a URI base id property may be any string; it need not have any particular
 syntax or follow any particular naming convention.
+In particular, it need not designate a machine environment variable or similar value,
+although it may.
 The tool that produces the log file and any systems that consume the log file must agree on
 the meanings of any values for the URI base id property that appear in the log file.
 
@@ -90,7 +92,7 @@ in which the file appears.
   {
     "resultFile": {
       "uri": "drivers/video/hidef/driver.c",
-      "uriBaseId": "src"
+      "uriBaseId": "%srcroot%"
     }
   }
 ]
@@ -111,14 +113,14 @@ the binary files produced by a build.
   {
     "analysisTarget": {
       "uri": "hidef.dll",
-      "uriBaseId": "bin"
+      "uriBaseId": "$bindrop"
     }
   }
 ]
 ```
 ~
 
-~ IsoNote
+~ IsoNumberedNote
 There are various reasons for providing URI base id properties:
 
 1. Portability: A log file that contains relative URIs together with URI base id properties
