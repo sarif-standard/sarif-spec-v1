@@ -51,13 +51,13 @@ rule id
 
 rule metadata
   ~ Information that describes a rule
-  ~ Example: Category (for example, "Style" or "Security"), documentation URL 
+  ~ Example: Category (for example, "Style" or "Security"), documentation URI
 
 log file
   ~ output file produced by a static analysis tool, which enumerates the results produced by the tool
 
 run
-  ~ 1. invocation of a specified set of static analysis tools on a specified version of a specified set of analysis targets,
+  ~ 1. invocation of a specified static analysis tool on a specified version of a specified set of analysis targets,
        with a specified set of runtime parameters
   ~ 2. set of results produced by such an invocation.
 
@@ -68,7 +68,7 @@ triage
   ~ person who uses the information in a log file to investigate, triage, or resolve results detected by a static analysis tool
 
 false positive
-  ~ result which an end user decides does not actually represent a problem in the analysis target
+  ~ result which an end user decides does not actually represent a problem
 
 (result log) viewer
   ~ software program that reads a log file, displays a list of the results it contains,
