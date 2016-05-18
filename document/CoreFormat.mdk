@@ -1204,7 +1204,7 @@ and is not an observation about the code.
 If the `level` property is absent, it value shall be considered to be the value of the `defaultLevel` property (&sect;[#rule-defaultLevel])
 of the `rule` object specified by this `result` object's `ruleId` property (&sect;[#result-ruleId]) or `ruleKey` property (&sect;[#result-ruleKey]).
 
-If the `run` object (&sect;[#run]) containing this result does not include a `rules` property (&sect;[#run-rules]),
+In that case, if the `run` object (&sect;[#run]) containing this result does not include a `rules` property (&sect;[#run-rules]),
 or if the `run.rules` property does not specify information for the rule associated with this `result`,
 or if the `rule` object associated with this result does not specify a `defaultLevel` property,
 then the value of the the `level` property shall be considered to be `"warning"`.
