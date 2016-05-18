@@ -650,16 +650,16 @@ distinct, and are clearly related to the rule id.
 
 ```
 "rules": {
-  "CA1711.1": {
+  "CA1711-1": {
     "id": "CA1711",
     "messageFormats": {
-      "msg": "Rename type name {0} so that it does not end in '{1}'"
+      "default": "Rename type name {0} so that it does not end in '{1}'"
     }
   },
-  "CA1711.2": {
+  "CA1711-2": {
     "id": "CA1711",
     "messageFormats": {
-      "msg": "Either replace the suffix '{0}' in member name '{1}' with the suggested numeric alternate or provide a more meaningful suffix"
+      "default": "Either replace the suffix '{0}' in member name '{1}' with the suggested numeric alternate or provide a more meaningful suffix"
     }
   }
 }```
@@ -1096,10 +1096,10 @@ result with that rule id, it provides a value for `ruleKey` to specify which of 
       }
     ],
     "rules": {
-      "CA1711.1": {
+      "CA1711-1": {
         "id": "CA1711"
       },
-      "CA1711.2": {
+      "CA1711-2": {
         "id": "CA1711"
       }
     }
@@ -2614,15 +2614,15 @@ notification with that rule id, it provides a value for `ruleKey` to specify whi
       {
         "id": "CFG0001",
         "message": "Rule configuration is missing."
-        "ruleId": "CA1711",  # Matches the "id" value of the specified property value within "rules"
-        "ruleKey": "CA711.1" # Specifies a property name within "rules".
+        "ruleId": "CA1711",   # Matches the "id" value of the specified property value within "rules"
+        "ruleKey": "CA1711-1" # Specifies a property name within "rules".
       }
     ],
     "rules": {
-      "CA1711.1": {
+      "CA1711-1": {
         "id": "CA1711"
       },
-      "CA1711.2": {
+      "CA1711-2": {
         "id": "CA1711"
       }
     }

@@ -1576,16 +1576,16 @@ distinct, and are clearly related to the rule id.
 </p>
 <p class="indent" data-line="30;document\CoreFormat.mdk:651"><span data-line="30;document\CoreFormat.mdk:651"></span><code class="code code3">
 &quot;rules&quot;: {
-  &quot;CA1711.1&quot;: {
+  &quot;CA1711-1&quot;: {
     &quot;id&quot;: &quot;CA1711&quot;,
     &quot;messageFormats&quot;: {
-      &quot;msg&quot;: &quot;Rename type name {0} so that it does not end in &#39;{1}&#39;&quot;
+      &quot;default&quot;: &quot;Rename type name {0} so that it does not end in &#39;{1}&#39;&quot;
     }
   },
-  &quot;CA1711.2&quot;: {
+  &quot;CA1711-2&quot;: {
     &quot;id&quot;: &quot;CA1711&quot;,
     &quot;messageFormats&quot;: {
-      &quot;msg&quot;: &quot;Either replace the suffix &#39;{0}&#39; in member name &#39;{1}&#39; with the suggested numeric alternate or provide a more meaningful suffix&quot;
+      &quot;default&quot;: &quot;Either replace the suffix &#39;{0}&#39; in member name &#39;{1}&#39; with the suggested numeric alternate or provide a more meaningful suffix&quot;
     }
   }
 }</code></p></div>
@@ -1945,10 +1945,10 @@ result with that rule id, it provides a value for <span data-line="30;document\C
       }
     ],
     &quot;rules&quot;: {
-      &quot;CA1711.1&quot;: {
+      &quot;CA1711-1&quot;: {
         &quot;id&quot;: &quot;CA1711&quot;
       },
-      &quot;CA1711.2&quot;: {
+      &quot;CA1711-2&quot;: {
         &quot;id&quot;: &quot;CA1711&quot;
       }
     }
@@ -3143,15 +3143,15 @@ notification with that rule id, it provides a value for <span data-line="30;docu
       {
         &quot;id&quot;: &quot;CFG0001&quot;,
         &quot;message&quot;: &quot;Rule configuration is missing.&quot;
-        &quot;ruleId&quot;: &quot;CA1711&quot;,  # Matches the &quot;id&quot; value of the specified property value within &quot;rules&quot;
-        &quot;ruleKey&quot;: &quot;CA711.1&quot; # Specifies a property name within &quot;rules&quot;.
+        &quot;ruleId&quot;: &quot;CA1711&quot;,   # Matches the &quot;id&quot; value of the specified property value within &quot;rules&quot;
+        &quot;ruleKey&quot;: &quot;CA1711-1&quot; # Specifies a property name within &quot;rules&quot;.
       }
     ],
     &quot;rules&quot;: {
-      &quot;CA1711.1&quot;: {
+      &quot;CA1711-1&quot;: {
         &quot;id&quot;: &quot;CA1711&quot;
       },
-      &quot;CA1711.2&quot;: {
+      &quot;CA1711-2&quot;: {
         &quot;id&quot;: &quot;CA1711&quot;
       }
     }
