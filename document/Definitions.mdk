@@ -99,9 +99,6 @@ camelCase name
   ~ name that begins with a lowercase letter, and in which each subsequent word begins with an uppercase letter
   ~ Example: `camelCase`, `version`, `fullName`.
 
-tag set
-  ~ a JSON array containing zero or more arbitrary strings, no two of which are the same
-
 property bag
   ~ a JSON object consisting of a set of name/value pairs with arbitrary camelCase names
 

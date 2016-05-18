@@ -23,6 +23,6 @@ characters such as newlines.
 A JSON object consists of a set of name/value pairs.
 The value may itself be an object, allowing arbitrary nesting.
 When necessary for clarity or to avoid ambiguity, we use the "dot" notation to refer to nested values.
-For example, the `physicalLocationComponent` object defines a property `region` whose value is a `region` object,
+For example, the `physicalLocation` object defines a property `region` whose value is a `region` object,
 which in turn contains a `length` property.
-For clarity, we can refer to the `length` property as `physicalLocationComponent.region.length`.
+For clarity, we can refer to the `length` property as `physicalLocation.region.length`.
