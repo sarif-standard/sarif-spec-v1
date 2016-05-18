@@ -128,7 +128,7 @@ can be interpreted on a machine where the files are located at a different absol
 
 2. Determinism: A log file that uses URI base id properties has a better chance of being
 "deterministic"; that is, of being identical from run to run if none of its inputs have changed,
-even if those runs occur on machines where the files are located at a different absolute location.
+even if those runs occur on machines where the files are located at different absolute locations.
 
 3. Security: The use of URI base id properties avoids the persistence of absolute path names
 in the log file. Absolute path names can reveal information that might be sensitive.
@@ -161,7 +161,7 @@ sequence of Unicode code points.
 
 Certain properties in this specification specify a date and time.
 The value of every such property, if present, shall be a string in the following format,
-which is compatible with [ISO-8601:2004](http://www.iso.org/iso/catalogue_detail?csnumber=40874)
+which is compatible with [ISO-8601:2004](http://www.iso.org/iso/catalogue_detail?csnumber=40874):
 
 ```
 <dateTime>: <date>T<time>Z
