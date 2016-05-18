@@ -1419,15 +1419,16 @@ the developer has suppressed it in the source code (see &sect;[#result-suppressi
 Some programming languages offer a syntactic construct for suppressing compiler warnings.
 
 ~ IsoExample
-The `#pragma` warning construct in C# is such a syntactic construct.
+The `#pragma warning` construct in C# is such a syntactic construct.
 ~
 
-For tools that examine source code written in such a language, this property shall be set to `"suppressedInSource"`
+For tools that examine source code written in such a language, the `suppressionStates` array shall include the value `"suppressedInSource"`
 if the tool determines that the result occurred at a location within the scope of an instance of such a construct
 which is intended to suppress that particular class of result.
 If the tool determines that the result did not occur at such a location,
 or if the tool cannot or chooses not to determine whether the result occurred at such a location,
-or if the tool examines source code written in a language that lacks such a construct, this property shall be absent.
+or if the tool examines source code written in a language that lacks such a construct, the `suppressionStates` array
+shall not include the value `"suppressedInSource"`.
 
 ### `fixes` property { #result-fixes }
 
