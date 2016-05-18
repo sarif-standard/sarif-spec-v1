@@ -120,7 +120,7 @@ the binary files produced by a build.
 ```
 ~
 
-~ IsoNumberedNote
+~ IsoNote
 There are various reasons for providing URI base id properties:
 
 1. Portability: A log file that contains relative URIs together with URI base id properties
