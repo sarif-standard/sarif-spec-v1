@@ -1294,9 +1294,9 @@ If the tool detects a misspelled variable name, it should produce a single `resu
 since fixing some but not all of the references would cause a compilation error.
 ~
 
-### `toolFingerprint` property { #result-toolFingerprint }
+### `toolFingerprintContribution` property { #result-toolFingerprintContribution }
 
-A `result` object may contain a property named `toolFingerprint` whose value is a string
+A `result` object may contain a property named `toolFingerprintContribution` whose value is a string
 that contributes to the unique identity of the result.
 [Annex A](#Annex-A) explains how a result management system can use this value.
 
@@ -1393,23 +1393,42 @@ C:\Code\a.js(2,6-6) : info : JS3056: The previous declaration of 'index' was her
 
 ~
 
-### `isSuppressedInSource` property { #result-isSuppressedInSource }
+### `suppressionStates` property { #result-suppressionStates }
 
-A `result` object may contain a property named `isSuppressedInSource` whose value is one of the strings
-`"true"` or `"false"`.
+#### General { #result-suppressionStates-General }
+
+A `result` object may contain a property named `suppressionStates` whose value is an array of unique (&sect;[#unique-array-properties]) strings.
+This property shall be present if and only if the analysis tool that produced the log file
+wishes to convey the information that the condition described by the `result` object should
+be "suppressed".
+
+~ IsoNote
+The treatment of "suppressed" issues depends on the development environment within which the
+log file is used, for example, a build system, an integrated development environment (IDE), or a result management system.
+Typically, development environments do not expose suppressed issues to the user.
+For example, they do not include them in build log files, display them in error lists,
+or include them in bug counts.
+~
+
+If present, this property conveys the reason or reasons that the result has been suppressed.
+In this version of the SARIF standard, the only supported reason for suppressing a result is that
+the developer has suppressed it in the source code (see &sect;[#result-suppressionStates-suppressedInSource]).
+
+#### `suppressedInSource` value { #result-suppressionStates-suppressedInSource }
 
 Some programming languages offer a syntactic construct for suppressing compiler warnings.
-For tools that examine source code written in such a language, this value shall be set to `"true"`
-if the tool determines that the result occurred at a location within the scope of an instance of such a construct
-which is intended to suppress that particular class of result.
-It shall be set to `"false"` if the tool determines that the result did not occur at such a location.
-It shall be absent if the tool cannot or chooses not to determine whether the result occurred at such a location.
-
-For tools that do not examine source code written in such a language, this value shall be absent.
 
 ~ IsoExample
-The `#pragma` warning construct in C# is such a syntactic construct.
+The `#pragma warning` construct in C# is such a syntactic construct.
 ~
+
+For tools that examine source code written in such a language, the `suppressionStates` array shall include the value `"suppressedInSource"`
+if the tool determines that the result occurred at a location within the scope of an instance of such a construct
+which is intended to suppress that particular class of result.
+If the tool determines that the result did not occur at such a location,
+or if the tool cannot or chooses not to determine whether the result occurred at such a location,
+or if the tool examines source code written in a language that lacks such a construct, the `suppressionStates` array
+shall not include the value `"suppressedInSource"`.
 
 ### `fixes` property { #result-fixes }
 

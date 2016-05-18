@@ -1,6 +1,8 @@
 ﻿Title         : Static Analysis Results Interchange Format
 Heading Base  : 2
 Logo          : false
+Toc Depth     : 4
+Heading Depth : 4
 
 ~IsoNote: .block before='[NOTE&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=small
 ~IsoNumberedNote: .block label='[@IsoNumberedNote]{.Example-label}' before='[NOTE\ &label;&nbsp;&nbsp;&nbsp;]{.Example-before}' font-size=small

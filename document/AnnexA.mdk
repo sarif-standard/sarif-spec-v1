@@ -24,9 +24,9 @@ For example, consider a tool which checks documentation for words that are cultu
 The word would most likely occur only in the `fullMessage` property, for example:
 `"The word xxx should not be used in documentation."`
 
-The SARIF format provides the `toolFingerprint` property to allow analysis tools to provide additional information
+The SARIF format provides the `toolFingerprintContribution` property to allow analysis tools to provide additional information
 which a result management system can incorporate into the fingerprint that it constructs for each result.
-In this example, the tool might set the value of `toolFingerprint` to the prohibited word.
+In this example, the tool might set the value of `toolFingerprintContribution` to the prohibited word.
 
 Some information contained in the result is not useful in constructing a fingerprint.
 For example, suppose the fingerprint were to include the line number where the result was located,
