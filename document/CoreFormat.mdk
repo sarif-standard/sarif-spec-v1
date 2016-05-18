@@ -1201,7 +1201,13 @@ and is not an observation about the code.
 ```
 ~
 
-If the `level` property is not present, it shall be considered equivalent to the value `warning`.
+If the `level` property is absent, it value shall be considered to be the value of the `defaultLevel` property (&sect;[#rule-defaultLevel])
+of the `rule` object specified by this `result` object's `ruleId` property (&sect;[#result-ruleId]) or `ruleKey` property (&sect;[#result-ruleKey]).
+
+If the `run` object (&sect;[#run]) containing this result does not include a `rules` property (&sect;[#run-rules]),
+or if the `run.rules` property does not specify information for the rule associated with this `result`,
+or if the `rule` object associated with this result does not specify a `defaultLevel` property,
+then the value of the the `level` property shall be considered to be `"warning"`.
 
 ### `message` property { #result-message }
 
@@ -2281,6 +2287,17 @@ Tools that do not construct `fullDescription` in this way should provide a value
 because otherwise, the initial portion of `fullDescription` that a viewer displays where available space is limited
 might not be understandable.
 
+### `defaultLevel` property { #rule-defaultLevel }
+
+A `rule` object may contain a property named `defaultLevel` whose value shall be one of
+the strings defined for the `result.level` property (&sect;[#result-level]).
+
+If this property is absent, it shall be considered to have the value `"warning"`.
+
+The value of this property specifies the default value of the `level` property
+for any `result` object which refers to this rule through its `ruleId` property (&sect;[#result-ruleId]) or its `ruleKey` property (&sect;[#result-ruleKey]),
+and which does not itself specify a `level` property.
+
 ### `messageFormats` property { #rule-messageFormats }
 
 A `rule` object may contain a property named `messageFormats`, whose value is a JSON object
@@ -2557,7 +2574,7 @@ starting at the byte offset specified by
 the `offset` property (&sect;[#replacement-offset]),
 measured from the beginning of the file.
 
-If `deletedLength` is not present, or if its value is 0,
+If `deletedLength` is absent, or if its value is 0,
 no bytes shall be deleted.
 
 ### `insertedBytes` property { #replacement-insertedBytes }
@@ -2567,7 +2584,7 @@ that specifies the byte sequence to be inserted at the byte offset specified by
 the `offset` property (&sect;[#replacement-offset]),
 measured from the beginning of the file.
 
-If `insertedBytes` is not present, or if its value is the empty string,
+If `insertedBytes` is absent, or if its value is the empty string,
 no bytes shall be inserted.
 
 If the file into which the bytes are to be inserted is a binary file,
