@@ -2309,7 +2309,8 @@ might not be understandable.
 ### `defaultLevel` property { #rule-defaultLevel }
 
 A `rule` object may contain a property named `defaultLevel` whose value shall be one of
-the strings defined for the `result.level` property (&sect;[#result-level]).
+the strings `"warning"`, `"error"`, or `"note"`, with the same meanings as when those strings appear
+as the value of the `result.level` property (&sect;[#result-level]).
 
 If this property is absent, it shall be considered to have the value `"warning"`.
 
