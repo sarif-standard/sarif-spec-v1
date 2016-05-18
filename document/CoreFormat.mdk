@@ -15,7 +15,7 @@ Because SARIF conforms to the JSON format, all integer values shall be expressed
 Hexadecimal or octal notation shall not be used.
 
 Every JSON property name defined by the SARIF format shall be a camelCase name.
-Because the names of properties defined in property bags (&sect;[#property-bags]) such as `result.properties` (&sect;[#result-properties]),
+Because the names of properties defined in property bags (&sect;[#property-bags]) such as `result.properties` (&sect;[#result-properties])
 are not defined by the SARIF format, they are not subject to this requirement.
 These property names should also be camelCase, but see [Annex C](#Annex-C) for exceptions.
 
@@ -82,7 +82,7 @@ the meanings of any values for the URI base id property that appear in the log f
 In this example, the analysis tool has set the URI-valued property `result.resultFile.uri`
 (&sect;[#physicalLocation-uri]) to the relative URI of the file in which the result was detected.
 The tool has also set the value of the URI base id property `result.resultFile.uriBaseId`
-(&sect;[#physicalLocation-uriBaseId]) to `"src"`.
+(&sect;[#physicalLocation-uriBaseId]) to `"%srcroot%"`.
 By a convention agreed upon between the analysis tool and the log file consumers,
 this indicates that the relative URI is expressed relative to the root of the source tree
 in which the file appears.
@@ -103,7 +103,7 @@ in which the file appears.
 In this example, the analysis tool has set the URI-valued property `result.analysisTarget.uri`
 (&sect;[#physicalLocation-uri]) to the relative URI of the file which the tool was instructed to scan.
 The tool has also set the value of the URI base id property `result.analysisTarget.uriBaseId`
-(&sect;[#physicalLocation-uriBaseId]) to `"bin"`.
+(&sect;[#physicalLocation-uriBaseId]) to `"$bindrop"`.
 By a convention agreed upon between the analysis tool and the log file consumers,
 this indicates that the relative URI is expressed relative to the directory containing
 the binary files produced by a build.
