@@ -52,7 +52,7 @@ This general guidance is embodied in various sections of the specification. For 
 
 * A converter should not attempt to synthesize a `ruleId` for a result if the tool does not provide one.
 
-* A converter that knows which file a result was produced in, but not which file the analysis tool
+* A converter that knows which file a result was detected in, but not which file the analysis tool
     was originally instructed to scan, should populate the `location.resultFile` property,
     but should not attempt to populate `location.analysisTarget` (see &sect;[#location-Constraints]).
     

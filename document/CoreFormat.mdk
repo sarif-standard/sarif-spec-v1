@@ -617,15 +617,58 @@ The tool should report the problem as an error in `configurationNotifications` a
 A `run` object (&sect;[#run]) may contain a property named `rules`
 whose value is a JSON object, each of whose properties represents an analysis rule.
 
-Each property name in the `rules` object shall be the id of an analysis rule.
+Each property value in the `rules` object shall be a `rule` object (&sect;[#rule]).
 
-Each property value in the `rules` object shall be a `rule` object (&sect;[#rule]) whose
-`id` property (&sect;[#rule-id]) is equal to the property name.
+If there is only one `rule` object with a particular `id` (&sect;[#rule-id]),
+then the property name for that rule object shall be the rule id.
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+In this example, two rules have different ids. The property names match the rule ids.
+
+```
+"rules": {
+  "CA1001": {
+    "id": "CA1001",
+    "shortDescription": "Types that own disposable fields should be disposable."
+  },
+  "CA1002": {
+    "id": "CA1002",
+    "shortDescription": "Do not expose generic lists."
+  }
+}
+```
+~
+
+Some tools use the same rule id to refer to multiple distinct (although logically related) rules.
+In that case, the property names for those rule objects shall be distinct, even though the rule ids
+are the same.
+The property names should be clearly related to the rule id.
+
+~ IsoNumberedExample
+In this example, two distinct but related rules have the same rule id. The property names are
+distinct, and are clearly related to the rule id.
+
+```
+"rules": {
+  "CA1711.1": {
+    "id": "CA1711",
+    "messageFormats": {
+      "msg": "Rename type name {0} so that it does not end in '{1}'"
+    }
+  },
+  "CA1711.2": {
+    "id": "CA1711",
+    "messageFormats": {
+      "msg": "Either replace the suffix '{0}' in member name '{1}' with the suggested numeric alternate or provide a more meaningful suffix"
+    }
+  }
+}```
+~
 
 ~ IsoNote
 This property is a dictionary, rather than simply an array of `rule` objects,
 to facilitate looking up the rule associated with each `result` object (&sect;[#result])
-by means of the `result`'s `ruleId` property (&sect;[#result-ruleId]).
+by means of the `result`'s `ruleId` property (&sect;[#result-ruleId]) or `ruleKey` property (&sect;[#result-ruleKey]).
 ~
 
 ### `properties` property { #run-properties }
@@ -1028,6 +1071,42 @@ Not all existing analysis tools emit the equivalent of a `ruleId` in their outpu
 A conversion tool which converts the output of such an analysis tool to the SARIF format
 shall not set the `ruleId` property, and in particular, it shall not attempt to
 synthesize it from other information available in the original analysis tool's output.
+
+### `ruleKey` property { #result-ruleKey }
+
+If there is more than one rule with the id specified by the `ruleId` property (&sect;[#result-ruleId]),
+and if the `run` object in which this result occurs contains a `rules` property (&sect;[#run-rules]),
+then the `result` object shall contain a property named `ruleKey` whose value is a string that matches
+one of the property names in the `run.rules` object.
+
+The value of the `ruleId` property on this `result` object must match the
+`id` property (&sect;[#rule-id]) of the `rule` object identified by `ruleKey`.
+
+~ IsoExample
+In this example, there is more than one rule with id `CA1711`. When the log includes a
+result with that rule id, it provides a value for `ruleKey` to specify which of the rules with that `id` is meant.
+
+```
+`runs`: [
+  {
+    "results": [
+      {
+        "ruleId": "CA1711",  # Matches the "id" value of the specified property value within "rules"
+        "ruleKey": "CA711.1" # Specifies a property name within "rules".
+      }
+    ],
+    "rules": {
+      "CA1711.1": {
+        "id": "CA1711"
+      },
+      "CA1711.2": {
+        "id": "CA1711"
+      }
+    }
+  }
+]
+```
+~
 
 ### `level` property { #result-level }
 
@@ -2513,6 +2592,44 @@ for them to be opaque; to the contrary, they are more useful if they convey info
 If the condition described by the `notification` object is relevant to a particular analysis rule,
 the `notification` property should contain a property named `ruleId` whose value is the stable,
 unique identifier of the rule (&sect;[#rule-id]).
+
+### `ruleKey` property { #notification-ruleKey }
+
+If there is more than one rule with the id specified by the `ruleId` property (&sect;[#notification-ruleId]),
+and if the `run` object in which this notification occurs contains a `rules` property (&sect;[#run-rules]),
+then the `notification` object shall contain a property named `ruleKey` whose value is a string that matches
+one of the property names in the `run.rules` object.
+
+The value of the `ruleId` property on this `notification` object must match the
+`id` property (&sect;[#rule-id]) of the `rule` object identified by `ruleKey`.
+
+~ IsoExample
+In this example, there is more than one rule with id `CA1711`. When the log includes a
+notification with that rule id, it provides a value for `ruleKey` to specify which of the rules with that `id` is meant.
+
+```
+`runs`: [
+  {
+    "configurationNotifications": [
+      {
+        "id": "CFG0001",
+        "message": "Rule configuration is missing."
+        "ruleId": "CA1711",  # Matches the "id" value of the specified property value within "rules"
+        "ruleKey": "CA711.1" # Specifies a property name within "rules".
+      }
+    ],
+    "rules": {
+      "CA1711.1": {
+        "id": "CA1711"
+      },
+      "CA1711.2": {
+        "id": "CA1711"
+      }
+    }
+  }
+]
+```
+~
 
 ### `message` property { #notification-message }
 
