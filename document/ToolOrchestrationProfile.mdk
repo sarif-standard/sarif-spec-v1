@@ -16,15 +16,27 @@ that are intended for use in this scenario.
 
 The Tool Orchestration Profile defines four additional properties on the `run` object (&sect;[#run]).
 
-### `correlationId` property { #tool-orchestration-profile-run-correlationId }
+### `automationId` property { #tool-orchestration-profile-run-automationId }
 
-A `run` object may contain a property named `correlationId` whose value is a string
-that allows the run to be correlated with other artifacts produced by a larger automation process.
+A `run` object may contain a property named `automationId` whose value is a string containing
+an identifier that allows the run to be correlated with other artifacts produced by a larger automation process.
 
 ~ IsoExample
-In an environment where an analysis tool is executed as part of a larger
-automated build process, the "build id" might serve as the `correlationId`,
+In an environment where an analysis tool is executed as part of an
+automated build process, the "build id" assigned by the build system might serve as the `automationId`,
 allowing the tool run to be associated with other artifacts produced by the build.
+
+```
+{
+  ...
+  "runs": [
+    {
+      "automationId": "Build-14.0.1.2-20160518-15:48:02",
+      ...
+    }
+  ]
+}
+```
 ~
 
 ### `architecture` property { #tool-orchestration-profile-run-architecture }

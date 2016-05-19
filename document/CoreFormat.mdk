@@ -301,16 +301,6 @@ A result management system can use `id` to associate the information in the log 
 additional information not provided by the analysis tool that produced it.
 ~
 
-### `automationId` property { #run-automationId }
-
-A `run` object may contain a property named `automationId` whose value is a string containing
-an identifier that allows the run to be correlated with other artifacts produced by a larger automation process.
-
-~ IsoNote
-This property could contain a build identifier assigned by a build system,
-for example `"Build-14.0.1.2-20160518-15:48:02"`.
-~
-
 ### `tool` property { #run-tool }
 
 A `run` object shall contain a property named `tool` whose value is a `tool` object (&sect;[#tool]).
