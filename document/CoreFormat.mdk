@@ -2073,11 +2073,11 @@ if any of those strings accurately describes the construct identified by this ob
 *   `"function"`
 *   `"member"`
 *   `"method"`
-*	`"module"`
-*	`"namespace"`
-*	`"package"`
-*	`"resource"`
-*	`"type"`
+*   `"module"`
+*   `"namespace"`
+*   `"package"`
+*   `"resource"`
+*   `"type"`
 
 If none of those strings accurately describes the construct, `kind` may contain any value specified by the analysis tool.
 
