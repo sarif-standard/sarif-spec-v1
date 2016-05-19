@@ -2214,7 +2214,7 @@ containing the name of the module that contains the location to which this stack
 
 ### `fullyQualifiedLogicalName` property { #stackFrame-fullyQualifiedLogicalName }
 
-A `stackFrame` object may contain a property named `fullyQualifiedLogicalName` whose value
+A `stackFrame` object shall contain a property named `fullyQualifiedLogicalName` whose value
 is a string containing the fully qualified name of the method to which this stack frame refers.
 See &sect;[#location-fullyQualifiedLogicalName] for examples.
 
