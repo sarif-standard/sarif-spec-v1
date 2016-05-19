@@ -1513,7 +1513,7 @@ There are two reasons to include logical locations in the SARIF format in additi
 
 2. Logical location information is an important contributor to fingerprinting scenarios,
     because it is typically more resilient to changes in source code than are line locations.
-    See Annex A for more information about fingerprinting.
+    See [Annex A](#Annex-A) for more information about fingerprinting.
     The `fullyQualifiedLogicalName` property (&sect;[#location-fullyQualifiedLogicalName])
     is particularly convenient for fingerprinting.
 ~
@@ -1700,6 +1700,25 @@ and it might populate the `logicalLocations` property as follows:
       "kind": "type"
     }
   ]
+}
+```
+~
+
+### `decoratedName` property { #location-decoratedName }
+
+A `location` object may contain a property named `decoratedName` whose value is a string containing
+the compiler's internal representation of the logical location associated with this `location` object.
+
+Even though `decoratedName` describes a logical location, `fullyQualifiedLogicalName` (&sect;[#location-fullyQualifiedLogicalName])
+need not be present when `decoratedName` is present.
+
+~ IsoExample
+In this example, the `decoratedName` property contains a "mangled" name emitted by a C++ compiler:
+
+```
+{ # A `location` object
+  "fullyQualifiedLogicalName": "b::c(float)",
+  "decoratedName": "?c@b@@AAGXM@Z"
 }
 ```
 ~
@@ -2413,7 +2432,7 @@ and links to additional information about the rule.
 
 ### `properties` property { #rule-properties }
 
-A `rule` object may contain a property named `properties`, whose value a property bag.
+A `rule` object may contain a property named `properties`, whose value is a property bag.
 This allows tools to include information about the rule that is not explicitly specified in the SARIF format.
 
 ## `formattedMessage` object { #formattedMessage }
@@ -2674,7 +2693,7 @@ for them to be opaque; to the contrary, they are more useful if they convey info
 ### `ruleId` property { #notification-ruleId }
 
 If the condition described by the `notification` object is relevant to a particular analysis rule,
-the `notification` property should contain a property named `ruleId` whose value is the stable,
+the `notification` object should contain a property named `ruleId` whose value is the stable,
 unique identifier of the rule (&sect;[#rule-id]).
 
 ### `ruleKey` property { #notification-ruleKey }
@@ -2714,6 +2733,12 @@ notification with that rule id, it provides a value for `ruleKey` to specify whi
 ]
 ```
 ~
+
+### `analysisTarget` { #notification-analysisTarget }
+
+If the condition described by the `notification` object is relevant to a particular analysis target,
+the `notification` object should contain a property named `analysisTarget` whose value is a `physicalLocation` object
+(&sect;[#physicalLocation]) that identifies the analysis target.
 
 ### `message` property { #notification-message }
 
