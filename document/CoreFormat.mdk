@@ -301,6 +301,14 @@ A result management system can use `id` to associate the information in the log 
 additional information not provided by the analysis tool that produced it.
 ~
 
+### `baselineId` property { #run-baselineId }
+
+A `run` object may contain a property named `baselineId` whose value is a string which shall match
+the `id` property (&sect;[#run-id]) of some previous run.
+
+If the `baselineId` property is present, the `baselineState` property (&sect;[#result-baselineState]) of every `result` object (&sect;[#result])
+in the current run shall be computed with respect to the run specified by `baselineId`.
+
 ### `tool` property { #run-tool }
 
 A `run` object shall contain a property named `tool` whose value is a `tool` object (&sect;[#tool]).
@@ -1023,36 +1031,36 @@ A `hash` object shall contain a property named `algorithm`, whose value is a str
 of the algorithm used to compute the hash value specified in the `value` property (&sect;[#hash-value]).
 This shall be one of the following:
 
-*	`BLAKE-256`
-*	`BLAKE-512`
-*	`ECOH`
-*	`FSB`
-*	`GOST`
-*	`Groestl`
-*	`HAS-160`
-*	`HAVAL`
-*	`JH`
-*	`MD2`
-*	`MD4`
-*	`MD5`
-*	`MD6`
-*	`RadioGatun`
-*	`RIPEMD`
-*	`RIPEMD-128`
-*	`RIPEMD-160`
-*	`RIPEMD-320`
-*	`SHA-1`
-*	`SHA-224`
-*	`SHA-256`
-*	`SHA-384`
-*	`SHA-512`
-*	`SHA-3`
-*	`Skein`
-*	`Snefru`
-*	`Spectral Hash`
-*	`SWIFFT`
-*	`Tiger`
-*	`Whirlpool`
+*	`"BLAKE-256"`
+*	`"BLAKE-512"`
+*	`"ECOH"`
+*	`"FSB"`
+*	`"GOST"`
+*	`"Groestl"`
+*	`"HAS-160"`
+*	`"HAVAL"`
+*	`"JH"`
+*	`"MD2"`
+*	`"MD4"`
+*	`"MD5"`
+*	`"MD6"`
+*	`"RadioGatun"`
+*	`"RIPEMD"`
+*	`"RIPEMD-128"`
+*	`"RIPEMD-160"`
+*	`"RIPEMD-320"`
+*	`"SHA-1"`
+*	`"SHA-224"`
+*	`"SHA-256"`
+*	`"SHA-384"`
+*	`"SHA-512"`
+*	`"SHA-3"`
+*	`"Skein"`
+*	`"Snefru"`
+*	`"Spectral Hash"`
+*	`"SWIFFT"`
+*	`"Tiger"`
+*	`"Whirlpool"`
 
 ## `result` object { #result }
 
@@ -1124,13 +1132,13 @@ that specify the severity level of the result.
 
 If present, the `level` property shall have one of the following values, with the specified meanings:
 
-* `pass`: The rule specified by the `ruleId` property (&sect;[#result-ruleId]) was evaluated, and no problem was found.
+* `"pass"`: The rule specified by the `ruleId` property (&sect;[#result-ruleId]) was evaluated, and no problem was found.
 
-* `warning`: The rule specified by the `ruleId` property was evaluated, and a problem was found.
+* `"warning"`: The rule specified by the `ruleId` property was evaluated, and a problem was found.
 
-* `error`: The rule specified by the `ruleId` property was evaluated, and a serious problem was found.
+* `"error"`: The rule specified by the `ruleId` property was evaluated, and a serious problem was found.
 
-* `notApplicable`: The rule specified by the `ruleId` property was not evaluated, because it does not apply to the
+* `"notApplicable"`: The rule specified by the `ruleId` property was not evaluated, because it does not apply to the
 file specified by `analysisTarget` (&sect;[#location-analysisTarget]).
 
 ~ IsoNumberedExample { @IsoNumberedExample=1 }
@@ -1154,9 +1162,9 @@ It produces a `notApplicable` result if it is run on a 64-bit binary:
 ```
 ~
 
-* `note`: A purely informational log entry.
+* `"note"`: A purely informational log entry.
 
-   The `ruleId` property for a `result` object whose `kind` property is `note` may be present, if the
+   The `ruleId` property for a `result` object whose `kind` property is `"note"` may be present, if the
    note relates to a particular rule; otherwise `ruleId` may be absent.
 
 ~ IsoNumberedExample
@@ -1444,6 +1452,36 @@ If the tool determines that the result did not occur at such a location,
 or if the tool cannot or chooses not to determine whether the result occurred at such a location,
 or if the tool examines source code written in a language that lacks such a construct, the `suppressionStates` array
 shall not include the value `"suppressedInSource"`.
+
+### `baselineState` property { #result-baselineState }
+
+If the `baselineId` property (&sect;[#run-baselineId]) of the current `run` object (&sect;[#run]) is present,
+then the `result` object may contain a property named `baselineState` whose value is a string that shall specify
+the state of this `result` with respect to the run specified by `baselineId`.
+
+If the `run.baselineId` property is absent, the `baselineState` property shall be absent.
+
+This property shall have one of the following values, with the specified meanings:
+
+* `"new"`: This result was detected in the current run but was not detected in the run specified by `run.baselineId`.
+
+* `"existing"`: This result was detected both in the current run and in the run specified by `run.baselineId`.
+
+* `"absent"`: This result was detected in the run specified by `run.baselineId` but was not detected in the current run.
+
+If the `run.baselineId` property is present but the `baselineState` property is absent, the `baselineState` property
+shall be considered to have the value `"new"`.
+
+~ IsoNote
+The purpose of the `baselineState` property is to allow result management systems to keep track of how many
+new results are introduced in each run, and how many have been addressed.
+
+To assign a value to `baselineState`, a tool must have a way to determine whether a result is "the same", in some sense,
+as a result that appeared in the run specified by `run.baselineId`.
+[Annex A](#Annex-A) discusses how a result management system can assign a "fingerprint" to each result.
+An analysis tool that works together with such a result management system can use the fingerprint to determine whether
+two results are the same; two results with the same fingerprint are considered the same.
+~
 
 ### `fixes` property { #result-fixes }
 
@@ -2032,14 +2070,14 @@ but `name` is not equal to the property name, so it cannot be omitted.
 A `logicalLocationComponent` object should contain a property named `kind`, whose value shall be one of the following strings,
 if any of those strings accurately describes the construct identified by this object:
 
-*   `function`
-*   `member`
-*   `method`
-*	`module`
-*	`namespace`
-*	`package`
-*	`resource`
-*	`type`
+*   `"function"`
+*   `"member"`
+*   `"method"`
+*	`"module"`
+*	`"namespace"`
+*	`"package"`
+*	`"resource"`
+*	`"type"`
 
 If none of those strings accurately describes the construct, `kind` may contain any value specified by the analysis tool.
 
@@ -2168,18 +2206,18 @@ If present, this string shall be equal to the name of one of the properties on t
 which provides additional information about the logical location specified by `fullyQualifiedLogicalName` (&sect;[#stackFrame-fullyQualifiedLogicalName]).
 For more information about the purpose of this property, see &sect;[#location-fullyQualifiedLogicalName].
 
-### `address` { #stackFrame-address }
+### `address` property { #stackFrame-address }
 
 A `stackFrame` object may contain a property named `address` whose value is an integer
 containing the address in memory of the location represented by this stack frame.
 
-### `offset` { #stackFrame-offset }
+### `offset` property { #stackFrame-offset }
 
 A `stackFrame` object may contain a property named `offset` whose value is an integer
 containing the byte offset of the location represented by this stack frame from the start
 of the method represented by this stack frame.
 
-### `parameters` { #stackFrame-parameters }
+### `parameters` property { #stackFrame-parameters }
 
 A `stackFrame` object may contain a property named `parameters` whose value is an array of strings
 representing the parameters of the function call represented by this stack frame.
@@ -2688,17 +2726,17 @@ that specify the severity level of the notification.
 
 If present, the `level` property shall have one of the following values, with the specified meanings:
 
-* `error`: A serious problem was found.
+* `"error"`: A serious problem was found.
 The condition encountered by the tool resulted in the analysis being halted,
 or caused the results to be incorrect or incomplete. 
 
-* `warning`: A problem that is not considered to be serious was found.
+* `"warning"`: A problem that is not considered to be serious was found.
 The condition encountered by the tool is such that it is uncertain whether a problem occurred,
 or is such that the analysis might be incomplete but the results that were generated are probably valid.
 
-* `note`: The notification is purely informational. There is no required action.
+* `"note"`: The notification is purely informational. There is no required action.
 
-If the `level` property is absent, it shall be considered equivalent to the value `warning`.
+If the `level` property is absent, it shall be considered equivalent to the value `"warning"`.
 
 ### `time` property { #notification-time }
 
