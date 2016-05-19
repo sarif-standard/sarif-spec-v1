@@ -388,7 +388,7 @@ run: {
                 "hashes": [
                     {
                         "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
-                        "algorithm": "SHA-256"
+                        "algorithm": "sha256"
                     }
                 ]
             }
@@ -1031,36 +1031,40 @@ A `hash` object shall contain a property named `algorithm`, whose value is a str
 of the algorithm used to compute the hash value specified in the `value` property (&sect;[#hash-value]).
 This shall be one of the following:
 
-*	`"BLAKE-256"`
-*	`"BLAKE-512"`
-*	`"ECOH"`
-*	`"FSB"`
-*	`"GOST"`
-*	`"Groestl"`
-*	`"HAS-160"`
-*	`"HAVAL"`
-*	`"JH"`
-*	`"MD2"`
-*	`"MD4"`
-*	`"MD5"`
-*	`"MD6"`
-*	`"RadioGatun"`
-*	`"RIPEMD"`
-*	`"RIPEMD-128"`
-*	`"RIPEMD-160"`
-*	`"RIPEMD-320"`
-*	`"SHA-1"`
-*	`"SHA-224"`
-*	`"SHA-256"`
-*	`"SHA-384"`
-*	`"SHA-512"`
-*	`"SHA-3"`
-*	`"Skein"`
-*	`"Snefru"`
-*	`"Spectral Hash"`
-*	`"SWIFFT"`
-*	`"Tiger"`
-*	`"Whirlpool"`
+*   `"authentihash"`
+*   `"blake256"`
+*   `"blake512"`
+*   `"ecoh"`
+*   `"fsb"`
+*   `"gost"`
+*   `"groestl"`
+*   `"has160"`
+*   `"haval"`
+*   `"jh"`
+*   `"md2"`
+*   `"md4"`
+*   `"md5"`
+*   `"md6"`
+*   `"radioGatun"`
+*   `"ripeMD"`
+*   `"ripeMD128"`
+*   `"ripeMD160"`
+*   `"ripeMD320"`
+*   `"sdhash"`
+*   `"sha1"`
+*   `"sha224"`
+*   `"sha256"`
+*   `"sha384"`
+*   `"sha512"`
+*   `"sha3"`
+*   `"skein"`
+*   `"snefru"`
+*   `"spectralHash"`
+*   `"ssdeep"`
+*   `"swifft"`
+*   `"tiger"`
+*   `"tlsh"`
+*   `"whirlpool"`
 
 ## `result` object { #result }
 
@@ -1473,8 +1477,8 @@ If the `run.baselineId` property is present but the `baselineState` property is 
 shall be considered to have the value `"new"`.
 
 ~ IsoNote
-The purpose of the `baselineState` property is to allow result management systems to keep track of how many
-new results are introduced in each run, and how many have been addressed.
+The purpose of the `baselineState` property is to allow (for example) a measurement of how many
+new results were introduced in the run, and how many previously existing results no longer appear.
 
 To assign a value to `baselineState`, a tool must have a way to determine whether a result is "the same", in some sense,
 as a result that appeared in the run specified by `run.baselineId`.
@@ -1709,8 +1713,9 @@ and it might populate the `logicalLocations` property as follows:
 A `location` object may contain a property named `decoratedName` whose value is a string containing
 the compiler's internal representation of the logical location associated with this `location` object.
 
-Even though `decoratedName` describes a logical location, `fullyQualifiedLogicalName` (&sect;[#location-fullyQualifiedLogicalName])
-need not be present when `decoratedName` is present.
+Even though `decoratedName` describes a logical location,
+the presence of `decoratedName` does not imply that `fullyQualifiedLogicalName` (&sect;[#location-fullyQualifiedLogicalName])
+must be present.
 
 ~ IsoExample
 In this example, the `decoratedName` property contains a "mangled" name emitted by a C++ compiler:
