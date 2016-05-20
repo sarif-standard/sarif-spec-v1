@@ -6,6 +6,15 @@ file
   ~ sequence of bytes accessible _via_ a URI
   ~ Example: a physical file in a file system,
     a specific version of a file in a version control system.
+    
+top-level file
+  ~ file which is not contained within any other file
+
+nested file
+  ~ file which is contained within another file
+
+parent (file)
+  ~ file which contains one or more nested files
 
 (programming) artifact
   ~ file, produced manually by a person or automatically by a program, which results from

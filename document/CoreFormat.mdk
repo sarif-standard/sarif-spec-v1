@@ -356,15 +356,9 @@ source to allow the run to be repeated.
 A `run` object should contain a property named `files` whose value is a JSON object,
 each of whose properties represents a file that was scanned in the course of the run.
 
-Each property name in the `files` object shall be the URI of a scanned file.
-No two of these property names shall be equivalent as defined in &sect;[#uriProperties].
-
-Each property value in the `files` object shall be an array of `file` objects (&sect;[#file])
-which contain information about the file identified by the URI in the property name.
-
 The object specified by the `files` property should contain properties representing at least those files in which results were detected,
 but it may contain properties representing all scanned files (whether or not results were detected in those files),
-or for any subset of those files.
+or any subset of those files.
 
 ~ IsoNumberedNote { @IsoNumberedNote=1}
 `file` objects contain information that is useful for viewers.
@@ -372,25 +366,16 @@ Viewers will be able to provide the most information to users if the `files`
 property is present and contains information for every file in which results were detected.
 ~
 
-If the scanned file is not nested within another file, then the array shall consist of a single
-element, and the property name shall be the URI of the scanned file.
-If the absolute location of the scanned file is available, the URI should be an absolute URI;
-otherwise, the URI shall be a relative URI.
-
 ~ IsoNumberedExample { @IsoNumberedExample=1 }
 
 ```
-run: {
-    files: {
-        "file:///C:/Code/main.cc": [
+"files": {
+    "file:///C:/Code/main.cc": {
+        "mimeType": "text/x-c",
+        "hashes": [
             {
-                "mimeType": "text/x-c",
-                "hashes": [
-                    {
-                        "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
-                        "algorithm": "sha256"
-                    }
-                ]
+                "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
+                "algorithm": "sha256
             }
         ]
     }
@@ -398,15 +383,25 @@ run: {
 ```
 ~
 
-If the scanned file is nested within another file (for example, within a compressed container),
-then the first `file` object in the array shall refer to the outermost container,
-the next one shall refer to a file nested immediately within that container, and so on,
-with the last element of the array referring to the most deeply nested file.
+Each property name in the `files` object shall be the URI of a scanned file.
+No two of these property names shall be equivalent as defined in &sect;[#uriProperties].
+If the absolute location of the scanned file is available, the URI should be an absolute URI;
+otherwise, the URI shall be a relative URI.
 
-In this case, the property name shall be the absolute URI of the outermost containing
-file, together with a fragment that describes the nesting of the scanned file within
+Each property value in the `files` object shall be a `file` object (&sect;[#file])
+which contains information about the file identified by the URI in the property name.
+
+In some cases, a scanned file might be nested within another file (for example, a compressed container),
+referred to as its "parent."
+A file that is not nested within another file is referred to as a "top-level file".
+A file that is nested withing another file is referred to as a "nested file".
+
+If the scanned file is a nested file,
+then the property name shall be the absolute URI of the outermost parent,
+together with a fragment that describes the nesting of the scanned file within
 its parent or parents.
-If the scanned file is nested more than one level deep in the outermost containing file,
+
+If the scanned file is nested more than one level deep in the outermost parent,
 the fragments representing each level of nesting may be combined in any way desired,
 as long as no two of the resulting property names are equivalent as defined in &sect;[#uriProperties].
 
@@ -414,7 +409,7 @@ as long as no two of the resulting property names are equivalent as defined in &
 It need not be possible to use this URI to navigate directly to the nested scanned file.
 The information necessary to do that is specified in the `uri` property (&sect;[#file-uri]),
 or in the `offset` (&sect;[#file-offset]) and `length` (&sect;[#file-length]) properties,
-of the `file` objects in the array .
+of each `file` object.
 ~
 
 ~ IsoNumberedExample
@@ -449,22 +444,20 @@ The second level of nesting is specified by a byte offset from the start of the 
 together with a length. See &sect;[#file]. 
 
 ```
-run: {
-    files: {
-        "file:///C:/Code/app.zip#/docs/intro.docx/Flash1": [
-            {
-                "mimeType": "application/zip",
-            },
-            {
-                "uri": "/docs/intro.docx"
-                "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            },
-            {
-                "offset": 17522,
-                "length": 4050,
-                "mimeType": "application/x-shockwave-flash"
-            }
-        ]
+"files": {
+    "file:///C:/Code/app.zip": {
+        "mimeType": "application/zip",
+    },
+    "file:///C:/Code/app.zip#/docs/intro.docx": {
+        "uri": "/docs/intro.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "parentKey": "file:///C:/Code/app.zip"    # \(See &sect;[#file-parentKey]\)
+    },
+    "file:///C:/Code/app.zip#/docs/intro.docx/Flash1": {
+        "offset": 17522,
+        "length": 4050,
+        "mimeType": "application/x-shockwave-flash",
+        "parentKey": "file:///C:/Code/app.zip#/docs/intro.docx"
     }
 }
 ```
@@ -839,70 +832,61 @@ This allows tools to include information about the themselves that is not explic
 
 ### General { #file-General }
 
-A `file` object represents a single file. In some cases, this file might be nested within another file,
-referred to as the "containing file."
-
-`file` objects occur as members of arrays within the `run.files` object (&sect;[#run-files]). 
-
-If the `file` object does not represent a nested file, neither of the properties
-`uri` (&sect;[#file-uri]) or `offset` (&sect;[#file-offset]) shall be present.
-
-If the location of a nested file can be expressed either by means of a path within the containing file
-or by means of a byte offset from the start of the containing file, then either `uri`
-or `offset` (&sect;[#file-offset]) or both shall be present; they shall not both be absent.
+A `file` object represents a single file.
 
 ### `uri` property { #file-uri }
 
-Depending on the circumstances, a `file` object either shall or may contain a property named `uri`
-whose value is a string.
+Depending on the circumstances, a `file` object either shall, may, or shall not contain a property named `uri`
+whose value is a string containing a valid URI.
 
-If the `file` object represents a top-level file (that is, a file that is not nested within another file),
-then the `uri` property may be present.
+If the `file` object represents a top-level file, then the `uri` property may be present.
 If present, it shall be equal to the name of the property within `run.files` (&sect;[#run-files])
-within which the `file` object occurs, but with any URI fragment removed.
-If absent, it shall be interpreted as being equal to the value it would be required to have if it were present.
+whose value is this `file` object.
+If absent, it shall be interpreted as having that same value.
 
-If the `file` object represents a nested file, and if the location of the nested file
-within its containing file can be expressed by means of a path within its containing file,
+If the `file` object represents a nested file whose location
+relative to its parent can be expressed only by means of a path,
 then the `uri` property shall be present, and its value shall be a valid relative URI expressing that path.
 
-If the location of the nested file within its containing file cannot be expressed by means of a path,
+If the `file` object represents a nested file whose location within its parent cannot be expressed by means of a path,
 then the `uri` property shall be absent.
 
+If the `file` object represents a nested file whose location within its parent can be expressed either by means of a path
+or by means of a byte offset from the start of the parent, then either the `uri` property
+or the `offset` property (&sect;[#file-offset]) or both shall be present; they shall not both be absent.
+If the `uri` property is present, its value shall be a valid relative URI expressing the path of the nested file within the parent.
+
 ~ IsoNumberedExample { @IsoNumberedExample = 1 }
-The property name includes a fragment.
-The `uri` for the top-level file (the first array element) repeats the property name without the fragment.
-The `uri` for the nested file (the second array element) specifies the relative URI of the nested file
+The `uri` property of the top-level file repeats the property name.
+The `uri` property of the nested file specifies the relative URI of the nested file
 with respect to its parent.
 ```
 "files": {
-  "http://www.example.com/a.zip#/src/file.c": [
-    {
-      "uri": "http://www.example.com/a.zip",
-      "mimeType": "application/zip"
+    "http://www.example.com/a.zip": {
+        "uri": "http://www.example.com/a.zip",
+        "mimeType": "application/zip"
     },
-    {
-      "uri": "/src/file.c",
-      "mimeType": "x-c"
+    "http://www.example.com/a.zip#/src/file.c": {
+        "uri": "/src/file.c",
+        "mimeType": "x-c",
+        "parentKey": "http://www.example.com/a.zip" # See \(&sect;[#file-parentKey]\)
     }
-  ]
 }
 ```
 ~
 
 ~ IsoNumberedExample
-The top-level `uri` is omitted. It is interpreted as `"http://www.example.com/a.zip"`.
+The `uri` property of the top-level file is omitted. It is interpreted as `"http://www.example.com/a.zip"`.
 ```
 "files": {
-  "http://www.example.com/a.zip#/src/file.c": [
-    {
-      "mimeType": "application/zip"
+    "http://www.example.com/a.zip": {
+        "mimeType": "application/zip"
     },
-    {
-      "uri": "/src/file.c",
-      "mimeType": "x-c"
+    "http://www.example.com/a.zip#/src/file.c": {
+        "uri": "/src/file.c",
+        "mimeType": "x-c",
+        "parentKey": "http://www.example.com/a.zip"
     }
-  ]
 }
 ```
 ~
@@ -913,23 +897,23 @@ This allows multiple levels of nesting to be represented.
 
 ~ IsoNumberedExample
 There are two levels of nesting.
-Neither of the `uri` properties representing the nested files
-(the second and third array elements) match the fragment portion of the URI specified in the property name.
+The `uri` property of the most deeply nested file
+does not match the fragment portion of the URI specified in the property name.
 ```
 "files": {
-  "http://www.example.com/a.zip#/media/b.zip/images/c.png": [
-    {
-      "mimeType": "application/zip"
-    },
-    {
-      "uri": "/media/b.zip",
-      "mimeType": "application/zip"
-    },
-    {
-      "uri": "/images/c.png",
-      "mimeType": "image/png"
-    }
-  ]
+  "http://www.example.com/a.zip": {
+    "mimeType": "application/zip"
+  },
+  "http://www.example.com/a.zip#/media/b.zip": {
+    "uri": "/media/b.zip",
+    "mimeType": "application/zip",
+    "parentKey": "http://www.example.com/a.zip"
+  },
+  "http://www.example.com/a.zip#/media/b.zip/images/c.png": {
+    "uri": "/images/c.png",
+    "mimeType": "image/png",
+    "parentKey": "http://www.example.com/a.zip#/media/b.zip"
+  }
 }
 ```
 ~
@@ -944,18 +928,39 @@ the absolute URI with respect to which `uri` shall be interpreted.
 If the `uri` property is absent or contains an absolute URI, then the `uriBaseId` property
 shall be absent.
 
+### `parentKey` property { #file-parentKey }
+
+If the file represented by the `file` object is a nested file,
+then the `file` object shall contain a property named `parentKey` whose value is a string containing a URI
+that matches the property name of the parent file's `file` object within `run.files` (&sect;[#run-files]).
+
+If the file represented by the `file` object is a top-level file, then the `parentKey` property shall be absent.
+
+~ IsoNote
+The presence of the `parentKey` property makes it possible to navigate from the `file` object representing
+a nested file to the `file` object representing each of its parent files in turn, up to the top-level file.
+It is necessary because the URI specified by a `file` object's property name within `run.files` does not
+necessarily contain enough information to do so.
+~
+
 ### `offset` property { #file-offset }
 
-If the location of a nested file within its containing file can be expressed
-only by means of a byte offset from the start of the containing file,
-then the `file` object shall contain a property named `offset`
-whose value is an integer specifying that offset.
+Depending on the circumstances, a `file` object either shall, may, or shall not contain a property named `offset`
+whose value is an integer.
 
-If the location of the file within its containing file can be expressed both by means of a path
-and by means of a byte offset, then the `offset` property may be present.
+If the `file` object represents a top-level file, then the `offset` property shall be absent.
 
-If the location of the file within its containing file cannot be expressed by means of a byte offset,
+If the `file` object represents a nested file whose location
+relative to its parent can be expressed only by means of a byte offset from the start of its parent file,
+then the `offset` property shall be present, and its value shall be that byte offset.
+
+If the `file` object represents a nested file whose location within its parent cannot be expressed by means of a byte offset,
 then the `offset` property shall be absent.
+
+If the `file` object represents a nested file whose location within its parent can be expressed either by means of a path
+or by means of a byte offset from the start of the parent, then either the `uri` property (&sect;[#file-uri])
+or the `offset` property or both shall be present; they shall not both be absent.
+If the `offset` property is present, its value shall be that byte offset.
 
 ### `length` property { #file-length }
 
