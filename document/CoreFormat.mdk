@@ -357,7 +357,7 @@ A `run` object should contain a property named `files` whose value is a JSON obj
 each of whose properties represents a file that was scanned in the course of the run.
 
 The object specified by the `files` property should contain properties representing at least those files in which results were detected,
-but it may contain properties representing all scanned files (whether or not results were detected in those files),
+but it may contain properties representing all files examined by the tool (whether or not results were detected in those files),
 or any subset of those files.
 
 ~ IsoNumberedNote { @IsoNumberedNote=1}
@@ -383,30 +383,30 @@ property is present and contains information for every file in which results wer
 ```
 ~
 
-Each property name in the `files` object shall be the URI of a scanned file.
+Each property name in the `files` object shall be the URI of a file examined by the tool.
 No two of these property names shall be equivalent as defined in &sect;[#uriProperties].
-If the absolute location of the scanned file is available, the URI should be an absolute URI;
+If the absolute location of the file is available, the URI should be an absolute URI;
 otherwise, the URI shall be a relative URI.
 
 Each property value in the `files` object shall be a `file` object (&sect;[#file])
 which contains information about the file identified by the URI in the property name.
 
-In some cases, a scanned file might be nested within another file (for example, a compressed container),
+In some cases, a file might be nested within another file (for example, a compressed container),
 referred to as its "parent."
 A file that is not nested within another file is referred to as a "top-level file".
 A file that is nested withing another file is referred to as a "nested file".
 
-If the scanned file is a nested file,
+If the file is a nested file,
 then the property name shall be the URI of the outermost parent,
-together with a fragment that describes the nesting of the scanned file within
+together with a fragment that describes the nesting of the file within
 its parent or parents.
 
-If the scanned file is nested more than one level deep in the outermost parent,
+If the file is nested more than one level deep in the outermost parent,
 the fragments representing each level of nesting may be combined in any way desired,
 as long as no two of the resulting property names are equivalent as defined in &sect;[#uriProperties].
 
 ~ IsoNumberedNote
-It need not be possible to use this URI to navigate directly to the nested scanned file.
+It need not be possible to use this URI to navigate directly to the nested file.
 The information necessary to do that is specified in the `uri` property (&sect;[#file-uri]),
 or in the `offset` (&sect;[#file-offset]) and `length` (&sect;[#file-length]) properties,
 of each `file` object.
@@ -848,7 +848,8 @@ If the `file` object represents a nested file whose location
 relative to its parent can be expressed only by means of a path,
 then the `uri` property shall be present, and its value shall be a valid relative URI expressing that path.
 
-If the `file` object represents a nested file whose location within its parent cannot be expressed by means of a path,
+If the `file` object represents a nested file whose location within its parent can be expressed only by a byte offset
+from the start of the parent, and not by means of a path,
 then the `uri` property shall be absent.
 
 If the `file` object represents a nested file whose location within its parent can be expressed either by means of a path
@@ -954,7 +955,8 @@ If the `file` object represents a nested file whose location
 relative to its parent can be expressed only by means of a byte offset from the start of its parent file,
 then the `offset` property shall be present, and its value shall be that byte offset.
 
-If the `file` object represents a nested file whose location within its parent cannot be expressed by means of a byte offset,
+If the `file` object represents a nested file whose location within its parent can only be expressed by means of a path,
+and not by means of a byte offset from the start of the parent,
 then the `offset` property shall be absent.
 
 If the `file` object represents a nested file whose location within its parent can be expressed either by means of a path
