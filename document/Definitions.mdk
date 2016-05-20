@@ -145,6 +145,14 @@ logical location
   ~ location specified by reference to a programmatic construct, without specifying the programming artifact within which that construct occurs
   ~ Example: A class name, a method name, a namespace.
 
+top-level logical location
+  ~ logical location that is not nested within another logical location
+  ~ Example: A global function in C++
+
+nested logical location
+  ~ logical location that is nested within another logical location
+  ~ Example: A method within a class in C++
+
 empty array
   ~ array that contains no elements, and so has a length of 0
 
