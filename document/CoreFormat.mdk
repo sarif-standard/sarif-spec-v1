@@ -397,7 +397,7 @@ A file that is not nested within another file is referred to as a "top-level fil
 A file that is nested withing another file is referred to as a "nested file".
 
 If the scanned file is a nested file,
-then the property name shall be the absolute URI of the outermost parent,
+then the property name shall be the URI of the outermost parent,
 together with a fragment that describes the nesting of the scanned file within
 its parent or parents.
 
