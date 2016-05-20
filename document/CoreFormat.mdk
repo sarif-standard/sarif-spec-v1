@@ -901,19 +901,19 @@ The `uri` property of the most deeply nested file
 does not match the fragment portion of the URI specified in the property name.
 ```
 "files": {
-  "http://www.example.com/a.zip": {
-    "mimeType": "application/zip"
-  },
-  "http://www.example.com/a.zip#/media/b.zip": {
-    "uri": "/media/b.zip",
-    "mimeType": "application/zip",
-    "parentKey": "http://www.example.com/a.zip"
-  },
-  "http://www.example.com/a.zip#/media/b.zip/images/c.png": {
-    "uri": "/images/c.png",
-    "mimeType": "image/png",
-    "parentKey": "http://www.example.com/a.zip#/media/b.zip"
-  }
+    "http://www.example.com/a.zip": {
+        "mimeType": "application/zip"
+    },
+    "http://www.example.com/a.zip#/media/b.zip": {
+        "uri": "/media/b.zip",
+        "mimeType": "application/zip",
+        "parentKey": "http://www.example.com/a.zip"
+    },
+    "http://www.example.com/a.zip#/media/b.zip/images/c.png": {
+        "uri": "/images/c.png",
+        "mimeType": "image/png",
+        "parentKey": "http://www.example.com/a.zip#/media/b.zip"
+    }
 }
 ```
 ~

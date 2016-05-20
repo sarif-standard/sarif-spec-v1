@@ -1774,19 +1774,19 @@ The <span data-line="32;document\CoreFormat.mdk:900"></span><code class="code co
 does not match the fragment portion of the URI specified in the property name.
 </p>
 <pre class="para-block pre-fenced pre-fenced3" data-line="32;document\CoreFormat.mdk:902" data-line-code="32;document\CoreFormat.mdk:903"><code data-line="32;document\CoreFormat.mdk:903">&quot;files&quot;: {
-  &quot;http://www.example.com/a.zip&quot;: {
-    &quot;mimeType&quot;: &quot;application/zip&quot;
-  },
-  &quot;http://www.example.com/a.zip#/media/b.zip&quot;: {
-    &quot;uri&quot;: &quot;/media/b.zip&quot;,
-    &quot;mimeType&quot;: &quot;application/zip&quot;,
-    &quot;parentKey&quot;: &quot;http://www.example.com/a.zip&quot;
-  },
-  &quot;http://www.example.com/a.zip#/media/b.zip/images/c.png&quot;: {
-    &quot;uri&quot;: &quot;/images/c.png&quot;,
-    &quot;mimeType&quot;: &quot;image/png&quot;,
-    &quot;parentKey&quot;: &quot;http://www.example.com/a.zip#/media/b.zip&quot;
-  }
+    &quot;http://www.example.com/a.zip&quot;: {
+        &quot;mimeType&quot;: &quot;application/zip&quot;
+    },
+    &quot;http://www.example.com/a.zip#/media/b.zip&quot;: {
+        &quot;uri&quot;: &quot;/media/b.zip&quot;,
+        &quot;mimeType&quot;: &quot;application/zip&quot;,
+        &quot;parentKey&quot;: &quot;http://www.example.com/a.zip&quot;
+    },
+    &quot;http://www.example.com/a.zip#/media/b.zip/images/c.png&quot;: {
+        &quot;uri&quot;: &quot;/images/c.png&quot;,
+        &quot;mimeType&quot;: &quot;image/png&quot;,
+        &quot;parentKey&quot;: &quot;http://www.example.com/a.zip#/media/b.zip&quot;
+    }
 }</code></pre></div><h4 id="file-uribaseid"  data-line="32;document\CoreFormat.mdk:921"  style="bookmark:6.10.3.&#8194;`uriBaseId` property"><span data-line="32;document\CoreFormat.mdk:921"></span><span class="heading-before"><span class="heading-label">6.10.3</span>.&#8194;</span><span data-line="32;document\CoreFormat.mdk:921"></span><code class="code code1">uriBaseId</code><span data-line="32;document\CoreFormat.mdk:921"></span> property</h4>
 <p data-line="32;document\CoreFormat.mdk:923"><span data-line="32;document\CoreFormat.mdk:923"></span>If the <span data-line="32;document\CoreFormat.mdk:923"></span><code class="code code1">uri</code><span data-line="32;document\CoreFormat.mdk:923"></span> property (<span data-line="32;document\CoreFormat.mdk:923"></span>&#167;<span data-line="32;document\CoreFormat.mdk:923"></span><a href="#file-uri" title="6.10.2.&#8194;uri property" class="localref" style="target-element:h3"><span class="heading-label">6.10.2</span></a><span data-line="32;document\CoreFormat.mdk:923"></span>) is present and contains a relative URI,
 then the <span data-line="32;document\CoreFormat.mdk:924"></span><code class="code code1">file</code><span data-line="32;document\CoreFormat.mdk:924"></span> object may contain a property named <span data-line="32;document\CoreFormat.mdk:924"></span><code class="code code1">uriBaseId</code><span data-line="32;document\CoreFormat.mdk:924"></span> whose value shall be
