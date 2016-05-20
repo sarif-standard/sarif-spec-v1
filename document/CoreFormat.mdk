@@ -1239,7 +1239,7 @@ of the `rule` object specified by this `result` object's `ruleId` property (&sec
 In that case, if the `run` object (&sect;[#run]) containing this result does not include a `rules` property (&sect;[#run-rules]),
 or if the `run.rules` property does not specify information for the rule associated with this `result`,
 or if the `rule` object associated with this result does not specify a `defaultLevel` property,
-then the value of the the `level` property shall be considered to be `"warning"`.
+then the value of the `level` property shall be considered to be `"warning"`.
 
 ### `message` property { #result-message }
 
@@ -2100,7 +2100,6 @@ if any of those strings accurately describes the construct identified by this ob
 
 *   `"function"` 
 *   `"member"`
-*   `"method"`
 *   `"module"`
 *   `"namespace"`
 *   `"package"`
@@ -2112,8 +2111,8 @@ If none of those strings accurately describes the construct, `kind` may contain 
 ### `parentKey` property { #logicalLocation-parentKey }
 
 If the logical location represented by the `logicalLocation` object is a nested logical location,
-then the the `logicalLocation` object shall contain a property named `parentKey` whose value is a string 
-that matches the property name of the parent logical locations's `logicalLocation` object within
+then the `logicalLocation` object shall contain a property named `parentKey` whose value is a string 
+that matches the property name of the parent `logicalLocation` object within
 `run.logicalLocations` (&sect;[#run-logicalLocations]).
 
 If the logical location represented by the `logicalLocation` object is a top-level logical location,
