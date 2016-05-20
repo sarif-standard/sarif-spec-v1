@@ -938,7 +938,7 @@ If the file represented by the `file` object is a top-level file, then the `pare
 
 ~ IsoNote
 The presence of the `parentKey` property makes it possible to navigate from the `file` object representing
-a nested file to the `file` object representing each of its parent files in turn, up to the top-level file.
+a nested file to the `file` objects representing each of its parent files in turn, up to the top-level file.
 It is necessary because the URI specified by a `file` object's property name within `run.files` does not
 necessarily contain enough information to do so.
 ~
