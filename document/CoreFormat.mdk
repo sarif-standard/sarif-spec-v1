@@ -465,7 +465,7 @@ together with a length. See &sect;[#file].
 
 ### `logicalLocations` property { #run-logicalLocations }
 
-A `run` object should contain a property named `logicalLocations` whose value is a dictionary,
+A `run` object should contain a property named `logicalLocations` whose value is an object,
 each of whose properties represents the logical location of one or more results detected in the course of the run.
 
 With one exception described in &sect;[#location-logicalLocationKey], each property name in the `logicalLocations` object shall be
@@ -474,43 +474,47 @@ the programming language in which the programmatic construct specified by that l
 We refer to this string as a "fully qualified logical name".
 See &sect;[#location-fullyQualifiedLogicalName] for examples.
 
-Each value in the `logicalLocation` object shall be
-an array of one or more `logicalLocationComponent` objects (&sect;[#logicalLocationComponent]).
-This allows reference to results which occur in nested logical components, for example,
-a member nested within a type which is in turn nested within a namespace.
-When a result occurs in such a nested construct, the first `logicalLocationComponent` object in the array shall refer to
-the outermost construct,
-the next element shall refer to a construct nested immediately within the first construct,
-and so on, with the last element referring to the most deeply nested construct.
+Each value in the object specified by the `logicalLocations` property shall be
+a `logicalLocation` object (&sect;[#logicalLocation]).
+
+In some cases, a logical location might be nested within another logical location
+(for example, a class nested within a namespace), referred to as its "parent."
+A logical location that is not nested within another logical location is referred to as a "top-level logical location".
+A logical location that is nested withing another logical location is referred to as a "nested logical location".
+
+If a result is detected in a nested logical location, then the `logicalLocations` object shall
+contain properties describing not only that logical location, but also properties
+describing each of its parents, up to and including the top-level logical location.
 
 ~ IsoExample
-
+In this example, a result was detected in the C++ class `namespaceA::namespaceB::classC`. The `logicalLocations`
+object contains not only a property describing the class, but also properties describing its parents.
 ```
 "logicalLocations": {
-  "namespaceA::namespaceB::classC": [
-    {
-      "name": "namespaceA",
-      "kind": "namespace"
+    "namespaceA::namespaceB::classC": {
+        "name": "classC",
+        "kind": "type",
+        "parentKey": "namespaceA::namespaceB"
     },
-    {
-      "name": "namespaceB",
-      "kind": "namespace"
+    "namespaceA::namespaceB": {
+        "name": "namespaceB",
+        "kind": "namespace"
+        "parentKey": "namespaceA"
     },
-    {
-      "name": "classC",
-      "kind": "type"
+    "namespaceA": {
+        "name": "namespaceA",
+        "kind": "namespace"
     }
-  ]
 }
 ```
 ~
 
 ~ IsoNote
-The reason that the detailed information in `logicalLocations` is useful,
-even though much of the information it contains is captured in the `location.fullyQualifiedLogicalName` property (&sect;[#location-fullyQualifiedLogicalName]),
-is that it allows results management systems and other programs to organize
+The detailed information in `logicalLocations` is useful,
+even though much of it is captured in the `location.fullyQualifiedLogicalName` property (&sect;[#location-fullyQualifiedLogicalName]),
+because it allows results management systems and other programs to organize
 analysis results, for example, by asking questions such as "How many results were
-found in the class `NamespaceA.NamespaceB.ClassC`?".
+found in the class `namespaceA.namespaceB`?".
 Programs can ask these questions without having to know how to parse the `fullyQualifiedLogicalName` string.
 ~
 
@@ -2028,17 +2032,17 @@ and in bytes for a binary region.
 A `region` whose `offset` is equal to the length of the file and whose `length` is 0 legal,
 and represents an insertion point at the end of the file.
 
-## `logicalLocationComponent` object { #logicalLocationComponent }
+## `logicalLocation` object { #logicalLocation }
 
-### General { #logicalLocationComponent-General }
+### General { #logicalLocation-General }
 
-A `logicalLocationComponent` object describes a component of a logical location.
+A `logicalLocation` object describes a logical location.
 
-`logicalLocationComponent` objects occur as members of arrays within the `run.logicalLocations` object (&sect;[#run-logicalLocations]).
+`logicalLocation` objects occur as property values within the `run.logicalLocations` object (&sect;[#run-logicalLocations]).
 
-### `name` property { #logicalLocationComponent-name }
+### `name` property { #logicalLocation-name }
 
-A `logicalLocationComponent` object shall contain a property named `name`, whose value shall be a string that identifies
+A `logicalLocation` object shall contain a property named `name`, whose value shall be a string that identifies
 the construct in which the result occurred.
 For example, this property might contain the name of a class or a method.
 
@@ -2050,58 +2054,51 @@ which encodes the function signature in a manner that is compiler-dependent and 
 ~
 
 
-If the `logicalLocationComponent` object occurs as the only member of an array within
-the `run.logicalLocations` object (&sect;[#run-logicalLocations]),
+If the `logicalLocation` object describes a top-level logical location,
 and if the `name` property would be equal to the name of the corresponding property, then the `name` property may be absent.
 
 ~ IsoNumberedExample { @IsoNumberedExample=1 }
-In this example, the array of `logicalLocationComponent` objects has only one element, and `name` is omitted.
+In this example, the logical location is a top-level C++ function named `functionF`, and `name` is omitted.
 ```
 "logicalLocations": {
-  "functionF": [
-    {
-      "kind": "function"
+    "functionF": {
+        "kind": "function"
     }
-  ]
 }
 ```
 ~
 
 ~ IsoNumberedExample
-In this example, the array of `logicalLocationComponent` objects has only one element, and `name` is equal to the property name.
+In this example, the logical location is a top-level C++ function, and `name` is equal to the property name.
 ```
 "logicalLocations": {
-  "functionF": [
-    {
-      "name": "functionF",
-      "kind": "function"
+    "functionF": {
+        "name": "functionF",
+        "kind": "function"
     }
-  ]
 }
 ```
 ~
 
 ~ IsoNumberedExample
-In this example, the array of `logicalLocationComponent` objects has only one element,
+In this example, the logical location is a top-level C++ function,
 but `name` is not equal to the property name, so it cannot be omitted.
 ```
 "logicalLocations": {
-  "functionF-0": [
-    {
-      "name": "functionF",
-      "kind": "function"
+    "functionF-0": {
+        "name": "functionF",
+        "kind": "function"
     }
-  ]
 }
 ```
 ~
 
-### `kind` property { #logicalLocationComponent-kind }
+### `kind` property { #logicalLocation-kind }
 
-A `logicalLocationComponent` object should contain a property named `kind`, whose value shall be one of the following strings,
+A `logicalLocation` object should contain a property named `kind`, whose value shall be one of the following strings,
 if any of those strings accurately describes the construct identified by this object:
 
-*   `"function"`
+*   `"function"` 
 *   `"member"`
 *   `"method"`
 *   `"module"`
@@ -2111,6 +2108,16 @@ if any of those strings accurately describes the construct identified by this ob
 *   `"type"`
 
 If none of those strings accurately describes the construct, `kind` may contain any value specified by the analysis tool.
+
+### `parentKey` property { #logicalLocation-parentKey }
+
+If the logical location represented by the `logicalLocation` object is a nested logical location,
+then the the `logicalLocation` object shall contain a property named `parentKey` whose value is a string 
+that matches the property name of the parent logical locations's `logicalLocation` object within
+`run.logicalLocations` (&sect;[#run-logicalLocations]).
+
+If the logical location represented by the `logicalLocation` object is a top-level logical location,
+then the `parentKey` property shall be absent.
 
 ## `codeFlow` object { #codeFlow }
 
