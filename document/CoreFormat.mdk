@@ -866,8 +866,9 @@ identical tool might be invoked from different paths on different machines.
 
 ~ IsoNumberedNote
 This property might duplicate information in the `commandLine` property (&sect;[#invocation-commandLine]).
-Storing the file name in a separate property eliminates the need to parse the command line to isolate
-the file name.
+It is necessary because the command line might not explicitly specify the path to the tool
+(for example, if the tool directory is on the execution path), and this information is important
+for troubleshooting.
 ~
 
 ~ IsoNumberedNote
@@ -889,6 +890,12 @@ An `invocation` object may contain a property named `environmentVariables` whose
 The property names in this object contain the names of the environment variables in the tool's
 execution environment. The value of each property is a string containing the value of the specified
 environment variable.
+
+~ IsoNote
+Environment variable names and values are likely to reveal highly sensitive information.
+For example, on a Windows machine, environment variables reveal the directories
+on the execution path, user account name, machine name, logon domain controller, _etc_.
+~
 
 ### `properties` property { #invocation-properties }
 
