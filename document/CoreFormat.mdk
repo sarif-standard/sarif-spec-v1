@@ -868,14 +868,10 @@ identical tool might be invoked from different paths on different machines.
 This property might duplicate information in the `commandLine` property (&sect;[#invocation-commandLine]).
 Storing the file name in a separate property eliminates the need to parse the command line to isolate
 the file name.
-
-_but why do I need to do that? Is this really needed? Especially in light of..._
 ~
 
 ~ IsoNumberedNote
 Absolute path names can reveal information that might be sensitive.
-
-_... so are we going to repeat or refer to the "redaction" advice here?_
 ~
 
 ### `workingDirectory` property { #invocation-workingDirectory }
