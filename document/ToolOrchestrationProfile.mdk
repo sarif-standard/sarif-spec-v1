@@ -1,6 +1,6 @@
 # Tool Orchestration Profile { #tool-orchestration-profile }
 
-## General
+## General { #tool-orchestration-profile-General }
 
 It is often desirable to integrate the results produced by an analysis tool
 into a larger process that orchestrates the operation of several tools. For example,
@@ -14,7 +14,7 @@ that are intended for use in this scenario.
 
 ### General { #tool-orchestration-profile-run-general }
 
-The Tool Orchestration Profile defines four additional properties on the `run` object (&sect;[#run]).
+The Tool Orchestration Profile defines additional properties on the `run` object (&sect;[#run]).
 
 ### `automationId` property { #tool-orchestration-profile-run-automationId }
 
@@ -55,14 +55,20 @@ The tool might set the `architecture` property for the first run to `"x86"`,
 and for the second run to `"AMD64"`.
 ~
 
-### `startTime` property { #tool-orchestration-profile-run-startTime }
+## `invocation` object { #tool-orchestration-profile-invocation }
 
-A `run` object may contain a property named `startTime` whose value is a string
+### General { #tool-orchestration-profile-invocation-general }
+
+The Tool Orchestration Profile defines additional properties on the `invocation` object (&sect;[#invocation]).
+
+### `startTime` property { #tool-orchestration-profile-invocation-startTime }
+
+An `invocation` object may contain a property named `startTime` whose value is a string
 specifying the date and time at which the run started.
 The string shall be in the format specified by (&sect;[#fileFormat-dateTime]).
 
-### `endTime` property { #tool-orchestration-profile-run-endTime }
+### `endTime` property { #tool-orchestration-profile-invocation-endTime }
 
-A `run` object may contain a property named `endTime` whose value is a string
+An `invocation` object may contain a property named `endTime` whose value is a string
 specifying the date and time at which the run ended.
 The string shall be in the format specified by (&sect;[#fileFormat-dateTime]).
