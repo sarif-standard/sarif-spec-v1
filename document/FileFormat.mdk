@@ -27,7 +27,7 @@ of multiple single-run log files into a single SARIF log file that contains the 
 This allows the aggregated results to be conveniently stored in a file or transported over a network.
 ~
 
-## URI-valued properties { #uriProperties }
+## URI-valued properties { #fileFormat-uriProperties }
 
 Certain properties in this specification specify the URI of a file.
 The value of every such property, if present, shall be a valid URI as described in RFC 3986.
@@ -57,11 +57,11 @@ nor are hyphen, underscore, or tilde.
 * In the host component, registered names and hexadecimal addresses use lower-case.
 ~
 
-## URI base id properties { #uriBaseIdProperties }
+## URI base id properties { #fileFormat-uriBaseIdProperties }
 
-Certain objects in this specification which have a URI-valued property (&sect;[#uriProperties])
+Certain objects in this specification which have a URI-valued property (&sect;[#fileFormat-uriProperties])
 also have a property that is described as being a "URI base id".
-The value of such a property is a string which indirectly specifies the base URI for
+The value of such a property, if present, shall be a string which indirectly specifies the base URI for
 the file whose location is specified in the corresponding URI-valued property by a relative URI.
 If the URI-valued property contains an absolute URI, the URI base id property shall be absent.
 
@@ -348,7 +348,23 @@ A `run` object shall contain a property named `tool` whose value is a `tool` obj
 
 ### `invocation` property { #run-invocation }
 
-A `run` object many contain a property named `invocation` whose value is an `invocation` object (&sect;[#invocation]).
+A `run` object may contain a property named `invocation` whose value is an `invocation` object (&sect;[#invocation]).
+
+### `defaultAnalysisTargetUri` property { #run-defaultAnalysisTargetUri }
+
+A `run` object may contain a property named `defaultAnalysisTargetUri` whose value is a string that represents the
+location of an analysis target as a valid URI (&sect;[#fileFormat-uriProperties]).
+
+If this property is present, then for any `location` object in `run.results.locations` (&sect;[#result-locations])
+whose `analysisTarget` property (&sect;[#location-analysisTarget]) is absent,
+its `analysisTarget` shall be considered to be a `physicalLocation` object (&sect;[#physicalLocation])
+whose `uri` property (&sect;[#physicalLocation-uri]) is equal to `defaultAnalysisTargetUri`,
+and whose `region` property (&sect;[#physicalLocation-region]) is absent.
+
+~ IsoNote
+The purpose of this property is to reduce the size of log files in the common case where
+an analysis tool analyzes a single target.
+~
 
 ### `files` property { #run-files }
 
@@ -383,7 +399,7 @@ property is present and contains information for every file in which results wer
 ~
 
 Each property name in the `files` object shall be the URI of a file examined by the tool.
-No two of these property names shall be equivalent as defined in &sect;[#uriProperties].
+No two of these property names shall be equivalent as defined in &sect;[#fileFormat-uriProperties].
 If the absolute location of the file is available, the URI should be an absolute URI;
 otherwise, the URI shall be a relative URI.
 
@@ -402,7 +418,7 @@ its parent or parents.
 
 If the file is nested more than one level deep in the outermost parent,
 the fragments representing each level of nesting may be combined in any way desired,
-as long as no two of the resulting property names are equivalent as defined in &sect;[#uriProperties].
+as long as no two of the resulting property names are equivalent as defined in &sect;[#fileFormat-uriProperties].
 
 ~ IsoNumberedNote
 It need not be possible to use this URI to navigate directly to the nested file.
@@ -957,7 +973,7 @@ A `file` object represents a single file.
 ### `uri` property { #file-uri }
 
 Depending on the circumstances, a `file` object either shall, may, or shall not contain a property named `uri`
-whose value is a string containing a valid URI.
+whose value is a string containing a valid URI (&sect;[#fileFormat-uriProperties]).
 
 If the `file` object represents a top-level file, then the `uri` property may be present.
 If present, it shall be equal to the name of the property within `run.files` (&sect;[#run-files])
@@ -1043,7 +1059,7 @@ does not match the fragment portion of the URI specified in the property name.
 
 If the `uri` property (&sect;[#file-uri]) is present and contains a relative URI,
 then the `file` object may contain a property named `uriBaseId` whose value shall be
-a string containing a URI base id (see &sect;[#uriBaseIdProperties]) which indirectly specifies
+a string containing a URI base id (see &sect;[#fileFormat-uriBaseIdProperties]) which indirectly specifies
 the absolute URI with respect to which `uri` shall be interpreted.
 
 If the `uri` property is absent or contains an absolute URI, then the `uriBaseId` property
@@ -1726,6 +1742,11 @@ This need not be the same as the file where the result actually occurred. See `r
 Whether `analysisTarget` is present depends on the information available to the tool that produces the log file
 (see &sect;[#location-Constraints]).
 
+If `analysisTarget` is absent and the `defaultAnalysisTargetUri` property (&sect;[#run-defaultAnalysisTargetUri]) for the
+current `run` is present, then `analysisTarget` shall be considered to be a `physicalLocation` object (&sect;[#physicalLocation])
+whose `uri` property (&sect;[#physicalLocation-uri]) is `run.defaultAnalysisTargetUri`
+and whose `region` property (&sect;[#physicalLocation-region]) is absent.
+
 ### `resultFile` property { #location-resultFile }
 
 A `location` object may contain a property named `resultFile` whose value is a `physicalLocation` object (&sect;[#physicalLocation])
@@ -1870,7 +1891,7 @@ A physical location specifies a reference to a programming artifact together wit
 ### `uri` property { #physicalLocation-uri }
 
 A `physicalLocation` object shall contain a property named `uri` whose value is a string that represents
-the location of the file as a valid URI.
+the location of the file as a valid URI (&sect;[#fileFormat-uriProperties]).
 
 If the `run.files` property (&sect;[#run-files]) is present, the value of the `uri` property should be equal to
 the name of one of the properties on the `run.files` object,
@@ -1920,7 +1941,7 @@ which provides additional information about the file specified by `uri`.
 
 If the `uri` property (&sect;[#physicalLocation-uri]) is present and contains a relative URI,
 then the `physicalLocation` object may contain a property named `uriBaseId` whose value shall be
-a string containing a URI base id (see &sect;[#uriBaseIdProperties]) which indirectly specifies
+a string containing a URI base id (see &sect;[#fileFormat-uriBaseIdProperties]) which indirectly specifies
 the absolute URI with respect to which `uri` shall be interpreted.
 
 If the `uri` property is absent or contains an absolute URI, then the `uriBaseId` property
@@ -2319,7 +2340,7 @@ containing the URI of the source code file to which this stack frame refers.
 
 If the `uri` property (&sect;[#stackFrame-uri]) is present and contains a relative URI,
 then the `stackFrame` object may contain a property named `uriBaseId` whose value shall be
-a string containing a URI base id (see &sect;[#uriBaseIdProperties]) which indirectly specifies
+a string containing a URI base id (see &sect;[#fileFormat-uriBaseIdProperties]) which indirectly specifies
 the absolute URI with respect to which `uri` shall be interpreted.
 
 If the `uri` property is absent or contains an absolute URI, then the `uriBaseId` property
@@ -2670,13 +2691,13 @@ A `fileChange` object represents a change to a single file.
 ### `uri` property { #fileChange-uri }
 
 A `fileChange` object shall contain a property named `uri` whose value is a string value that represents
-the location of the file as a valid URI.
+the location of the file as a valid URI (&sect;[#fileFormat-uriProperties]).
 
 ### `uriBaseId` property { #fileChange-uriBaseId }
 
 If the `uri` property (&sect;[#fileChange-uri]) is present and contains a relative URI,
 then the `fileChange` object may contain a property named `uriBaseId` whose value shall be
-a string containing a URI base id (see &sect;[#uriBaseIdProperties]) which indirectly specifies
+a string containing a URI base id (see &sect;[#fileFormat-uriBaseIdProperties]) which indirectly specifies
 the absolute URI with respect to which `uri` shall be interpreted.
 
 If the `uri` property is absent or contains an absolute URI, then the `uriBaseId` property
