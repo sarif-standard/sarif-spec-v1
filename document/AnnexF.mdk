@@ -1,0 +1,51 @@
+# Annex F (informative) Relationships among rules, correctness criteria, and policies { - #Annex-F }
+
+As defined in the Terms and Definitions section (&sect;[#terms-and-definitions]),
+a rule is a specific criterion for correctness verified by an analysis tool,
+and a rule id is a unique, stable identifier that a tool associates with a rule.
+In this Annex, we limit our discussion to tools that associate a rule id with each rule;
+not all tools do so.
+
+Multiple tools might have rules which verify the same criterion for correctness
+(for example, "no null-dereference errors").
+However, those tools might associate different rule ids with those rules.
+This raises the question of how a person responsible for verifying policy compliance,
+such as a corporate compliance officer or an auditor from a government agency,
+can verify that a software product complies with a policy requirement such as
+"no null-dereference errors."
+
+The auditor can start by examining a log file.
+If the log file implements the the Policy Compliance Profile (&sect;[#policy-compliance-profile]),
+the auditor can see the list of rule ids for the rules that the tool executed.
+But how is the auditor to know what those rule ids mean?
+
+The first step is to locate the rule metadata, which can be done in various ways
+(see [Annex D](#Annex-D), Locating rule metadata).
+The `rule` object (&sect;[#rule]) for this rule
+might include a `shortDescription` (&sect;[#rule-shortDescription])
+such as "Do not dereference a null pointer."
+If the description is clear enough and the auditor well-enough informed about
+software development, that might suffice, but it would be best not to rely on that.
+
+Ideally, there would exist a global, extensible set of criteria for correctness,
+similar to the Common Weakness Enumeration ([https://cwe.mitre.org/](https://cwe.mitre.org/)).
+Each correctness criterion would have a URI.
+
+In that case, a future version of the SARIF format could add a `uri` property to the
+`rule` object.
+Also in that case, a "policy" could be conceptually defined as the set of rule URIs to
+which a software system must conform
+(perhaps with additional refinements such as the maximum number of permissible violations
+of each rule).
+
+With that infrastructure in place, an auditor could verify policy compliance by
+examining the set of `executedRules` (&sect;[#compliance-executedRules]) in the
+`compliance` object (&sect;[#compliance]),
+using the rule metadata to map the `ruleId` (&sect;[#executedRule-ruleId])
+of each `executedRule` (&sect;[#executedRule]) to the URI of the corresponding correctness criterion,
+and comparing the resulting set of correctness criteria to the applicable policy.
+
+Naturally, an auditor would not do this by hand, but it could easily be automated.
+
+The SARIF format does not specify the structure of a policy, nor the relationship
+between policies and the rules defined in the SARIF rule metadata.
