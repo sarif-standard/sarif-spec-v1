@@ -27,11 +27,7 @@ Copyright © 2015 Microsoft Corporation. All rights reserved.
 
 [INCLUDE=Conventions]
 
-[INCLUDE=Organization]
-
-[INCLUDE=CoreFormat]
-
-[INCLUDE=ToolOrchestrationProfile]
+[INCLUDE=FileFormat]
 
 [INCLUDE=AnnexA]
 
