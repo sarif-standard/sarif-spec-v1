@@ -2261,7 +2261,7 @@ then the `parentKey` property shall be absent.
 
 A code flow is a sequence of locations that specify a possible execution path through the code.
 
-### `message` property { #annotatedCodeLocation-message }
+### `message` property { #codeFlow-message }
 
 A `codeFlow` object may contain a property named `message` whose value is a string containing
 a message relevant to the code flow.
@@ -2373,6 +2373,10 @@ A `stackFrame` object shall contain a property named `fullyQualifiedLogicalName`
 is a string containing the fully qualified name of the method to which this stack frame refers.
 See &sect;[#location-fullyQualifiedLogicalName] for examples.
 
+If the `run.logicalLocations` property (&sect;[#run-logicalLocations]) is present,
+the value of the `fullyQualifiedLogicalName` property should be equal to the name of one of the properties on the `run.logicalLocations` object,
+with one exception, described in &sect;[#stackFrame-logicalLocationKey].
+
 ### `logicalLocationKey` property { #stackFrame-logicalLocationKey }
 
 A `stackFrame` object may contain a property named `logicalLocationKey` whose value is a string.
@@ -2408,21 +2412,130 @@ This allows tools to include information about the stack frame that is not expli
 An `annotatedCodeLocation` object represents a physical location together with additional information
 relevant to the use of the location in a particular context.
 
+### `id` property { #annotatedCodeLocation-id }
+
+An `annotatedCodeLocation` object may contain a property named `id` whose value is a string that provides
+an identifier for the location. This identifier shall be unique within the scope of the `codeFlow` object (&sect;[#codeFlow])
+within which this `annotatedCodeLocation` occurs.
+If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `id` property shall be absent.
+
+~ IsoNumberedNote { @IsoNumberedNote=1 }
+The primary purpose of this property is to allow a viewer to display the identifer when it displays
+the list of locations that comprise a code flow.
+This enables users to easily refer to the location in conversation, for example,
+"I think the problem occurs at location 6".
+~
+
+~ IsoNumberedNote
+The `message` property (&sect;[#annotatedCodeLocation-message]) of an `annotatedCodeLocation` can use the `id` property
+to refer to another `annotatedCodeLocation` within the same `codeFlow` object.
+~
+
+~ IsoExample
+
+```
+    {                                            # A codeFlow object
+        "locations": [
+            {
+                "id": "1",
+                "kind": "call",
+                "physicalLocation": { ... }
+            },
+            {
+                "kind: "callReturn",
+                "physicalLocation": { ... },
+                "message": "Return from call at location 1"
+            }
+        ]
+    }
+```
+~
+
 ### `physicalLocation` property { #annotatedCodeLocation-physicalLocation }
 
 An `annotatedCodeLocation` object shall contain a property named `physicalLocation` whose value is a `physicalLocation` object
 (&sect;[#physicalLocation]) that specifies the file location to which the `annotatedCodeLocation` object refers.
+
+### `fullyQualifiedLogicalName` property { #annotatedCodeLocation-fullyQualifiedLogicalName }
+
+An `annotatedCodeLocation` object may contain a property named `fullyQualifiedLogicalName` whose value
+is a string containing the fully qualified name of the method to which this `annotatedCodeLocation` refers.
+See &sect;[#location-fullyQualifiedLogicalName] for examples.
+
+If the `run.logicalLocations` property (&sect;[#run-logicalLocations]) is present,
+the value of the `fullyQualifiedLogicalName` property should be equal to the name of one of the properties on the `run.logicalLocations` object,
+with one exception, described in &sect;[#annotatedCodeLocation-logicalLocationKey].
+
+### `logicalLocationKey` property { #annotatedCodeLocation-logicalLocationKey }
+
+An `annotatedCodeLocation` object may contain a property named `logicalLocationKey` whose value is a string.
+If present, this string shall be equal to the name of one of the properties on the `run.logicalLocations` object (&sect;[#run-logicalLocations]),
+which provides additional information about the logical location specified by `fullyQualifiedLogicalName` (&sect;[#stackFrame-fullyQualifiedLogicalName]).
+For more information about the purpose of this property, see &sect;[#location-fullyQualifiedLogicalName].
+
+### `module` property { #annotatedCodeLocation-module }
+
+An `annotatedCodeLocation` object may contain a property named `module` whose value is a string
+containing the name of the module that contains the code location specified by this object.
+
+### `threadId` property { #annotatedCodeLocation-threadId }
+
+An `annotatedCodeLocation` object may contain a property named `threadId` whose value is an integer which
+identifies that thread that was executing when the execution of a code flow reached the location specified by this object.
+If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `threadId` property shall be absent.
 
 ### `message` property { #annotatedCodeLocation-message }
 
 An `annotatedCodeLocation` object may contain a property named `message` whose value is a string that describes
 the significance of this location within a particular context.
 
+### `kind` property { #annotatedCodeLocation-kind }
+
+An `annotatedCodeLocation` object may contain a property named `kind` whose value is a string that provides
+a descriptive identifier that categorizes the annotation.
+
+If present, the `kind` property shall have one of the following values, with the specified meanings:
+
+* `"alias"`: This location defines an additional name for a variable defined in a declaration.
+
+* `"branch": At this location, a branch in the execution path occurred.
+
+* `"call"`: This location is the site of a function or method call.
+
+* `"callReturn"`: This location is the target of a return from a function or method.
+
+* `"declaration"`: The location declares a variable.
+
+* `"functionEnter"`: This location is an entry point to a function or method.
+
+* `"functionExit": This location is an exit point from a function or method (for example, a return statement).
+
+* `"sanitizer"`: At this location,  data that entered the system from outside (for example, from user input)
+is ensured to be safe.
+
+* `"sink"`: At this location, data leaves the system (for example, by being written to the console or sent over a network).
+
+* `"source"`: At this location, data enters the system (for example, by being provided by a user or read from a file on disk).
+
+* `"usage"`: At location, data is used. 
+
 ~ IsoExample
 Suppose an analysis tool produces a result which states that a piece of data from an insecure source
 has been used at a particular location.
 The tool might provide a "related location" (&sect;[#result-relatedLocations]) whose value is
 an `annotatedCodeLocation` object with the message "Insecure data entered the system here". 
+~
+
+### `essential` property { #annotatedCodeLocation-essential }
+
+An `annotatedCodeLocation` object may contain a property named `essential` whose value is a Boolean value
+that specifies whether this `annotatedCodeLocation` is essential to understanding the `codeFlow` object
+(&sect;[#codeFlow]) in which it occurs.
+If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `essential` property shall be absent.
+
+~ IsoNote
+A viewer might use this property to offer the user an abbreviated view of a lengthy code flow,
+displaying only the most important locations in the code flow.
 ~
 
 ### `properties` property { #annotatedCodeLocation-properties }
