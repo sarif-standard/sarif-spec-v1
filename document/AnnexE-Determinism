@@ -1,0 +1,52 @@
+# Annex E (informative) Producing deterministic SARIF log files { - #Annex-E }
+
+In certain circumstances, it is desirable for an analysis tool to produce deterministic output;
+that is, for it to produce identical output when run repeatedly over identical inputs.
+
+Certain build systems provide an example of when this is desirable.
+Consider a build system that caches the results of each build step.
+If the build is rerun, and the inputs to the step are identical
+(which the build system might determine, for example, by comparing timestamps,
+or by computing a hash of the inputs to the step and storing it along with the output from the step),
+then the build system can save time by not re-running the step, and simply
+using the existing outputs.
+
+In the case of SARIF, one could imagine a sequence of build steps where Steps A
+B, and C each run an analysis tool on a different set of targets, producing log files
+A.sarif, B.sarif, and C.sarif, and then build Step D performs an analysis on the aggregate
+of those log files. If the targets analyzed in Step B change
+but the targets analyzed in steps A and C do not, and if the contents of the
+SARIF log file are deterministic, then when the build is re-run, only Steps B and D
+need be performed.
+
+If it is desired to produce deterministic output, the following elements of the SARIF format
+should not be used. All of these elements are optional in the format:
+
+* `invocation.startTime`
+* `invocation.endTime`
+* `invocation.processId`
+* `invocation.machine`
+* `invocation.account`
+* `invocation.fileName` (because `fileName` is specified as being an absolute path, and
+tools might be stored in different directories on different machines)
+* `invocation.workingDirectory`
+* `invocation.environmentVariables`
+* The use of absolute file paths in `invocation.commandLine`
+(because builds performed on different machines might use a different root directory)
+* `annotatedCodeLocation.threadId`
+* `notification.threadId`
+* `notification.time`
+* `result.baselineState` (because it depends on a previous run.
+A result whose `baselineState` was `"new"` in a previous run would be `"existing"`
+in the next run.)
+* `run.id`
+* `run.automationId`
+* `run.baselineId`
+* `stackFrame.threadId`
+* `stackFrame.address`
+* The use of absolute file paths in URI-valued properties such as `physicalLocation.uri`
+* The presence of any non-deterministic elements in a property bag property
+
+Authors of analysis tools are encouraged to provide a mechanism
+(for example, a command line option such as `--deterministic`) which instructs the tool to
+omit non-deterministic elements from the log file.
