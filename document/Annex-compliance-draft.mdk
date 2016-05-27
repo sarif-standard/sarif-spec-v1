@@ -1,4 +1,6 @@
-# Annex E (informative) Relationships among rules, correctness criteria, and policies { - #Annex-E }
+# Annex Z (informative) Relationships among rules, correctness criteria, and policies { - #Annex-Z }
+
+**TODO** If this Annex ever becomes part of the spec, don't forget to adjust the letter in its heading title.
 
 As defined in the Terms and Definitions section (&sect;[#terms-and-definitions]),
 a rule is a specific criterion for correctness verified by an analysis tool,
