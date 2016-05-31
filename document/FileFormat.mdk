@@ -2414,41 +2414,21 @@ relevant to the use of the location in a particular context.
 
 ### `id` property { #annotatedCodeLocation-id }
 
-An `annotatedCodeLocation` object may contain a property named `id` whose value is a string that provides
-an identifier for the location. This identifier shall be unique within the scope of the `codeFlow` object (&sect;[#codeFlow])
-within which this `annotatedCodeLocation` occurs.
-If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `id` property shall be absent.
+If an `annotatedCodeLocation` object occurs within a `codeFlow`, it may contain a property named `id`.
+If the `annotatedCodeLocation` does not occur within a `codeFlow`, the `id` property shall be absent.
 
-~ IsoNumberedNote { @IsoNumberedNote=1 }
-The primary purpose of this property is to allow a viewer to display the identifer when it displays
-the list of locations that comprise a code flow.
-This enables users to easily refer to the location in conversation, for example,
+The value of the `id` property should be an integer, but it may be a string.
+If it is an integer, its value shall be the 1-based sequence number of the location within the code flow,
+that is, it shall be 1 for the first location, 2 for the second, and so on.
+If it is a string, its value shall be the base 10 string representation of that 1-based sequence number.
+The string shall match the regular expression `^[1-9][0-9]*$`.
+
+~ IsoNote
+This property has two primary purposes:
+
+1) A viewer can display the identifier next to each location when it a code flow.
+2) A user reading the log file can easily refer to the location in conversation, for example,
 "I think the problem occurs at location 6".
-~
-
-~ IsoNumberedNote
-The `message` property (&sect;[#annotatedCodeLocation-message]) of an `annotatedCodeLocation` can use the `id` property
-to refer to another `annotatedCodeLocation` within the same `codeFlow` object.
-~
-
-~ IsoExample
-
-```
-    {                                            # A codeFlow object
-        "locations": [
-            {
-                "id": "1",
-                "kind": "call",
-                "physicalLocation": { ... }
-            },
-            {
-                "kind: "callReturn",
-                "physicalLocation": { ... },
-                "message": "Return from call at location 1"
-            }
-        ]
-    }
-```
 ~
 
 ### `physicalLocation` property { #annotatedCodeLocation-physicalLocation }
@@ -2481,7 +2461,7 @@ containing the name of the module that contains the code location specified by t
 ### `threadId` property { #annotatedCodeLocation-threadId }
 
 An `annotatedCodeLocation` object may contain a property named `threadId` whose value is an integer which
-identifies that thread that was executing when the execution of a code flow reached the location specified by this object.
+identifies the thread that was executing when the execution of a code flow reached the location specified by this object.
 If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `threadId` property shall be absent.
 
 ### `message` property { #annotatedCodeLocation-message }
@@ -2504,20 +2484,32 @@ If present, the `kind` property shall have one of the following values, with the
 
 * `"callReturn"`: This location is the target of a return from a function or method.
 
-* `"declaration"`: The location declares a variable.
+~ IsoNote
+Viewers can use the `"call"` and `"callReturn"` values to clarify the presentation of a code flow
+that crosses function boundaries.
+For example, when displaying the list of locations in a code flow, a viewer could indent the locations
+between a `"call"` and a `"callReturn"`.
+~
+
+* `"declaration"`: The location introduces into the program a name which denotes an entity such as a variable, function, template, _etc_.
 
 * `"functionEnter"`: This location is an entry point to a function or method.
 
 * `"functionExit": This location is an exit point from a function or method (for example, a return statement).
 
-* `"sanitizer"`: At this location,  data that entered the system from outside (for example, from user input)
-is ensured to be safe.
+* `"sanitizer"`: This is the location of a statement (for example, a function call), after the execution of which data that entered the system from outside (for example, from user input)
+is presumed to be safe.
 
-* `"sink"`: At this location, data leaves the system (for example, by being written to the console or sent over a network).
+* `"sink"`: At this location, untrusted data enters some security-sensitive code (for example, an `eval` statement
+that converts untrusted text to executable code).
 
-* `"source"`: At this location, data enters the system (for example, by being provided by a user or read from a file on disk).
+* `"source"`: At this location, untrusted data enters the system (for example, by being provided by a user or read from a file on disk).
 
-* `"usage"`: At location, data is used. 
+* `"usage"`: At this location, data is used.
+
+~ IsoNote
+In practice, analysis tools tend to track the usage of _untrusted_ data.
+~
 
 ~ IsoExample
 Suppose an analysis tool produces a result which states that a piece of data from an insecure source
@@ -2535,7 +2527,7 @@ If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `essenti
 
 ~ IsoNote
 A viewer might use this property to offer the user an abbreviated view of a lengthy code flow,
-displaying only the most important locations in the code flow.
+displaying only the essential locations in the code flow.
 ~
 
 ### `properties` property { #annotatedCodeLocation-properties }
