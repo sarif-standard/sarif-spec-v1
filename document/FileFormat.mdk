@@ -64,6 +64,7 @@ also have a property that is described as being a "URI base id".
 The value of such a property, if present, shall be a string which indirectly specifies the base URI for
 the file whose location is specified in the corresponding URI-valued property by a relative URI.
 If the URI-valued property contains an absolute URI, the URI base id property shall be absent.
+If the URI-valued property is absent, the URI base id property shall be absent.
 
 If the consumer of the log file requires an absolute URI (for example, to display
 the specified file to a user), then the consumer must have the necessary information
@@ -2478,7 +2479,7 @@ If present, the `kind` property shall have one of the following values, with the
 
 * `"alias"`: This location defines an additional name for a variable defined in a declaration.
 
-* `"branch": At this location, a branch in the execution path occurred.
+* `"branch"`: At this location, a branch in the execution path occurred.
 
 * `"call"`: This location is the site of a function or method call.
 
@@ -2495,7 +2496,7 @@ between a `"call"` and a `"callReturn"`.
 
 * `"functionEnter"`: This location is an entry point to a function or method.
 
-* `"functionExit": This location is an exit point from a function or method (for example, a return statement).
+* `"functionExit"`: This location is an exit point from a function or method (for example, a return statement).
 
 * `"sanitizer"`: This is the location of a statement (for example, a function call), after the execution of which data that entered the system from outside (for example, from user input)
 is presumed to be safe.
