@@ -47,6 +47,31 @@ in the next run.)
 * The use of absolute file paths in URI-valued properties such as `physicalLocation.uri`
 * The presence of any non-deterministic elements in a property bag property
 
+In addition to avoiding non-deterministic elements of the file format,
+tools that wish to produce deterministic output must ensure that array and dictionary elements
+are produced in a predictable order.
+
+Some of the arrays defined in the SARIF format have a natural ordering
+for example, the `annotatedCodeLocation` objects within the `stack.Frames` property.
+Others, such as the array of `hash` objects within the `file.hashes` property, do not,
+but it would not be difficult for a tool to ensure that it always emitted them in the
+same order.
+
+The array of `result` objects presents more of a problem.
+A multi-threaded analysis tool analyzing multiple files in parallel might produce results
+in any order, and there is no natural order for the results.
+A tool might choose to order them, for example, first alphabetically by analysis target URI,
+then numerically by line number, then by column number, then alphabetically by rule id.
+
+For dictionaries such as the `run.rules` object or the `run.files` object,
+a tool might order the property names alphabetically, using a locale-insensitive ordering.
+
+A tool might similarly choose to emit the string elements of a `properties.tags` array in
+locale-insensitive alphabetical order.
+
+Finally, it is worth noting that even if an analysis tool does not produce deterministic
+output, a post-processing tool could remove or ignore non-deterministic elements.
+
 Authors of analysis tools are encouraged to provide a mechanism
 (for example, a command line option such as `--deterministic`) which instructs the tool to
-omit non-deterministic elements from the log file.
+produce deterministic output.

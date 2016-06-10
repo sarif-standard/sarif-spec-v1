@@ -3791,9 +3791,34 @@ in the next run.)
 <li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:48"><span data-line="40;document\AnnexE-Determinism:48"></span>The presence of any non-deterministic elements in a property bag property
 </li></ul>
 
-<p data-line="40;document\AnnexE-Determinism:50"><span data-line="40;document\AnnexE-Determinism:50"></span>Authors of analysis tools are encouraged to provide a mechanism
-(for example, a command line option such as <span data-line="40;document\AnnexE-Determinism:51"></span><code class="code code1">--deterministic</code><span data-line="40;document\AnnexE-Determinism:51"></span>) which instructs the tool to
-omit non-deterministic elements from the log file.
+<p data-line="40;document\AnnexE-Determinism:50"><span data-line="40;document\AnnexE-Determinism:50"></span>In addition to avoiding non-deterministic elements of the file format,
+tools that wish to produce deterministic output must ensure that array and dictionary elements
+are produced in a predictable order.
+</p>
+<p class="indent" data-line="40;document\AnnexE-Determinism:54"><span data-line="40;document\AnnexE-Determinism:54"></span>Some of the arrays defined in the SARIF format have a natural ordering
+for example, the <span data-line="40;document\AnnexE-Determinism:55"></span><code class="code code1">annotatedCodeLocation</code><span data-line="40;document\AnnexE-Determinism:55"></span> objects within the <span data-line="40;document\AnnexE-Determinism:55"></span><code class="code code1">stack.Frames</code><span data-line="40;document\AnnexE-Determinism:55"></span> property.
+Others, such as the array of <span data-line="40;document\AnnexE-Determinism:56"></span><code class="code code1">hash</code><span data-line="40;document\AnnexE-Determinism:56"></span> objects within the <span data-line="40;document\AnnexE-Determinism:56"></span><code class="code code1">file.hashes</code><span data-line="40;document\AnnexE-Determinism:56"></span> property, do not,
+but it would not be difficult for a tool to ensure that it always emitted them in the
+same order.
+</p>
+<p class="indent" data-line="40;document\AnnexE-Determinism:60"><span data-line="40;document\AnnexE-Determinism:60"></span>The array of <span data-line="40;document\AnnexE-Determinism:60"></span><code class="code code1">result</code><span data-line="40;document\AnnexE-Determinism:60"></span> objects presents more of a problem.
+A multi-threaded analysis tool analyzing multiple files in parallel might produce results
+in any order, and there is no natural order for the results.
+A tool might choose to order them, for example, first alphabetically by analysis target URI,
+then numerically by line number, then by column number, then alphabetically by rule id.
+</p>
+<p class="indent" data-line="40;document\AnnexE-Determinism:66"><span data-line="40;document\AnnexE-Determinism:66"></span>For dictionaries such as the <span data-line="40;document\AnnexE-Determinism:66"></span><code class="code code1">run.rules</code><span data-line="40;document\AnnexE-Determinism:66"></span> object or the <span data-line="40;document\AnnexE-Determinism:66"></span><code class="code code1">run.files</code><span data-line="40;document\AnnexE-Determinism:66"></span> object,
+a tool might order the property names alphabetically, using a locale-insensitive ordering.
+</p>
+<p class="indent" data-line="40;document\AnnexE-Determinism:69"><span data-line="40;document\AnnexE-Determinism:69"></span>A tool might similarly choose to emit the string elements of a <span data-line="40;document\AnnexE-Determinism:69"></span><code class="code code1">properties.tags</code><span data-line="40;document\AnnexE-Determinism:69"></span> array in
+locale-insensitive alphabetical order.
+</p>
+<p class="indent" data-line="40;document\AnnexE-Determinism:72"><span data-line="40;document\AnnexE-Determinism:72"></span>Finally, it is worth noting that even if an analysis tool does not produce deterministic
+output, a post-processing tool could remove or ignore non-deterministic elements.
+</p>
+<p class="indent" data-line="40;document\AnnexE-Determinism:75"><span data-line="40;document\AnnexE-Determinism:75"></span>Authors of analysis tools are encouraged to provide a mechanism
+(for example, a command line option such as <span data-line="40;document\AnnexE-Determinism:76"></span><code class="code code1">--deterministic</code><span data-line="40;document\AnnexE-Determinism:76"></span>) which instructs the tool to
+produce deterministic output.
 </p><h2 id="sec-bibliography"  data-line="42;document\Bibliography.mdk:1"  style="bookmark:Bibliography"><span data-line="42;document\Bibliography.mdk:1"></span>Bibliography</h2>
 <p data-line="42;document\Bibliography.mdk:3"><span data-line="42;document\Bibliography.mdk:3"></span>ISO/IEC 9899, <span data-line="42;document\Bibliography.mdk:3"></span><em>Information technology - Programming languages – C</em><span data-line="42;document\Bibliography.mdk:3"></span>
 </p>
