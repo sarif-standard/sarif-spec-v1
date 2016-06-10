@@ -3032,7 +3032,7 @@ If the `level` property is absent, it shall be considered equivalent to the valu
 ### `threadId` property { #notification-threadId }
 
 A `notification` object may contain a property named `threadId` whose value is an integer which
-identifies the thread which generated this notification.
+identifies the thread associated with this notification.
 
 ### `time` property { #notification-time }
 
