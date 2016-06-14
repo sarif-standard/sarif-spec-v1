@@ -1,5 +1,7 @@
 # Annex E (informative) Producing deterministic SARIF log files { - #Annex-E }
 
+## General { #Annex-E-General }
+
 In certain circumstances, it is desirable for an analysis tool to produce deterministic output;
 that is, for it to produce identical output when run repeatedly over identical inputs.
 
@@ -19,8 +21,20 @@ but the targets analyzed in steps A and C do not, and if the contents of the
 SARIF log file are deterministic, then when the build is re-run, only Steps B and D
 need be performed.
 
-If it is desired to produce deterministic output, the following elements of the SARIF format
-should not be used. All of these elements are optional in the format:
+Authors of analysis tools are encouraged to provide a mechanism
+(for example, a command line option such as `--deterministic`) which instructs the tool to
+produce deterministic output.
+
+There are three issues to consider when producing deterministic output:
+
+* Avoiding elements of the SARIF file format whose values are non-deterministic.
+* Emitting array and dictionary elements in a deterministic order.
+* Emitting case-insensitive string values with a deterministic casing.
+
+## Non-deterministic file format elements { #Annex-E-Elements }
+
+For a tool to produce deterministic output, it should not emit the following elements
+of the SARIF format. All of these elements are optional:
 
 * `invocation.startTime`
 * `invocation.endTime`
@@ -47,15 +61,25 @@ in the next run.)
 * The use of absolute file paths in URI-valued properties such as `physicalLocation.uri`
 * The presence of any non-deterministic elements in a property bag property
 
-In addition to avoiding non-deterministic elements of the file format,
-tools that wish to produce deterministic output must ensure that array and dictionary elements
-are produced in a predictable order.
+## Array and dictionary element ordering { #Annex-E-Ordering }
 
-Some of the arrays defined in the SARIF format have a natural ordering
-for example, the `annotatedCodeLocation` objects within the `stack.Frames` property.
-Others, such as the array of `hash` objects within the `file.hashes` property, do not,
-but it would not be difficult for a tool to ensure that it always emitted them in the
-same order.
+For a tool to produce deterministic output, it must emit array and dictionary elements
+in a deterministic order.
+
+For some arrays, the SARIF format requires a specific ordering.
+For example, within the `stack.Frames` property, SARIF requires the `annotatedCodeLocation` object
+representing the most deeply nested function call to appear first.
+
+For other arrays, the SARIF format does not require a specific ordering.
+For example, within the `file.hashes` property, SARIF does not require the `hash` objects
+to appear in any particular order.
+For such arrays, a tool can ensure the order by sorting the array elements before
+writing them to the log file.
+For example, it might sort the `hash` objects alphabetically by the string value of the
+`hash.algorithm` property.
+
+A tool might similarly choose to emit the string elements of a `properties.tags` array in
+locale-insensitive alphabetical order.
 
 The array of `result` objects presents more of a problem.
 A multi-threaded analysis tool analyzing multiple files in parallel might produce results
@@ -66,12 +90,47 @@ then numerically by line number, then by column number, then alphabetically by r
 For dictionaries such as the `run.rules` object or the `run.files` object,
 a tool might order the property names alphabetically, using a locale-insensitive ordering.
 
-A tool might similarly choose to emit the string elements of a `properties.tags` array in
-locale-insensitive alphabetical order.
+## Case-insensitive file format elements { #Annex-E-Case }
 
-Finally, it is worth noting that even if an analysis tool does not produce deterministic
-output, a post-processing tool could remove or ignore non-deterministic elements.
+Case-insensitive file systems can also cause non-deterministic output.
+Suppose a URI-valued property contains a file path from a file system that is
+case-preserving but case-insensitive (such as NTFS):
 
-Authors of analysis tools are encouraged to provide a mechanism
-(for example, a command line option such as `--deterministic`) which instructs the tool to
-produce deterministic output.
+```
+"uri": "file:///C:/Code/File1.c"
+```
+
+Suppose the file is then renamed to `file.c`. NTFS treats `File.c` and `file.c` as the same file.
+But a subsequent run of the tool might produce
+
+```
+"uri": "file:///C:/Code/file1.c"
+```
+
+A tool might choose to ignore this issue, since this would happen rarely, and the only
+consequence of ignoring it is that a subsequent step in a build process might execute
+even though it does not strictly have to.
+
+To produce absolutely deterministic output, the tool might instead choose to pull all
+file paths to lowercase or to uppercase, using a locale-insensitive case conversion:
+
+```
+"uri": "file:///C:/code/file1.c"
+```
+
+~IsoNote
+
+On the .NET platform, the recommendation is to pull strings to uppercase
+using the method `String.ToUpperInvariant`, which would result in:
+
+```
+"uri": "file:///C:/CODE/FILE1.C"
+```
+~
+
+## Post-processing { #Annex-E-PostProcessing }
+
+Even if an analysis tool does not produce deterministic output, a post-processing tool could
+produce deterministic output by removing or ignoring non-deterministic elements,
+reordering array elements and object properties,
+and adjusting the casing of case-insensitive string values
