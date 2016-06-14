@@ -1,6 +1,6 @@
 # Annex E (informative) Producing deterministic SARIF log files { - #Annex-E }
 
-## General { #Annex-E-General }
+## General { - #Annex-E-General }
 
 In certain circumstances, it is desirable for an analysis tool to produce deterministic output;
 that is, for it to produce identical output when run repeatedly over identical inputs.
@@ -25,16 +25,23 @@ Authors of analysis tools are encouraged to provide a mechanism
 (for example, a command line option such as `--deterministic`) which instructs the tool to
 produce deterministic output.
 
-There are three issues to consider when producing deterministic output:
+There are several issues to consider when producing deterministic output:
 
 * Avoiding elements of the SARIF file format whose values are non-deterministic.
 * Emitting array and dictionary elements in a deterministic order.
-* Emitting case-insensitive string values with a deterministic casing.
+* Avoiding absolute paths.
+* Emitting case-insensitive string values with deterministic casing.
+* Handling baseline information.
 
-## Non-deterministic file format elements { #Annex-E-Elements }
+## Non-deterministic file format elements { - #Annex-E-Elements }
 
 For a tool to produce deterministic output, it should not emit the following elements
-of the SARIF format. All of these elements are optional:
+of the SARIF format. All of these elements are optional.
+
+Not all of these elements are non-deterministic in all cases.
+For example, some build systems might run all builds on the same machine or under the same account.
+However, avoiding these elements, in conjunction with the techniques described in subsequent
+sections of this Annex, guarantees deterministic output.
 
 * `invocation.startTime`
 * `invocation.endTime`
@@ -50,18 +57,15 @@ tools might be stored in different directories on different machines)
 * `annotatedCodeLocation.threadId`
 * `notification.threadId`
 * `notification.time`
-* `result.baselineState` (because it depends on a previous run.
-A result whose `baselineState` was `"new"` in a previous run would be `"existing"`
-in the next run.)
 * `run.id`
 * `run.automationId`
 * `run.baselineId`
 * `stackFrame.threadId`
-* `stackFrame.address`
-* The use of absolute file paths in URI-valued properties such as `physicalLocation.uri`
+* `stackFrame.address` (because security measures such as address space layout randomization (ASLR)
+might place identical code at different addresses from run to run)
 * The presence of any non-deterministic elements in a property bag property
 
-## Array and dictionary element ordering { #Annex-E-Ordering }
+## Array and dictionary element ordering { - #Annex-E-Ordering }
 
 For a tool to produce deterministic output, it must emit array and dictionary elements
 in a deterministic order.
@@ -90,7 +94,21 @@ then numerically by line number, then by column number, then alphabetically by r
 For dictionaries such as the `run.rules` object or the `run.files` object,
 a tool might order the property names alphabetically, using a locale-insensitive ordering.
 
-## Case-insensitive file format elements { #Annex-E-Case }
+## Absolute paths { - #Annex-E-AbsolutePaths }
+
+The use of absolute file paths in URI-valued properties such as `physicalLocation.uri`
+makes it difficult to produce deterministic output.
+For example:
+
+* Different build machines might be configured to use different source directories.
+* A single build machine might use a different directory for each build.
+
+For a tool to produce deterministic output, it must avoid the use of absolute file paths.
+Tools can achieve this by emitting URIs that are relative to one or more root directories
+(for example, a source root directory and an output root directory),
+and accompanying each URI-valued property with a URI base id property (&sect;[#fileFormat-uriBaseIdProperties]). 
+
+## Case-insensitive file format elements { - #Annex-E-Case }
 
 Case-insensitive file systems can also cause non-deterministic output.
 Suppose a URI-valued property contains a file path from a file system that is
@@ -100,7 +118,7 @@ case-preserving but case-insensitive (such as NTFS):
 "uri": "file:///C:/Code/File1.c"
 ```
 
-Suppose the file is then renamed to `file.c`. NTFS treats `File.c` and `file.c` as the same file.
+Suppose the file is then renamed to `file.c`. NTFS treats `File1.c` and `file1.c` as the same file.
 But a subsequent run of the tool might produce
 
 ```
@@ -111,7 +129,7 @@ A tool might choose to ignore this issue, since this would happen rarely, and th
 consequence of ignoring it is that a subsequent step in a build process might execute
 even though it does not strictly have to.
 
-To produce absolutely deterministic output, the tool might instead choose to pull all
+To produce absolutely deterministic output, the tool might instead choose to convert all
 file paths to lowercase or to uppercase, using a locale-insensitive case conversion:
 
 ```
@@ -120,7 +138,7 @@ file paths to lowercase or to uppercase, using a locale-insensitive case convers
 
 ~IsoNote
 
-On the .NET platform, the recommendation is to pull strings to uppercase
+On the .NET platform, the recommendation is to convert strings to uppercase
 using the method `String.ToUpperInvariant`, which would result in:
 
 ```
@@ -128,9 +146,54 @@ using the method `String.ToUpperInvariant`, which would result in:
 ```
 ~
 
-## Post-processing { #Annex-E-PostProcessing }
+## Compensating for non-deterministic output { - #Annex-E-Compensating }
 
-Even if an analysis tool does not produce deterministic output, a post-processing tool could
-produce deterministic output by removing or ignoring non-deterministic elements,
+If an analysis tool does not produce deterministic output,
+a build system can add additional processing steps to compensate.
+
+There are two scenarios to consider:
+
+1. Log equality is determined by a simple comparison of file contents, or by comparing file hashes.
+2. Log equality is determined by an "intelligent" comparison.
+
+In the first scenario, a post-processing step could
+produce deterministic output by removing non-deterministic elements,
 reordering array elements and object properties,
-and adjusting the casing of case-insensitive string values
+removing file path prefixes and introducing `uriBaseId` properties,
+and adjusting the casing of case-insensitive string values.
+
+In the second scenario, a post-processing step could intelligently compare the newly produced log
+to the log from a previous build by ignoring non-deterministic elements,
+ensuring that arrays have the same elements regardless of order,
+ignoring file path prefixes,
+and performing a case-insensitive comparison.
+
+## Interaction between determinism and baselining { - #Annex-E-Baselining }
+
+SARIF's baselining feature poses a particular challenge for determinism.
+We illustrate the problem with the following scenario:
+
+On a particular date, a project's nightly build runs an analysis tool ToolX,
+which produces a log file, say, `log_20160614.sarif`.
+The next day, a developer modifies one of the files scanned by the tool
+in a way that introduces a new problem.
+That night, the nightly build tool runs again, this time producing a log file which
+compares the current set of results to those that appeared in the previous run:
+```
+ToolX --input a.c b.c --baseline log_20160614.sarif --output log_20160615.sarif
+```
+Because a new problem has been introduced, `log_20160614.sarif` will contain a `result` object
+whose `baselineState` is `"new"`.
+The next night, without any further changes to the source files, the tool is run yet again:
+```
+ToolX --input a.c b.c --baseline log_20160615.sarif --output log_20160616.sarif
+```
+The `result` object that first appeared in `log_20160615.sarif` still appears in `log_20160616.sarif`,
+but since it existed in the baseline, its `baselineState` will now be `"existing"`.
+
+The result is that even though none of the analysis target files have changed,
+the log file has changed.
+
+Strictly speaking, this does not violate determinism. After all, the baseline file has changed,
+and the baseline file is one of the inputs to the analysis.
+But from a practical standpoint, this is still a problem, because... why?
