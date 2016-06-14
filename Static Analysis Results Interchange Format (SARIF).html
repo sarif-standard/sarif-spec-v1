@@ -3894,10 +3894,10 @@ a build system can add additional processing steps to compensate.
 </li></ol>
 
 <p data-line="40;document\AnnexE-Determinism:159"><span data-line="40;document\AnnexE-Determinism:159"></span>In the first scenario, a post-processing step could
-produce deterministic output by removing non-deterministic elements,
-reordering array elements and object properties,
-removing file path prefixes and introducing <span data-line="40;document\AnnexE-Determinism:162"></span><code class="code code1">uriBaseId</code><span data-line="40;document\AnnexE-Determinism:162"></span> properties,
-and adjusting the casing of case-insensitive string values.
+produce deterministic output by creating a new file that omits non-deterministic elements,
+reorders array elements and object properties,
+removes file path prefixes and introduces <span data-line="40;document\AnnexE-Determinism:162"></span><code class="code code1">uriBaseId</code><span data-line="40;document\AnnexE-Determinism:162"></span> properties,
+and adjusts the casing of case-insensitive string values.
 </p>
 <p class="indent" data-line="40;document\AnnexE-Determinism:165"><span data-line="40;document\AnnexE-Determinism:165"></span>In the second scenario, a post-processing step could intelligently compare the newly produced log
 to the log from a previous build by ignoring non-deterministic elements,

@@ -157,10 +157,10 @@ There are two scenarios to consider:
 2. Log equality is determined by an "intelligent" comparison.
 
 In the first scenario, a post-processing step could
-produce deterministic output by removing non-deterministic elements,
-reordering array elements and object properties,
-removing file path prefixes and introducing `uriBaseId` properties,
-and adjusting the casing of case-insensitive string values.
+produce deterministic output by creating a new file that omits non-deterministic elements,
+reorders array elements and object properties,
+removes file path prefixes and introduces `uriBaseId` properties,
+and adjusts the casing of case-insensitive string values.
 
 In the second scenario, a post-processing step could intelligently compare the newly produced log
 to the log from a previous build by ignoring non-deterministic elements,
