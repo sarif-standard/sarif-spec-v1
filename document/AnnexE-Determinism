@@ -1,0 +1,218 @@
+# Annex E (informative) Producing deterministic SARIF log files { - #Annex-E }
+
+## General { - #Annex-E-General }
+
+In certain circumstances, it is desirable for an analysis tool to produce deterministic output;
+that is, for it to produce identical output when run repeatedly over identical inputs.
+
+Certain build systems provide an example of when this is desirable.
+Consider a build system that caches the results of each build step.
+If the build is rerun, and the inputs to the step are identical
+(which the build system might determine, for example, by comparing timestamps,
+or by computing a hash of the inputs to the step and storing it along with the output from the step),
+then the build system can save time by not re-running the step, and simply
+using the existing outputs.
+
+In the case of SARIF, one could imagine a sequence of build steps where Steps A
+B, and C each run an analysis tool on a different set of targets, producing log files
+A.sarif, B.sarif, and C.sarif, and then build Step D performs an analysis on the aggregate
+of those log files. If the targets analyzed in Step B change
+but the targets analyzed in steps A and C do not, and if the contents of the
+SARIF log file are deterministic, then when the build is re-run, only Steps B and D
+need be performed.
+
+Authors of analysis tools are encouraged to provide a mechanism
+(for example, a command line option such as `--deterministic`) which instructs the tool to
+produce deterministic output.
+
+There are several issues to consider when producing deterministic output:
+
+* Avoiding elements of the SARIF file format whose values are non-deterministic.
+* Emitting array and dictionary elements in a deterministic order.
+* Avoiding absolute paths.
+* Emitting case-insensitive string values with deterministic casing.
+* Handling baseline information.
+
+## Non-deterministic file format elements { - #Annex-E-Elements }
+
+For a tool to produce deterministic output, it should not emit the following elements
+of the SARIF format. All of these elements are optional.
+
+Not all of these elements are non-deterministic in all cases.
+For example, some build systems might run all builds on the same machine or under the same account.
+However, avoiding these elements, in conjunction with the techniques described in subsequent
+sections of this Annex, guarantees deterministic output.
+
+* `invocation.startTime`
+* `invocation.endTime`
+* `invocation.processId`
+* `invocation.machine`
+* `invocation.account`
+* `invocation.fileName` (because `fileName` is specified as being an absolute path, and
+tools might be stored in different directories on different machines)
+* `invocation.workingDirectory`
+* `invocation.environmentVariables`
+* The use of absolute file paths in `invocation.commandLine`
+(because builds performed on different machines might use a different root directory)
+* `annotatedCodeLocation.threadId`
+* `notification.threadId`
+* `notification.time`
+* `run.id`
+* `run.automationId`
+* `run.baselineId`
+* `stackFrame.threadId`
+* `stackFrame.address` (because security measures such as address space layout randomization (ASLR)
+might place identical code at different addresses from run to run)
+* The presence of any non-deterministic elements in a property bag property
+
+## Array and dictionary element ordering { - #Annex-E-Ordering }
+
+For a tool to produce deterministic output, it must emit array and dictionary elements
+in a deterministic order.
+
+For some arrays, the SARIF format requires a specific ordering.
+For example, within the `stack.Frames` property, SARIF requires the `annotatedCodeLocation` object
+representing the most deeply nested function call to appear first.
+
+For other arrays, the SARIF format does not require a specific ordering.
+For example, within the `file.hashes` property, SARIF does not require the `hash` objects
+to appear in any particular order.
+For such arrays, a tool can ensure the order by sorting the array elements before
+writing them to the log file.
+For example, it might sort the `hash` objects alphabetically by the string value of the
+`hash.algorithm` property.
+
+A tool might similarly choose to emit the string elements of a `properties.tags` array in
+locale-insensitive alphabetical order.
+
+The array of `result` objects presents more of a problem.
+A multi-threaded analysis tool analyzing multiple files in parallel might produce results
+in any order, and there is no natural order for the results.
+A tool might choose to order them, for example, first alphabetically by analysis target URI,
+then numerically by line number, then by column number, then alphabetically by rule id.
+
+For dictionaries such as the `run.rules` object or the `run.files` object,
+a tool might order the property names alphabetically, using a locale-insensitive ordering.
+
+## Absolute paths { - #Annex-E-AbsolutePaths }
+
+The use of absolute file paths in URI-valued properties such as `physicalLocation.uri`
+makes it difficult to produce deterministic output.
+For example:
+
+* Different build machines might be configured to use different source directories.
+* A single build machine might use a different directory for each build.
+
+For a tool to produce deterministic output, it must avoid the use of absolute file paths.
+Tools can achieve this by emitting URIs that are relative to one or more root directories
+(for example, a source root directory and an output root directory),
+and accompanying each URI-valued property with a URI base id property (&sect;[#fileFormat-uriBaseIdProperties]). 
+
+## Case-insensitive file format elements { - #Annex-E-Case }
+
+Case-insensitive file systems can also cause non-deterministic output.
+Suppose a URI-valued property contains a file path from a file system that is
+case-preserving but case-insensitive (such as NTFS):
+
+```
+"uri": "file:///C:/Code/File1.c"
+```
+
+Suppose the file is then renamed to `file.c`. NTFS treats `File1.c` and `file1.c` as the same file.
+But a subsequent run of the tool might produce
+
+```
+"uri": "file:///C:/Code/file1.c"
+```
+
+A tool might choose to ignore this issue, since this would happen rarely, and the only
+consequence of ignoring it is that a subsequent step in a build process might execute
+even though it does not strictly have to.
+
+To produce absolutely deterministic output, the tool might instead choose to convert all
+file paths to lowercase or to uppercase, using a locale-insensitive case conversion:
+
+```
+"uri": "file:///C:/code/file1.c"
+```
+
+~IsoNote
+
+On the .NET platform, the recommendation is to convert strings to uppercase
+using the method `String.ToUpperInvariant`, which would result in:
+
+```
+"uri": "file:///C:/CODE/FILE1.C"
+```
+~
+
+## Compensating for non-deterministic output { - #Annex-E-Compensating }
+
+If an analysis tool does not produce deterministic output,
+a build system can add additional processing steps to compensate.
+
+There are two scenarios to consider:
+
+1. Log equality is determined by a simple comparison of file contents, or by comparing file hashes.
+2. Log equality is determined by an "intelligent" comparison.
+
+In the first scenario, a post-processing step could
+produce deterministic output by creating a new file that omits non-deterministic elements,
+reorders array elements and object properties,
+removes file path prefixes and introduces `uriBaseId` properties,
+and adjusts the casing of case-insensitive string values.
+
+In the second scenario, a post-processing step could intelligently compare the newly produced log
+to the log from a previous build by ignoring non-deterministic elements,
+ensuring that arrays have the same elements regardless of order,
+ignoring file path prefixes,
+and performing case-insensitive comparisons where appropriate.
+
+## Interaction between determinism and baselining { - #Annex-E-Baselining }
+
+SARIF's baselining feature poses a particular challenge for determinism.
+We illustrate the problem with the following scenario:
+
+On a particular date, a project's nightly build runs an analysis tool ToolX,
+which produces a log file, say, `log_20160614.sarif`.
+The next day, a developer modifies one of the files scanned by the tool
+in a way that introduces a new problem.
+That night, the nightly build tool runs again, this time producing a log file which
+compares the current set of results to those that appeared in the previous run:
+```
+ToolX --input a.c b.c --baseline log_20160614.sarif --output log_20160615.sarif
+```
+Because a new problem has been introduced, `log_20160614.sarif` will contain a `result` object
+whose `baselineState` is `"new"`.
+The next night, without any further changes to the source files, the tool is run yet again:
+```
+ToolX --input a.c b.c --baseline log_20160615.sarif --output log_20160616.sarif
+```
+The `result` object that first appeared in `log_20160615.sarif` still appears in `log_20160616.sarif`,
+but since it existed in the baseline, its `baselineState` will now be `"existing"`.
+
+The result is that even though none of the analysis target files have changed,
+the log file has changed, or at least, a simple file comparison (such as comparing the hash
+of the new log with the hash of the baseline) will report that is has changed.
+
+Strictly speaking, this does not violate determinism. After all, the baseline file has changed,
+and the baseline file is one of the inputs to the analysis.
+But from a practical standpoint, this is still a problem, albeit a small one.
+
+If the build uses a simple mechanism such as hash value comparison to determine if a file has changed,
+then on those occasions when the _only_ difference between the newest log and the baseline
+is that some results that were previously `"new"` are now `"existing"`,
+subsequent build steps which consume the SARIF log file will run, even if they might not actually be necessary.
+For example, a build step which automatically files bugs for new results will run, even though
+the log contains no new results.
+Or a build step which tracks the number of open issues will run,
+even though the number of open issues has not actually changed.
+
+If the build engineers for a project wish to absolutely minimize the execution of unnecessary build steps,
+they have various options.
+They might perform an "intelligent" comparison between the baseline and the new log, treating
+`"new"` results in the baseline as equivalent to `"existing"` results.
+Or they might rewrite the baseline (marking all `"new"` results as `"existing"`) before performing
+the comparison.
+Of course, there is no guarantee that such an "intelligent" comparison or baseline rewriting process will actually take less time
+than the unnecessary build steps it is intended to avoid.
