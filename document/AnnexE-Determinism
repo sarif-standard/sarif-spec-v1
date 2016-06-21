@@ -166,7 +166,7 @@ In the second scenario, a post-processing step could intelligently compare the n
 to the log from a previous build by ignoring non-deterministic elements,
 ensuring that arrays have the same elements regardless of order,
 ignoring file path prefixes,
-and performing a case-insensitive comparison.
+and performing case-insensitive comparisons where appropriate.
 
 ## Interaction between determinism and baselining { - #Annex-E-Baselining }
 
@@ -192,8 +192,27 @@ The `result` object that first appeared in `log_20160615.sarif` still appears in
 but since it existed in the baseline, its `baselineState` will now be `"existing"`.
 
 The result is that even though none of the analysis target files have changed,
-the log file has changed.
+the log file has changed, or at least, a simple file comparison (such as comparing the hash
+of the new log with the hash of the baseline) will report that is has changed.
 
 Strictly speaking, this does not violate determinism. After all, the baseline file has changed,
 and the baseline file is one of the inputs to the analysis.
-But from a practical standpoint, this is still a problem, because... why?
+But from a practical standpoint, this is still a problem, albeit a small one.
+
+If the build uses a simple mechanism such as hash value comparison to determine if a file has changed,
+then on those occasions when the _only_ difference between the newest log and the baseline
+is that some results that were previously `"new"` are now `"existing"`,
+subsequent build steps which consume the SARIF log file will run, even if they might not actually be necessary.
+For example, a build step which automatically files bugs for new results will run, even though
+the log contains no new results.
+Or a build step which tracks the number of open issues will run,
+even though the number of open issues has not actually changed.
+
+If the build engineers for a project wish to absolutely minimize the execution of unnecessary build steps,
+they have various options.
+They might perform an "intelligent" comparison between the baseline and the new log, treating
+`"new"` results in the baseline as equivalent to `"existing"` results.
+Or they might rewrite the baseline (marking all `"new"` results as `"existing"`) before performing
+the comparison.
+Of course, there is no guarantee that such an "intelligent" comparison or baseline rewriting process will actually take less time
+than the unnecessary build steps it is intended to avoid.

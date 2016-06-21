@@ -3903,7 +3903,7 @@ and adjusts the casing of case-insensitive string values.
 to the log from a previous build by ignoring non-deterministic elements,
 ensuring that arrays have the same elements regardless of order,
 ignoring file path prefixes,
-and performing a case-insensitive comparison.
+and performing case-insensitive comparisons where appropriate.
 </p><h3 id="annex-e-baselining"  data-line="40;document\AnnexE-Determinism:171"  style="bookmark:Interaction between determinism and baselining"><span data-line="40;document\AnnexE-Determinism:171"></span>Interaction between determinism and baselining</h3>
 <p data-line="40;document\AnnexE-Determinism:173"><span data-line="40;document\AnnexE-Determinism:173"></span>SARIF<span data-line="40;document\AnnexE-Determinism:173"></span>&#39;<span data-line="40;document\AnnexE-Determinism:173"></span>s baselining feature poses a particular challenge for determinism.
 We illustrate the problem with the following scenario:
@@ -3925,11 +3925,30 @@ The next night, without any further changes to the source files, the tool is run
 but since it existed in the baseline, its <span data-line="40;document\AnnexE-Determinism:192"></span><code class="code code1">baselineState</code><span data-line="40;document\AnnexE-Determinism:192"></span> will now be <span data-line="40;document\AnnexE-Determinism:192"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism:192"></span>.
 </p>
 <p class="indent" data-line="40;document\AnnexE-Determinism:194"><span data-line="40;document\AnnexE-Determinism:194"></span>The result is that even though none of the analysis target files have changed,
-the log file has changed.
+the log file has changed, or at least, a simple file comparison (such as comparing the hash
+of the new log with the hash of the baseline) will report that is has changed.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:197"><span data-line="40;document\AnnexE-Determinism:197"></span>Strictly speaking, this does not violate determinism. After all, the baseline file has changed,
+<p class="indent" data-line="40;document\AnnexE-Determinism:198"><span data-line="40;document\AnnexE-Determinism:198"></span>Strictly speaking, this does not violate determinism. After all, the baseline file has changed,
 and the baseline file is one of the inputs to the analysis.
-But from a practical standpoint, this is still a problem, because<span data-line="40;document\AnnexE-Determinism:199"></span>&#8230;<span data-line="40;document\AnnexE-Determinism:199"></span> why?
+But from a practical standpoint, this is still a problem, albeit a small one.
+</p>
+<p class="indent" data-line="40;document\AnnexE-Determinism:202"><span data-line="40;document\AnnexE-Determinism:202"></span>If the build uses a simple mechanism such as hash value comparison to determine if a file has changed,
+then on those occasions when the <span data-line="40;document\AnnexE-Determinism:203"></span><em>only</em><span data-line="40;document\AnnexE-Determinism:203"></span> difference between the newest log and the baseline
+is that some results that were previously <span data-line="40;document\AnnexE-Determinism:204"></span><code class="code code1">&quot;new&quot;</code><span data-line="40;document\AnnexE-Determinism:204"></span> are now <span data-line="40;document\AnnexE-Determinism:204"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism:204"></span>,
+subsequent build steps which consume the SARIF log file will run, even if they might not actually be necessary.
+For example, a build step which automatically files bugs for new results will run, even though
+the log contains no new results.
+Or a build step which tracks the number of open issues will run,
+even though the number of open issues has not actually changed.
+</p>
+<p class="indent" data-line="40;document\AnnexE-Determinism:211"><span data-line="40;document\AnnexE-Determinism:211"></span>If the build engineers for a project wish to absolutely minimize the execution of unnecessary build steps,
+they have various options.
+They might perform an <span data-line="40;document\AnnexE-Determinism:213"></span>&#8220;intelligent&#8221;<span data-line="40;document\AnnexE-Determinism:213"></span> comparison between the baseline and the new log, treating
+<span data-line="40;document\AnnexE-Determinism:214"></span><code class="code code1">&quot;new&quot;</code><span data-line="40;document\AnnexE-Determinism:214"></span> results in the baseline as equivalent to <span data-line="40;document\AnnexE-Determinism:214"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism:214"></span> results.
+Or they might rewrite the baseline (marking all <span data-line="40;document\AnnexE-Determinism:215"></span><code class="code code1">&quot;new&quot;</code><span data-line="40;document\AnnexE-Determinism:215"></span> results as <span data-line="40;document\AnnexE-Determinism:215"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism:215"></span>) before performing
+the comparison.
+Of course, there is no guarantee that such an <span data-line="40;document\AnnexE-Determinism:217"></span>&#8220;intelligent&#8221;<span data-line="40;document\AnnexE-Determinism:217"></span> comparison or baseline rewriting process will actually take less time
+than the unnecessary build steps it is intended to avoid.
 </p><h2 id="sec-bibliography"  data-line="42;document\Bibliography.mdk:1"  style="bookmark:Bibliography"><span data-line="42;document\Bibliography.mdk:1"></span>Bibliography</h2>
 <p data-line="42;document\Bibliography.mdk:3"><span data-line="42;document\Bibliography.mdk:3"></span>ISO/IEC 9899, <span data-line="42;document\Bibliography.mdk:3"></span><em>Information technology - Programming languages – C</em><span data-line="42;document\Bibliography.mdk:3"></span>
 </p>
