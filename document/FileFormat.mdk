@@ -1601,6 +1601,21 @@ or if the tool cannot or chooses not to determine whether the result occurred at
 or if the tool examines source code written in a language that lacks such a construct, the `suppressionStates` array
 shall not include the value `"suppressedInSource"`.
 
+#### `suppressedExternally` value { #result-suppressionStates-suppressedExternally }
+
+Some development environments provide a persistent store, for example a database,
+containing historical information about the results from static analysis tools.
+Such a store might offer the ability to mark a result as "suppressed", meaning that
+if the result is encountered again, it should be ignored.
+
+When a tool with access to such a database detects such a result, it may choose not to add the result to the log.
+If the tool does include such a result in the log, the `suppressionStates` array shall include the value 
+`"suppressedExternally"`.
+
+If the tool does not have access to a database of suppression information,
+or if the tool does have access to such a database and determines that the result is not marked for suppression
+in that database, the the `suppressionStates` array shall not include the value `"suppressedExternally"`.
+
 ### `baselineState` property { #result-baselineState }
 
 If the `baselineId` property (&sect;[#run-baselineId]) of the current `run` object (&sect;[#run]) is present,
@@ -2484,17 +2499,25 @@ If present, the `kind` property shall have one of the following values, with the
 
 * `"alias"`: This location defines an additional name for a variable defined in a declaration.
 
+* `"assignment"`: At this location, an assignment to a variable occurred.
+
 * `"branch"`: At this location, a branch in the execution path occurred.
 
 * `"call"`: This location is the site of a function or method call.
 
 * `"callReturn"`: This location is the target of a return from a function or method.
 
-~ IsoNote
+~ IsoNumberedNote { @IsoNumberedNote=1 }
 Viewers can use the `"call"` and `"callReturn"` values to clarify the presentation of a code flow
 that crosses function boundaries.
 For example, when displaying the list of locations in a code flow, a viewer could indent the locations
 between a `"call"` and a `"callReturn"`.
+~
+
+* `"continuation"`: Execution continued at this location.
+
+~ IsoNumberedNote
+This can be used, for example, to designate the target of a jump instruction, or the statement after the end a loop.
 ~
 
 * `"declaration"`: The location introduces into the program a name which denotes an entity such as a variable, function, template, _etc_.
@@ -2513,7 +2536,7 @@ that converts untrusted text to executable code).
 
 * `"usage"`: At this location, data is used.
 
-~ IsoNote
+~ IsoNumberedNote
 In practice, analysis tools tend to track the usage of _untrusted_ data.
 ~
 
