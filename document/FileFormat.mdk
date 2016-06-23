@@ -2517,7 +2517,7 @@ between a `"call"` and a `"callReturn"`.
 * `"continuation"`: Execution continued at this location.
 
 ~ IsoNumberedNote
-This can be used, for example, to designate the target of a jump instruction, or the statement after the end a loop.
+This can be used, for example, to designate the target of a jump instruction, or the statement after the end of a loop.
 ~
 
 * `"declaration"`: The location introduces into the program a name which denotes an entity such as a variable, function, template, _etc_.
