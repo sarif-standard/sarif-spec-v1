@@ -2433,21 +2433,21 @@ This allows tools to include information about the stack frame that is not expli
 An `annotatedCodeLocation` object represents a physical location together with additional information
 relevant to the use of the location in a particular context.
 
-### `id` property { #annotatedCodeLocation-id }
+### `step` property { #annotatedCodeLocation-step }
 
-If an `annotatedCodeLocation` object occurs within a `codeFlow`, it may contain a property named `id`.
-If the `annotatedCodeLocation` does not occur within a `codeFlow`, the `id` property shall be absent.
+If an `annotatedCodeLocation` object occurs within a `codeFlow`, it may contain a property named `step`.
+If the `annotatedCodeLocation` does not occur within a `codeFlow`, the `step` property shall be absent.
 
-The value of the `id` property shall be an integer whose value is
+The value of the `step` property shall be an integer whose value is
 the 0-based sequence number of the location within the code flow,
 that is, it shall be 0 for the first location, 1 for the second, and so on.
 
 ~ IsoNote
 This property has two primary purposes:
 
-1) A viewer can display the identifier next to each location when it a code flow.
+1) A viewer can display the identifier next to each location when it displays a code flow.
 2) A user reading the log file can easily refer to the location in conversation, for example,
-"I think the problem occurs at location 6".
+"I think the problem occurs at step 6."
 ~
 
 ### `physicalLocation` property { #annotatedCodeLocation-physicalLocation }
