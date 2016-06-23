@@ -2438,11 +2438,9 @@ relevant to the use of the location in a particular context.
 If an `annotatedCodeLocation` object occurs within a `codeFlow`, it may contain a property named `id`.
 If the `annotatedCodeLocation` does not occur within a `codeFlow`, the `id` property shall be absent.
 
-The value of the `id` property should be an integer, but it may be a string.
-If it is an integer, its value shall be the 1-based sequence number of the location within the code flow,
-that is, it shall be 1 for the first location, 2 for the second, and so on.
-If it is a string, its value shall be the base 10 string representation of that 1-based sequence number.
-The string shall match the regular expression `^[1-9][0-9]*$`.
+The value of the `id` property shall be an integer whose value is
+the 0-based sequence number of the location within the code flow,
+that is, it shall be 0 for the first location, 1 for the second, and so on.
 
 ~ IsoNote
 This property has two primary purposes:
@@ -2547,16 +2545,20 @@ The tool might provide a "related location" (&sect;[#result-relatedLocations]) w
 an `annotatedCodeLocation` object with the message "Insecure data entered the system here". 
 ~
 
-### `essential` property { #annotatedCodeLocation-essential }
+### `verbose` property { #annotatedCodeLocation-verbose }
 
-An `annotatedCodeLocation` object may contain a property named `essential` whose value is a Boolean value
-that specifies whether this `annotatedCodeLocation` is essential to understanding the `codeFlow` object
+An `annotatedCodeLocation` object may contain a property named `verbose` whose value is a Boolean value
+that specifies whether this `annotatedCodeLocation` should be displayed only in a verbose view of the `codeFlow` object
 (&sect;[#codeFlow]) in which it occurs.
-If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `essential` property shall be absent.
+If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `verbose` property shall be absent.
+
+If this property is absent, it shall be considered to have the value `false`.
 
 ~ IsoNote
-A viewer might use this property to offer the user an abbreviated view of a lengthy code flow,
-displaying only the essential locations in the code flow.
+A viewer might use this property to offer the user two options for viewing a lengthy code flow:
+a "verbose view," in which all `annotatedCodeLocation`s in the code flow are displayed,
+and an "abbreviated view," in which only those `annotatedCodeLocation`s whose `verbose` property is
+`false` are displayed.
 ~
 
 ### `properties` property { #annotatedCodeLocation-properties }
