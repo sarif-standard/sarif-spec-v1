@@ -1605,7 +1605,7 @@ shall not include the value `"suppressedInSource"`.
 
 Some development environments provide a persistent store, for example a database,
 containing historical information about the results from static analysis tools.
-Such a store might offer the ability to mark a result as "suppressed", meaning that
+Such a store might offer the ability to mark a result as "suppressed," meaning that
 if the result is encountered again, it should be ignored.
 
 When a tool with access to such a database detects such a result, it may choose not to add the result to the log.
@@ -1614,7 +1614,7 @@ If the tool does include such a result in the log, the `suppressionStates` array
 
 If the tool does not have access to a database of suppression information,
 or if the tool does have access to such a database and determines that the result is not marked for suppression
-in that database, the the `suppressionStates` array shall not include the value `"suppressedExternally"`.
+in that database, then the `suppressionStates` array shall not include the value `"suppressedExternally"`.
 
 ### `baselineState` property { #result-baselineState }
 
