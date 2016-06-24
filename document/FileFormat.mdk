@@ -2547,7 +2547,7 @@ an `annotatedCodeLocation` object with the message "Insecure data entered the sy
 
 ### `importance` property { #annotatedCodeLocation-importance }
 
-An `annotatedCodeLocation` object may contain a property named `importance` whose value is a string value
+An `annotatedCodeLocation` object may contain a property named `importance` whose value is a string
 that specifies the importance of this `annotatedCodeLocation` in understanding the `codeFlow` object
 (&sect;[#codeFlow]) in which it occurs.
 If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `importance` property shall be absent.
