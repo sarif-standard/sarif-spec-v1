@@ -2558,14 +2558,14 @@ If present, the `importance` property shall have one of the following values, wi
 
 * `"normal"`: this location is helpful in understanding the code flow.
 
-* `"optional"`: this location contributes to a more detailed understanding of the code flow, but is not normally needed. 
+* `"nonessential"`: this location contributes to a more detailed understanding of the code flow, but is not normally needed. 
 
 If this property is absent, it shall be considered to have the value `"normal"`.
 
 ~ IsoNote
 A viewer might use this property to offer the user three options for viewing a lengthy code flow:
 
-* A "normal view," which omits locations whose `importance` property is `"optional"`.
+* A "normal view," which omits locations whose `importance` property is `"nonessential"`.
 * An "abbreviated view," which displays only those locations whose `importance` property is
 `"essential"`.
 * A "verbose view," which displays all the locations in the code flow.
