@@ -2490,8 +2490,8 @@ the significance of this location within a particular context.
 
 ### `kind` property { #annotatedCodeLocation-kind }
 
-An `annotatedCodeLocation` object may contain a property named `kind` whose value is a string that provides
-a descriptive identifier that categorizes the annotation.
+An `annotatedCodeLocation` object may contain a property named `kind` whose value is a string that categorizes
+the location.
 
 If present, the `kind` property shall have one of the following values, with the specified meanings:
 
@@ -2545,20 +2545,30 @@ The tool might provide a "related location" (&sect;[#result-relatedLocations]) w
 an `annotatedCodeLocation` object with the message "Insecure data entered the system here". 
 ~
 
-### `verbose` property { #annotatedCodeLocation-verbose }
+### `importance` property { #annotatedCodeLocation-importance }
 
-An `annotatedCodeLocation` object may contain a property named `verbose` whose value is a Boolean value
-that specifies whether this `annotatedCodeLocation` should be displayed only in a verbose view of the `codeFlow` object
+An `annotatedCodeLocation` object may contain a property named `importance` whose value is a string value
+that specifies the importance of this `annotatedCodeLocation` in understanding the `codeFlow` object
 (&sect;[#codeFlow]) in which it occurs.
-If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `verbose` property shall be absent.
+If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `importance` property shall be absent.
 
-If this property is absent, it shall be considered to have the value `false`.
+If present, the `importance` property shall have one of the following values, with the specified meanings:
+
+* `"essential"`: this location is essential for understanding the code flow.
+
+* `"normal"`: this location is helpful in understanding the code flow.
+
+* `"optional"`: this location contributes to a more detailed understanding of the code flow, but is not normally needed. 
+
+If this property is absent, it shall be considered to have the value `"normal"`.
 
 ~ IsoNote
-A viewer might use this property to offer the user two options for viewing a lengthy code flow:
-a "verbose view," in which all `annotatedCodeLocation`s in the code flow are displayed,
-and an "abbreviated view," in which only those `annotatedCodeLocation`s whose `verbose` property is
-`false` are displayed.
+A viewer might use this property to offer the user three options for viewing a lengthy code flow:
+
+* A "normal view," which omits locations whose `importance` property is `"optional"`.
+* An "abbreviated view," which displays only those locations whose `importance` property is
+`"essential"`.
+* A "verbose view," which displays all the locations in the code flow.
 ~
 
 ### `properties` property { #annotatedCodeLocation-properties }
