@@ -1894,7 +1894,7 @@ In this example, the `decoratedName` property contains a "mangled" name emitted 
 
 ### `properties` property { #location-properties }
 
-A `location` object may contain a property named `properties`, whose value is a property bag.
+A `location` object may contain a property named `properties`, whose value is a property bag (&sect;[#property-bags]).
 This allows tools to include information about the location that is not explicitly specified in the SARIF format.
 
 ## `physicalLocation` object { #physicalLocation }
@@ -2299,7 +2299,7 @@ the analysis tool simulated the execution of a loop in the course of producing t
 
 ### `properties` property { #codeFlow-properties }
 
-A `codeFlow` object may contain a property named `properties`, whose value is a property bag.
+A `codeFlow` object may contain a property named `properties`, whose value is a property bag (&sect;[#property-bags]).
 This allows tools to include information about the code flow that is not explicitly specified in the SARIF format.
 
 ## `stack` object { #stack }
@@ -2333,7 +2333,7 @@ for which location information is not available, which in turn calls back into a
 
 ### `properties` property { #stack-properties }
 
-A `stack` object may contain a property named `properties`, whose value is a property bag.
+A `stack` object may contain a property named `properties`, whose value is a property bag (&sect;[#property-bags]).
 This allows tools to include information about the stack that is not explicitly specified in the SARIF format.
 
 ## `stackFrame` object { #stackFrame }
@@ -2423,7 +2423,7 @@ representing the parameters of the function call represented by this stack frame
 
 ### `properties` property { #stackFrame-properties }
 
-A `stackFrame` object may contain a property named `properties`, whose value is a property bag.
+A `stackFrame` object may contain a property named `properties`, whose value is a property bag (&sect;[#property-bags]).
 This allows tools to include information about the stack frame that is not explicitly specified in the SARIF format.
 
 ## `annotatedCodeLocation` object { #annotatedCodeLocation }
@@ -2573,7 +2573,7 @@ A viewer might use this property to offer the user three options for viewing a l
 
 ### `properties` property { #annotatedCodeLocation-properties }
 
-An `annotatedCodeLocation` object may contain a property named `properties`, whose value is a property bag.
+An `annotatedCodeLocation` object may contain a property named `properties`, whose value is a property bag (&sect;[#property-bags]).
 This allows tools to include additional information about the use of the location in this context that is not explicitly specified in the SARIF format.
 
 ## `rule` object { #rule }
@@ -2733,7 +2733,7 @@ and links to additional information about the rule.
 
 ### `properties` property { #rule-properties }
 
-A `rule` object may contain a property named `properties`, whose value is a property bag.
+A `rule` object may contain a property named `properties`, whose value is a property bag (&sect;[#property-bags]).
 This allows tools to include information about the rule that is not explicitly specified in the SARIF format.
 
 ## `formattedMessage` object { #formattedMessage }
