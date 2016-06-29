@@ -1465,6 +1465,13 @@ If the tool detects a misspelled variable name, it should produce a single `resu
 since fixing some but not all of the references would cause a compilation error.
 ~
 
+### `snippet` property { #result-snippet }
+
+A `result` object may contain a property named `snippet` whose value is a string containing
+a source code or other file fragment that illustrates the result,
+for example, the text of the source code line on which the result was detected,
+or a small range of lines surrounding the result location.
+
 ### `toolFingerprintContribution` property { #result-toolFingerprintContribution }
 
 A `result` object may contain a property named `toolFingerprintContribution` whose value is a string
