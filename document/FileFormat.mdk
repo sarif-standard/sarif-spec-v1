@@ -2561,22 +2561,27 @@ If this `annotatedCodeLocation` does not occur within a `codeFlow`, the `importa
 
 If present, the `importance` property shall have one of the following values, with the specified meanings:
 
+* `"important"`: this location is important for understanding the code flow.
+
 * `"essential"`: this location is essential for understanding the code flow.
 
-* `"normal"`: this location is helpful in understanding the code flow.
+* `"unimportant"`: this location contributes to a more detailed understanding of the code flow, but is not normally needed. 
 
-* `"nonessential"`: this location contributes to a more detailed understanding of the code flow, but is not normally needed. 
-
-If this property is absent, it shall be considered to have the value `"normal"`.
+If this property is absent, it shall be considered to have the value `"important"`.
 
 ~ IsoNote
 A viewer might use this property to offer the user three options for viewing a lengthy code flow:
 
-* A "normal view," which omits locations whose `importance` property is `"nonessential"`.
+* A "normal view," which omits locations whose `importance` property is `"unimportant"`.
 * An "abbreviated view," which displays only those locations whose `importance` property is
 `"essential"`.
 * A "verbose view," which displays all the locations in the code flow.
 ~
+
+### `snippet` property { #annotatedCodeLocation-snippet }
+
+An `annotatedCodeLocation` object may contain a property named `snippet` whose value is a string containing
+the text of the source code lines specified by `annotatedCodeLocation.physicalLocation.region`.
 
 ### `properties` property { #annotatedCodeLocation-properties }
 
