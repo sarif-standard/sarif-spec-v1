@@ -30,7 +30,6 @@ There are several issues to consider when producing deterministic output:
 * Avoiding elements of the SARIF file format whose values are non-deterministic.
 * Emitting array and dictionary elements in a deterministic order.
 * Avoiding absolute paths.
-* Emitting case-insensitive string values with deterministic casing.
 * Handling baseline information.
 
 ## Non-deterministic file format elements { - #Annex-E-Elements }
@@ -108,44 +107,6 @@ Tools can achieve this by emitting URIs that are relative to one or more root di
 (for example, a source root directory and an output root directory),
 and accompanying each URI-valued property with a URI base id property (&sect;[#fileFormat-uriBaseIdProperties]). 
 
-## Case-insensitive file format elements { - #Annex-E-Case }
-
-Case-insensitive file systems can also cause non-deterministic output.
-Suppose a URI-valued property contains a file path from a file system that is
-case-preserving but case-insensitive (such as NTFS):
-
-```
-"uri": "file:///C:/Code/File1.c"
-```
-
-Suppose the file is then renamed to `file.c`. NTFS treats `File1.c` and `file1.c` as the same file.
-But a subsequent run of the tool might produce
-
-```
-"uri": "file:///C:/Code/file1.c"
-```
-
-A tool might choose to ignore this issue, since this would happen rarely, and the only
-consequence of ignoring it is that a subsequent step in a build process might execute
-even though it does not strictly have to.
-
-To produce absolutely deterministic output, the tool might instead choose to convert all
-file paths to lowercase or to uppercase, using a locale-insensitive case conversion:
-
-```
-"uri": "file:///C:/code/file1.c"
-```
-
-~IsoNote
-
-On the .NET platform, the recommendation is to convert strings to uppercase
-using the method `String.ToUpperInvariant`, which would result in:
-
-```
-"uri": "file:///C:/CODE/FILE1.C"
-```
-~
-
 ## Compensating for non-deterministic output { - #Annex-E-Compensating }
 
 If an analysis tool does not produce deterministic output,
@@ -159,14 +120,12 @@ There are two scenarios to consider:
 In the first scenario, a post-processing step could
 produce deterministic output by creating a new file that omits non-deterministic elements,
 reorders array elements and object properties,
-removes file path prefixes and introduces `uriBaseId` properties,
-and adjusts the casing of case-insensitive string values.
+removes file path prefixes, and introduces `uriBaseId` properties.
 
 In the second scenario, a post-processing step could intelligently compare the newly produced log
 to the log from a previous build by ignoring non-deterministic elements,
 ensuring that arrays have the same elements regardless of order,
-ignoring file path prefixes,
-and performing case-insensitive comparisons where appropriate.
+and ignoring file path prefixes.
 
 ## Interaction between determinism and baselining { - #Annex-E-Baselining }
 
