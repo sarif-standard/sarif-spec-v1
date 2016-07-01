@@ -57,6 +57,10 @@ nor are hyphen, underscore, or tilde.
 * In the host component, registered names and hexadecimal addresses use lower-case.
 ~
 
+Aside from normalization, tools that produce SARIF files shall not make any other
+changes to the text of the URI; for example, they shall not convert the URI path to
+upper case or to lower case. 
+
 ## URI base id properties { #fileFormat-uriBaseIdProperties }
 
 Certain objects in this specification which have a URI-valued property (&sect;[#fileFormat-uriProperties])
