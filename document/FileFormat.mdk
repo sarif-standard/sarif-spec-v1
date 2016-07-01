@@ -38,7 +38,7 @@ If the URI refers to a file stored on a physical file system, it may be specifie
 that omits root information details
 (such as hard drive letter and an arbitrarily named root directory associated with a source code enlistment).
 
-~ IsoNote
+~ IsoNumberedNote { @IsoNumberedNote=1 }
 An absolute URI may contain information that represents unwanted information disclosure,
 particularly in cases where a tool is analyzing files stored on a physical file system.
 For example, a file path might contain the account name of a developer.
@@ -47,7 +47,7 @@ For example, a file path might contain the account name of a developer.
 Two URIs shall be considered equivalent if their normalized forms are the same
 as described in RFC 3986.
 
-~ IsoNote
+~ IsoNumberedNote
 For example, in the normalized form specified in RFC 3986:
 
 * Percent-encoded characters use upper-case hexadecimal digits.
@@ -59,7 +59,17 @@ nor are hyphen, underscore, or tilde.
 
 Aside from normalization, tools that produce SARIF files shall not make any other
 changes to the text of the URI; for example, they shall not convert the URI path to
-upper case or to lower case. 
+upper case or to lower case.
+
+~ IsoNumberedNote
+This is especially important when the same SARIF file might be consumed on multiple platforms,
+for example, a platform such as Windows, whose NTFS file system is case-insensitive but case-preserving,
+and a platform such as Linux, whose file system is case-sensitive.
+Consider a scenario where a tool runs on a Windows system using NTFS,
+and the tool decides to lower-case the file names in the log.
+If the source files and the SARIF log are transferred to a Linux system,
+the URIs in the log file would not match the path names on the destination system. 
+~
 
 ## URI base id properties { #fileFormat-uriBaseIdProperties }
 
