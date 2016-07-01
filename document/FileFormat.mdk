@@ -67,7 +67,7 @@ for example, a platform such as Windows, whose NTFS file system is case-insensit
 and a platform such as Linux, whose file system is case-sensitive.
 Consider a scenario where a tool runs on a Windows system using NTFS,
 and the tool decides to lower-case the file names in the log.
-If the source files and the SARIF log are transferred to a Linux system,
+If the source files and the SARIF log were transferred to a Linux system,
 the URIs in the log file would not match the path names on the destination system. 
 ~
 
