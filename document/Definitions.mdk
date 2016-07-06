@@ -158,3 +158,6 @@ empty array
 
 empty string
   ~ string that contains no characters, and so has a length of 0
+
+response file
+  ~ file containing arguments for a tool, which are interpreted as if they had appeared directly on the command line

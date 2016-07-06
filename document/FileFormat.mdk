@@ -903,6 +903,31 @@ an analysis run. The value of `commandLine` would have to be combined with infor
 source to allow the run to be repeated.
 ~
 
+### `responseFiles` property { #invocation-responseFiles }
+
+An `invocation` object may contain a property named `responseFiles` whose value is an object,
+each of whose properties represents the contents of a response file specified on the tool's command line.
+
+Each property name in the object shall be the URI of a response file specified on the tool's command line.
+If the absolute location of the file is available, the URI should be an absolute URI;
+otherwise, the URI shall be a relative URI.
+
+Each property value in the object shall be a string containing the textual contents of the file specified by the property name.
+Characters that cannot appear directly in a JSON string shall be escaped as specified in the JSON specification.
+
+~ IsoExample
+
+```
+"invocation": {
+  "commandLine": "/quiet @analyzer.rsp @analyzer-strict.rsp",
+  "responseFiles": {
+    "analyzer.rsp": "/rules:basic\n/out:analyzer.sarif",
+    "analyzer-strict.rsp": "/rules:security /rules:reliability"
+  }
+}
+```
+~
+
 ### `startTime` property { #invocation-startTime }
 
 An `invocation` object may contain a property named `startTime` whose value is a string
