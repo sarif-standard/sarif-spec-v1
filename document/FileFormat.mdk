@@ -313,7 +313,7 @@ additional information not provided by the analysis tool that produced it.
 ### `stableId` property { #run-stableId }
 
 A `run` object may contain a property named `stableId` whose value is a string containing a stable identifier for the run.
-Multiple runs of the same type can have the same `stableId`.
+Multiple runs of the same type may have the same `stableId`.
 
 ~ IsoExample
 
