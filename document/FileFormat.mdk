@@ -1419,7 +1419,7 @@ and is not an observation about the code.
 ```
 ~
 
-If the `level` property is absent, it value shall be considered to be the value of the `defaultLevel` property (&sect;[#rule-defaultLevel])
+If the `level` property is absent, its value shall be considered to be the value of the `defaultLevel` property (&sect;[#rule-defaultLevel])
 of the `rule` object specified by this `result` object's `ruleId` property (&sect;[#result-ruleId]) or `ruleKey` property (&sect;[#result-ruleKey]).
 
 In that case, if the `run` object (&sect;[#run]) containing this result does not include a `rules` property (&sect;[#run-rules]),

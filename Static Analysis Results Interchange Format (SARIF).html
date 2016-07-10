@@ -753,6 +753,7 @@ body.madoko.preview {
 <div class="tocitem"  ><a href="#annex-e-absolutepaths" class="localref">Absolute paths</a></div>
 <div class="tocitem"  ><a href="#annex-e-compensating" class="localref">Compensating for non-deterministic output</a></div>
 <div class="tocitem"  ><a href="#annex-e-baselining" class="localref">Interaction between determinism and baselining</a></div></div>
+<div class="tocitem"  ><a href="#annex-f" class="localref">Annex F (informative) Guidance on fixes</a></div>
 <div class="tocitem"  ><a href="#sec-bibliography" class="localref">Bibliography</a></div></div></nav><h2 id="sec-introduction"  data-line="20;document\Introduction.mdk:1"  style="bookmark:Introduction"><span data-line="20;document\Introduction.mdk:1"></span>Introduction</h2>
 <p data-line="20;document\Introduction.mdk:3"><span data-line="20;document\Introduction.mdk:3"></span>Software developers use a variety of analysis tools to assess the quality of their programs.
 These tools report results which can indicate problems related to program qualities such as correctness, security,
@@ -2237,7 +2238,7 @@ and is not an observation about the code.
             &quot;message&quot;: &quot;Version 11.0 of SuperLint is now available.&quot;
         }
     ]</code></pre></div>
-<p data-line="30;document\FileFormat.mdk:1422"><span data-line="30;document\FileFormat.mdk:1422"></span>If the <span data-line="30;document\FileFormat.mdk:1422"></span><code class="code code1">level</code><span data-line="30;document\FileFormat.mdk:1422"></span> property is absent, it value shall be considered to be the value of the <span data-line="30;document\FileFormat.mdk:1422"></span><code class="code code1">defaultLevel</code><span data-line="30;document\FileFormat.mdk:1422"></span> property (<span data-line="30;document\FileFormat.mdk:1422"></span>&#167;<span data-line="30;document\FileFormat.mdk:1422"></span><a href="#rule-defaultlevel" title="5.22.7.&#8194;defaultLevel property" class="localref" style="target-element:h3"><span class="heading-label">5.22.7</span></a><span data-line="30;document\FileFormat.mdk:1422"></span>)
+<p data-line="30;document\FileFormat.mdk:1422"><span data-line="30;document\FileFormat.mdk:1422"></span>If the <span data-line="30;document\FileFormat.mdk:1422"></span><code class="code code1">level</code><span data-line="30;document\FileFormat.mdk:1422"></span> property is absent, its value shall be considered to be the value of the <span data-line="30;document\FileFormat.mdk:1422"></span><code class="code code1">defaultLevel</code><span data-line="30;document\FileFormat.mdk:1422"></span> property (<span data-line="30;document\FileFormat.mdk:1422"></span>&#167;<span data-line="30;document\FileFormat.mdk:1422"></span><a href="#rule-defaultlevel" title="5.22.7.&#8194;defaultLevel property" class="localref" style="target-element:h3"><span class="heading-label">5.22.7</span></a><span data-line="30;document\FileFormat.mdk:1422"></span>)
 of the <span data-line="30;document\FileFormat.mdk:1423"></span><code class="code code1">rule</code><span data-line="30;document\FileFormat.mdk:1423"></span> object specified by this <span data-line="30;document\FileFormat.mdk:1423"></span><code class="code code1">result</code><span data-line="30;document\FileFormat.mdk:1423"></span> object<span data-line="30;document\FileFormat.mdk:1423"></span>&#39;<span data-line="30;document\FileFormat.mdk:1423"></span>s <span data-line="30;document\FileFormat.mdk:1423"></span><code class="code code1">ruleId</code><span data-line="30;document\FileFormat.mdk:1423"></span> property (<span data-line="30;document\FileFormat.mdk:1423"></span>&#167;<span data-line="30;document\FileFormat.mdk:1423"></span><a href="#result-ruleid" title="5.13.2.&#8194;ruleId property" class="localref" style="target-element:h3"><span class="heading-label">5.13.2</span></a><span data-line="30;document\FileFormat.mdk:1423"></span>) or <span data-line="30;document\FileFormat.mdk:1423"></span><code class="code code1">ruleKey</code><span data-line="30;document\FileFormat.mdk:1423"></span> property (<span data-line="30;document\FileFormat.mdk:1423"></span>&#167;<span data-line="30;document\FileFormat.mdk:1423"></span><a href="#result-rulekey" title="5.13.3.&#8194;ruleKey property" class="localref" style="target-element:h3"><span class="heading-label">5.13.3</span></a><span data-line="30;document\FileFormat.mdk:1423"></span>).
 </p>
 <p class="indent" data-line="30;document\FileFormat.mdk:1425"><span data-line="30;document\FileFormat.mdk:1425"></span>In that case, if the <span data-line="30;document\FileFormat.mdk:1425"></span><code class="code code1">run</code><span data-line="30;document\FileFormat.mdk:1425"></span> object (<span data-line="30;document\FileFormat.mdk:1425"></span>&#167;<span data-line="30;document\FileFormat.mdk:1425"></span><a href="#run" title="5.8.&#8194;run object" class="localref" style="target-element:h2"><span class="heading-label">5.8</span></a><span data-line="30;document\FileFormat.mdk:1425"></span>) containing this result does not include a <span data-line="30;document\FileFormat.mdk:1425"></span><code class="code code1">rules</code><span data-line="30;document\FileFormat.mdk:1425"></span> property (<span data-line="30;document\FileFormat.mdk:1425"></span>&#167;<span data-line="30;document\FileFormat.mdk:1425"></span><a href="#run-rules" title="5.8.15.&#8194;rules property" class="localref" style="target-element:h3"><span class="heading-label">5.8.15</span></a><span data-line="30;document\FileFormat.mdk:1425"></span>),
@@ -3829,11 +3830,11 @@ a service from which rule metadata can be obtained (for example, a result manage
 or a web service dedicated to rule metadata), then tooling can be created to merge
 a log file with the relevant metadata when required (for example, when presenting the
 results in a log file viewer).
-</p><h2 id="annex-e"  data-line="40;document\AnnexE-Determinism:1"  style="bookmark:Annex E (informative) Producing deterministic SARIF log files"><span data-line="40;document\AnnexE-Determinism:1"></span>Annex E (informative) Producing deterministic SARIF log files</h2><h3 id="annex-e-general"  data-line="40;document\AnnexE-Determinism:3"  style="bookmark:General"><span data-line="40;document\AnnexE-Determinism:3"></span>General</h3>
-<p data-line="40;document\AnnexE-Determinism:5"><span data-line="40;document\AnnexE-Determinism:5"></span>In certain circumstances, it is desirable for an analysis tool to produce deterministic output;
+</p><h2 id="annex-e"  data-line="40;document\AnnexE-Determinism.mdk:1"  style="bookmark:Annex E (informative) Producing deterministic SARIF log files"><span data-line="40;document\AnnexE-Determinism.mdk:1"></span>Annex E (informative) Producing deterministic SARIF log files</h2><h3 id="annex-e-general"  data-line="40;document\AnnexE-Determinism.mdk:3"  style="bookmark:General"><span data-line="40;document\AnnexE-Determinism.mdk:3"></span>General</h3>
+<p data-line="40;document\AnnexE-Determinism.mdk:5"><span data-line="40;document\AnnexE-Determinism.mdk:5"></span>In certain circumstances, it is desirable for an analysis tool to produce deterministic output;
 that is, for it to produce identical output when run repeatedly over identical inputs.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:8"><span data-line="40;document\AnnexE-Determinism:8"></span>Certain build systems provide an example of when this is desirable.
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:8"><span data-line="40;document\AnnexE-Determinism.mdk:8"></span>Certain build systems provide an example of when this is desirable.
 Consider a build system that caches the results of each build step.
 If the build is rerun, and the inputs to the step are identical
 (which the build system might determine, for example, by comparing timestamps,
@@ -3841,7 +3842,7 @@ or by computing a hash of the inputs to the step and storing it along with the o
 then the build system can save time by not re-running the step, and simply
 using the existing outputs.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:16"><span data-line="40;document\AnnexE-Determinism:16"></span>In the case of SARIF, one could imagine a sequence of build steps where Steps A
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:16"><span data-line="40;document\AnnexE-Determinism.mdk:16"></span>In the case of SARIF, one could imagine a sequence of build steps where Steps A
 B, and C each run an analysis tool on a different set of targets, producing log files
 A.sarif, B.sarif, and C.sarif, and then build Step D performs an analysis on the aggregate
 of those log files. If the targets analyzed in Step B change
@@ -3849,193 +3850,259 @@ but the targets analyzed in steps A and C do not, and if the contents of the
 SARIF log file are deterministic, then when the build is re-run, only Steps B and D
 need be performed.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:24"><span data-line="40;document\AnnexE-Determinism:24"></span>Authors of analysis tools are encouraged to provide a mechanism
-(for example, a command line option such as <span data-line="40;document\AnnexE-Determinism:25"></span><code class="code code1">--deterministic</code><span data-line="40;document\AnnexE-Determinism:25"></span>) which instructs the tool to
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:24"><span data-line="40;document\AnnexE-Determinism.mdk:24"></span>Authors of analysis tools are encouraged to provide a mechanism
+(for example, a command line option such as <span data-line="40;document\AnnexE-Determinism.mdk:25"></span><code class="code code1">--deterministic</code><span data-line="40;document\AnnexE-Determinism.mdk:25"></span>) which instructs the tool to
 produce deterministic output.
 </p>
-<p class="indent para-continue" data-line="40;document\AnnexE-Determinism:28"><span data-line="40;document\AnnexE-Determinism:28"></span>There are several issues to consider when producing deterministic output:
+<p class="indent para-continue" data-line="40;document\AnnexE-Determinism.mdk:28"><span data-line="40;document\AnnexE-Determinism.mdk:28"></span>There are several issues to consider when producing deterministic output:
 </p>
-<ul class="ul list-star compact" data-line="40;document\AnnexE-Determinism:30">
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:30"><span data-line="40;document\AnnexE-Determinism:30"></span>Avoiding elements of the SARIF file format whose values are non-deterministic.
+<ul class="ul list-star compact" data-line="40;document\AnnexE-Determinism.mdk:30">
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:30"><span data-line="40;document\AnnexE-Determinism.mdk:30"></span>Avoiding elements of the SARIF file format whose values are non-deterministic.
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:31"><span data-line="40;document\AnnexE-Determinism:31"></span>Emitting array and dictionary elements in a deterministic order.
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:31"><span data-line="40;document\AnnexE-Determinism.mdk:31"></span>Emitting array and dictionary elements in a deterministic order.
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:32"><span data-line="40;document\AnnexE-Determinism:32"></span>Avoiding absolute paths.
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:32"><span data-line="40;document\AnnexE-Determinism.mdk:32"></span>Avoiding absolute paths.
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:33"><span data-line="40;document\AnnexE-Determinism:33"></span>Handling baseline information.
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:33"><span data-line="40;document\AnnexE-Determinism.mdk:33"></span>Handling baseline information.
 </li></ul>
-<h3 id="annex-e-elements"  data-line="40;document\AnnexE-Determinism:35"  style="bookmark:Non-deterministic file format elements"><span data-line="40;document\AnnexE-Determinism:35"></span>Non-deterministic file format elements</h3>
-<p data-line="40;document\AnnexE-Determinism:37"><span data-line="40;document\AnnexE-Determinism:37"></span>For a tool to produce deterministic output, it should not emit the following elements
+<h3 id="annex-e-elements"  data-line="40;document\AnnexE-Determinism.mdk:35"  style="bookmark:Non-deterministic file format elements"><span data-line="40;document\AnnexE-Determinism.mdk:35"></span>Non-deterministic file format elements</h3>
+<p data-line="40;document\AnnexE-Determinism.mdk:37"><span data-line="40;document\AnnexE-Determinism.mdk:37"></span>For a tool to produce deterministic output, it should not emit the following elements
 of the SARIF format. All of these elements are optional.
 </p>
-<p class="indent para-continue" data-line="40;document\AnnexE-Determinism:40"><span data-line="40;document\AnnexE-Determinism:40"></span>Not all of these elements are non-deterministic in all cases.
+<p class="indent para-continue" data-line="40;document\AnnexE-Determinism.mdk:40"><span data-line="40;document\AnnexE-Determinism.mdk:40"></span>Not all of these elements are non-deterministic in all cases.
 For example, some build systems might run all builds on the same machine or under the same account.
 However, avoiding these elements, in conjunction with the techniques described in subsequent
 sections of this Annex, guarantees deterministic output.
 </p>
-<ul class="ul list-star compact" data-line="40;document\AnnexE-Determinism:45">
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:45"><span data-line="40;document\AnnexE-Determinism:45"></span><code class="code code1">invocation.startTime</code><span data-line="40;document\AnnexE-Determinism:45"></span>
+<ul class="ul list-star compact" data-line="40;document\AnnexE-Determinism.mdk:45">
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:45"><span data-line="40;document\AnnexE-Determinism.mdk:45"></span><code class="code code1">invocation.startTime</code><span data-line="40;document\AnnexE-Determinism.mdk:45"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:46"><span data-line="40;document\AnnexE-Determinism:46"></span><code class="code code1">invocation.endTime</code><span data-line="40;document\AnnexE-Determinism:46"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:46"><span data-line="40;document\AnnexE-Determinism.mdk:46"></span><code class="code code1">invocation.endTime</code><span data-line="40;document\AnnexE-Determinism.mdk:46"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:47"><span data-line="40;document\AnnexE-Determinism:47"></span><code class="code code1">invocation.processId</code><span data-line="40;document\AnnexE-Determinism:47"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:47"><span data-line="40;document\AnnexE-Determinism.mdk:47"></span><code class="code code1">invocation.processId</code><span data-line="40;document\AnnexE-Determinism.mdk:47"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:48"><span data-line="40;document\AnnexE-Determinism:48"></span><code class="code code1">invocation.machine</code><span data-line="40;document\AnnexE-Determinism:48"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:48"><span data-line="40;document\AnnexE-Determinism.mdk:48"></span><code class="code code1">invocation.machine</code><span data-line="40;document\AnnexE-Determinism.mdk:48"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:49"><span data-line="40;document\AnnexE-Determinism:49"></span><code class="code code1">invocation.account</code><span data-line="40;document\AnnexE-Determinism:49"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:49"><span data-line="40;document\AnnexE-Determinism.mdk:49"></span><code class="code code1">invocation.account</code><span data-line="40;document\AnnexE-Determinism.mdk:49"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:50"><span data-line="40;document\AnnexE-Determinism:50"></span><code class="code code1">invocation.fileName</code><span data-line="40;document\AnnexE-Determinism:50"></span> (because <span data-line="40;document\AnnexE-Determinism:50"></span><code class="code code1">fileName</code><span data-line="40;document\AnnexE-Determinism:50"></span> is specified as being an absolute path, and
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:50"><span data-line="40;document\AnnexE-Determinism.mdk:50"></span><code class="code code1">invocation.fileName</code><span data-line="40;document\AnnexE-Determinism.mdk:50"></span> (because <span data-line="40;document\AnnexE-Determinism.mdk:50"></span><code class="code code1">fileName</code><span data-line="40;document\AnnexE-Determinism.mdk:50"></span> is specified as being an absolute path, and
 tools might be stored in different directories on different machines)
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:52"><span data-line="40;document\AnnexE-Determinism:52"></span><code class="code code1">invocation.workingDirectory</code><span data-line="40;document\AnnexE-Determinism:52"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:52"><span data-line="40;document\AnnexE-Determinism.mdk:52"></span><code class="code code1">invocation.workingDirectory</code><span data-line="40;document\AnnexE-Determinism.mdk:52"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:53"><span data-line="40;document\AnnexE-Determinism:53"></span><code class="code code1">invocation.environmentVariables</code><span data-line="40;document\AnnexE-Determinism:53"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:53"><span data-line="40;document\AnnexE-Determinism.mdk:53"></span><code class="code code1">invocation.environmentVariables</code><span data-line="40;document\AnnexE-Determinism.mdk:53"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:54"><span data-line="40;document\AnnexE-Determinism:54"></span>The use of absolute file paths in <span data-line="40;document\AnnexE-Determinism:54"></span><code class="code code1">invocation.commandLine</code><span data-line="40;document\AnnexE-Determinism:54"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:54"><span data-line="40;document\AnnexE-Determinism.mdk:54"></span>The use of absolute file paths in <span data-line="40;document\AnnexE-Determinism.mdk:54"></span><code class="code code1">invocation.commandLine</code><span data-line="40;document\AnnexE-Determinism.mdk:54"></span>
 (because builds performed on different machines might use a different root directory)
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:56"><span data-line="40;document\AnnexE-Determinism:56"></span><code class="code code1">annotatedCodeLocation.threadId</code><span data-line="40;document\AnnexE-Determinism:56"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:56"><span data-line="40;document\AnnexE-Determinism.mdk:56"></span><code class="code code1">annotatedCodeLocation.threadId</code><span data-line="40;document\AnnexE-Determinism.mdk:56"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:57"><span data-line="40;document\AnnexE-Determinism:57"></span><code class="code code1">notification.threadId</code><span data-line="40;document\AnnexE-Determinism:57"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:57"><span data-line="40;document\AnnexE-Determinism.mdk:57"></span><code class="code code1">notification.threadId</code><span data-line="40;document\AnnexE-Determinism.mdk:57"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:58"><span data-line="40;document\AnnexE-Determinism:58"></span><code class="code code1">notification.time</code><span data-line="40;document\AnnexE-Determinism:58"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:58"><span data-line="40;document\AnnexE-Determinism.mdk:58"></span><code class="code code1">notification.time</code><span data-line="40;document\AnnexE-Determinism.mdk:58"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:59"><span data-line="40;document\AnnexE-Determinism:59"></span><code class="code code1">run.id</code><span data-line="40;document\AnnexE-Determinism:59"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:59"><span data-line="40;document\AnnexE-Determinism.mdk:59"></span><code class="code code1">run.id</code><span data-line="40;document\AnnexE-Determinism.mdk:59"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:60"><span data-line="40;document\AnnexE-Determinism:60"></span><code class="code code1">run.automationId</code><span data-line="40;document\AnnexE-Determinism:60"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:60"><span data-line="40;document\AnnexE-Determinism.mdk:60"></span><code class="code code1">run.automationId</code><span data-line="40;document\AnnexE-Determinism.mdk:60"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:61"><span data-line="40;document\AnnexE-Determinism:61"></span><code class="code code1">run.baselineId</code><span data-line="40;document\AnnexE-Determinism:61"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:61"><span data-line="40;document\AnnexE-Determinism.mdk:61"></span><code class="code code1">run.baselineId</code><span data-line="40;document\AnnexE-Determinism.mdk:61"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:62"><span data-line="40;document\AnnexE-Determinism:62"></span><code class="code code1">stackFrame.threadId</code><span data-line="40;document\AnnexE-Determinism:62"></span>
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:62"><span data-line="40;document\AnnexE-Determinism.mdk:62"></span><code class="code code1">stackFrame.threadId</code><span data-line="40;document\AnnexE-Determinism.mdk:62"></span>
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:63"><span data-line="40;document\AnnexE-Determinism:63"></span><code class="code code1">stackFrame.address</code><span data-line="40;document\AnnexE-Determinism:63"></span> (because security measures such as address space layout randomization (ASLR)
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:63"><span data-line="40;document\AnnexE-Determinism.mdk:63"></span><code class="code code1">stackFrame.address</code><span data-line="40;document\AnnexE-Determinism.mdk:63"></span> (because security measures such as address space layout randomization (ASLR)
 might place identical code at different addresses from run to run)
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:65"><span data-line="40;document\AnnexE-Determinism:65"></span>The presence of any non-deterministic elements in a property bag property
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:65"><span data-line="40;document\AnnexE-Determinism.mdk:65"></span>The presence of any non-deterministic elements in a property bag property
 </li></ul>
-<h3 id="annex-e-ordering"  data-line="40;document\AnnexE-Determinism:67"  style="bookmark:Array and dictionary element ordering"><span data-line="40;document\AnnexE-Determinism:67"></span>Array and dictionary element ordering</h3>
-<p data-line="40;document\AnnexE-Determinism:69"><span data-line="40;document\AnnexE-Determinism:69"></span>For a tool to produce deterministic output, it must emit array and dictionary elements
+<h3 id="annex-e-ordering"  data-line="40;document\AnnexE-Determinism.mdk:67"  style="bookmark:Array and dictionary element ordering"><span data-line="40;document\AnnexE-Determinism.mdk:67"></span>Array and dictionary element ordering</h3>
+<p data-line="40;document\AnnexE-Determinism.mdk:69"><span data-line="40;document\AnnexE-Determinism.mdk:69"></span>For a tool to produce deterministic output, it must emit array and dictionary elements
 in a deterministic order.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:72"><span data-line="40;document\AnnexE-Determinism:72"></span>For some arrays, the SARIF format requires a specific ordering.
-For example, within the <span data-line="40;document\AnnexE-Determinism:73"></span><code class="code code1">stack.Frames</code><span data-line="40;document\AnnexE-Determinism:73"></span> property, SARIF requires the <span data-line="40;document\AnnexE-Determinism:73"></span><code class="code code1">annotatedCodeLocation</code><span data-line="40;document\AnnexE-Determinism:73"></span> object
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:72"><span data-line="40;document\AnnexE-Determinism.mdk:72"></span>For some arrays, the SARIF format requires a specific ordering.
+For example, within the <span data-line="40;document\AnnexE-Determinism.mdk:73"></span><code class="code code1">stack.Frames</code><span data-line="40;document\AnnexE-Determinism.mdk:73"></span> property, SARIF requires the <span data-line="40;document\AnnexE-Determinism.mdk:73"></span><code class="code code1">annotatedCodeLocation</code><span data-line="40;document\AnnexE-Determinism.mdk:73"></span> object
 representing the most deeply nested function call to appear first.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:76"><span data-line="40;document\AnnexE-Determinism:76"></span>For other arrays, the SARIF format does not require a specific ordering.
-For example, within the <span data-line="40;document\AnnexE-Determinism:77"></span><code class="code code1">file.hashes</code><span data-line="40;document\AnnexE-Determinism:77"></span> property, SARIF does not require the <span data-line="40;document\AnnexE-Determinism:77"></span><code class="code code1">hash</code><span data-line="40;document\AnnexE-Determinism:77"></span> objects
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:76"><span data-line="40;document\AnnexE-Determinism.mdk:76"></span>For other arrays, the SARIF format does not require a specific ordering.
+For example, within the <span data-line="40;document\AnnexE-Determinism.mdk:77"></span><code class="code code1">file.hashes</code><span data-line="40;document\AnnexE-Determinism.mdk:77"></span> property, SARIF does not require the <span data-line="40;document\AnnexE-Determinism.mdk:77"></span><code class="code code1">hash</code><span data-line="40;document\AnnexE-Determinism.mdk:77"></span> objects
 to appear in any particular order.
 For such arrays, a tool can ensure the order by sorting the array elements before
 writing them to the log file.
-For example, it might sort the <span data-line="40;document\AnnexE-Determinism:81"></span><code class="code code1">hash</code><span data-line="40;document\AnnexE-Determinism:81"></span> objects alphabetically by the string value of the
-<span data-line="40;document\AnnexE-Determinism:82"></span><code class="code code1">hash.algorithm</code><span data-line="40;document\AnnexE-Determinism:82"></span> property.
+For example, it might sort the <span data-line="40;document\AnnexE-Determinism.mdk:81"></span><code class="code code1">hash</code><span data-line="40;document\AnnexE-Determinism.mdk:81"></span> objects alphabetically by the string value of the
+<span data-line="40;document\AnnexE-Determinism.mdk:82"></span><code class="code code1">hash.algorithm</code><span data-line="40;document\AnnexE-Determinism.mdk:82"></span> property.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:84"><span data-line="40;document\AnnexE-Determinism:84"></span>A tool might similarly choose to emit the string elements of a <span data-line="40;document\AnnexE-Determinism:84"></span><code class="code code1">properties.tags</code><span data-line="40;document\AnnexE-Determinism:84"></span> array in
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:84"><span data-line="40;document\AnnexE-Determinism.mdk:84"></span>A tool might similarly choose to emit the string elements of a <span data-line="40;document\AnnexE-Determinism.mdk:84"></span><code class="code code1">properties.tags</code><span data-line="40;document\AnnexE-Determinism.mdk:84"></span> array in
 locale-insensitive alphabetical order.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:87"><span data-line="40;document\AnnexE-Determinism:87"></span>The array of <span data-line="40;document\AnnexE-Determinism:87"></span><code class="code code1">result</code><span data-line="40;document\AnnexE-Determinism:87"></span> objects presents more of a problem.
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:87"><span data-line="40;document\AnnexE-Determinism.mdk:87"></span>The array of <span data-line="40;document\AnnexE-Determinism.mdk:87"></span><code class="code code1">result</code><span data-line="40;document\AnnexE-Determinism.mdk:87"></span> objects presents more of a problem.
 A multi-threaded analysis tool analyzing multiple files in parallel might produce results
 in any order, and there is no natural order for the results.
 A tool might choose to order them, for example, first alphabetically by analysis target URI,
 then numerically by line number, then by column number, then alphabetically by rule id.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:93"><span data-line="40;document\AnnexE-Determinism:93"></span>For dictionaries such as the <span data-line="40;document\AnnexE-Determinism:93"></span><code class="code code1">run.rules</code><span data-line="40;document\AnnexE-Determinism:93"></span> object or the <span data-line="40;document\AnnexE-Determinism:93"></span><code class="code code1">run.files</code><span data-line="40;document\AnnexE-Determinism:93"></span> object,
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:93"><span data-line="40;document\AnnexE-Determinism.mdk:93"></span>For dictionaries such as the <span data-line="40;document\AnnexE-Determinism.mdk:93"></span><code class="code code1">run.rules</code><span data-line="40;document\AnnexE-Determinism.mdk:93"></span> object or the <span data-line="40;document\AnnexE-Determinism.mdk:93"></span><code class="code code1">run.files</code><span data-line="40;document\AnnexE-Determinism.mdk:93"></span> object,
 a tool might order the property names alphabetically, using a locale-insensitive ordering.
-</p><h3 id="annex-e-absolutepaths"  data-line="40;document\AnnexE-Determinism:96"  style="bookmark:Absolute paths"><span data-line="40;document\AnnexE-Determinism:96"></span>Absolute paths</h3>
-<p class="para-continue" data-line="40;document\AnnexE-Determinism:98"><span data-line="40;document\AnnexE-Determinism:98"></span>The use of absolute file paths in URI-valued properties such as <span data-line="40;document\AnnexE-Determinism:98"></span><code class="code code1">physicalLocation.uri</code><span data-line="40;document\AnnexE-Determinism:98"></span>
+</p><h3 id="annex-e-absolutepaths"  data-line="40;document\AnnexE-Determinism.mdk:96"  style="bookmark:Absolute paths"><span data-line="40;document\AnnexE-Determinism.mdk:96"></span>Absolute paths</h3>
+<p class="para-continue" data-line="40;document\AnnexE-Determinism.mdk:98"><span data-line="40;document\AnnexE-Determinism.mdk:98"></span>The use of absolute file paths in URI-valued properties such as <span data-line="40;document\AnnexE-Determinism.mdk:98"></span><code class="code code1">physicalLocation.uri</code><span data-line="40;document\AnnexE-Determinism.mdk:98"></span>
 makes it difficult to produce deterministic output.
 For example:
 </p>
-<ul class="ul list-star compact" data-line="40;document\AnnexE-Determinism:102">
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:102"><span data-line="40;document\AnnexE-Determinism:102"></span>Different build machines might be configured to use different source directories.
+<ul class="ul list-star compact" data-line="40;document\AnnexE-Determinism.mdk:102">
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:102"><span data-line="40;document\AnnexE-Determinism.mdk:102"></span>Different build machines might be configured to use different source directories.
 </li>
-<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism:103"><span data-line="40;document\AnnexE-Determinism:103"></span>A single build machine might use a different directory for each build.
+<li class="li ul-li list-star-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:103"><span data-line="40;document\AnnexE-Determinism.mdk:103"></span>A single build machine might use a different directory for each build.
 </li></ul>
 
-<p data-line="40;document\AnnexE-Determinism:105"><span data-line="40;document\AnnexE-Determinism:105"></span>For a tool to produce deterministic output, it must avoid the use of absolute file paths.
+<p data-line="40;document\AnnexE-Determinism.mdk:105"><span data-line="40;document\AnnexE-Determinism.mdk:105"></span>For a tool to produce deterministic output, it must avoid the use of absolute file paths.
 Tools can achieve this by emitting URIs that are relative to one or more root directories
 (for example, a source root directory and an output root directory),
-and accompanying each URI-valued property with a URI base id property (<span data-line="40;document\AnnexE-Determinism:108"></span>&#167;<span data-line="40;document\AnnexE-Determinism:108"></span><a href="#fileformat-uribaseidproperties" title="5.3.&#8194;URI base id properties" class="localref" style="target-element:h2"><span class="heading-label">5.3</span></a><span data-line="40;document\AnnexE-Determinism:108"></span>). 
-</p><h3 id="annex-e-compensating"  data-line="40;document\AnnexE-Determinism:110"  style="bookmark:Compensating for non-deterministic output"><span data-line="40;document\AnnexE-Determinism:110"></span>Compensating for non-deterministic output</h3>
-<p data-line="40;document\AnnexE-Determinism:112"><span data-line="40;document\AnnexE-Determinism:112"></span>If an analysis tool does not produce deterministic output,
+and accompanying each URI-valued property with a URI base id property (<span data-line="40;document\AnnexE-Determinism.mdk:108"></span>&#167;<span data-line="40;document\AnnexE-Determinism.mdk:108"></span><a href="#fileformat-uribaseidproperties" title="5.3.&#8194;URI base id properties" class="localref" style="target-element:h2"><span class="heading-label">5.3</span></a><span data-line="40;document\AnnexE-Determinism.mdk:108"></span>). 
+</p><h3 id="annex-e-compensating"  data-line="40;document\AnnexE-Determinism.mdk:110"  style="bookmark:Compensating for non-deterministic output"><span data-line="40;document\AnnexE-Determinism.mdk:110"></span>Compensating for non-deterministic output</h3>
+<p data-line="40;document\AnnexE-Determinism.mdk:112"><span data-line="40;document\AnnexE-Determinism.mdk:112"></span>If an analysis tool does not produce deterministic output,
 a build system can add additional processing steps to compensate.
 </p>
-<p class="indent para-continue" data-line="40;document\AnnexE-Determinism:115"><span data-line="40;document\AnnexE-Determinism:115"></span>There are two scenarios to consider:
+<p class="indent para-continue" data-line="40;document\AnnexE-Determinism.mdk:115"><span data-line="40;document\AnnexE-Determinism.mdk:115"></span>There are two scenarios to consider:
 </p>
-<ol class="ol compact" data-line="40;document\AnnexE-Determinism:117">
-<li class="li ol-li compact-li" data-line="40;document\AnnexE-Determinism:117"><span data-line="40;document\AnnexE-Determinism:117"></span>Log equality is determined by a simple comparison of file contents, or by comparing file hashes.
+<ol class="ol compact" data-line="40;document\AnnexE-Determinism.mdk:117">
+<li class="li ol-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:117"><span data-line="40;document\AnnexE-Determinism.mdk:117"></span>Log equality is determined by a simple comparison of file contents, or by comparing file hashes.
 </li>
-<li class="li ol-li compact-li" data-line="40;document\AnnexE-Determinism:118"><span data-line="40;document\AnnexE-Determinism:118"></span>Log equality is determined by an <span data-line="40;document\AnnexE-Determinism:118"></span>&#8220;intelligent&#8221;<span data-line="40;document\AnnexE-Determinism:118"></span> comparison.
+<li class="li ol-li compact-li" data-line="40;document\AnnexE-Determinism.mdk:118"><span data-line="40;document\AnnexE-Determinism.mdk:118"></span>Log equality is determined by an <span data-line="40;document\AnnexE-Determinism.mdk:118"></span>&#8220;intelligent&#8221;<span data-line="40;document\AnnexE-Determinism.mdk:118"></span> comparison.
 </li></ol>
 
-<p data-line="40;document\AnnexE-Determinism:120"><span data-line="40;document\AnnexE-Determinism:120"></span>In the first scenario, a post-processing step could
+<p data-line="40;document\AnnexE-Determinism.mdk:120"><span data-line="40;document\AnnexE-Determinism.mdk:120"></span>In the first scenario, a post-processing step could
 produce deterministic output by creating a new file that omits non-deterministic elements,
 reorders array elements and object properties,
-removes file path prefixes, and introduces <span data-line="40;document\AnnexE-Determinism:123"></span><code class="code code1">uriBaseId</code><span data-line="40;document\AnnexE-Determinism:123"></span> properties.
+removes file path prefixes, and introduces <span data-line="40;document\AnnexE-Determinism.mdk:123"></span><code class="code code1">uriBaseId</code><span data-line="40;document\AnnexE-Determinism.mdk:123"></span> properties.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:125"><span data-line="40;document\AnnexE-Determinism:125"></span>In the second scenario, a post-processing step could intelligently compare the newly produced log
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:125"><span data-line="40;document\AnnexE-Determinism.mdk:125"></span>In the second scenario, a post-processing step could intelligently compare the newly produced log
 to the log from a previous build by ignoring non-deterministic elements,
 ensuring that arrays have the same elements regardless of order,
 and ignoring file path prefixes.
-</p><h3 id="annex-e-baselining"  data-line="40;document\AnnexE-Determinism:130"  style="bookmark:Interaction between determinism and baselining"><span data-line="40;document\AnnexE-Determinism:130"></span>Interaction between determinism and baselining</h3>
-<p data-line="40;document\AnnexE-Determinism:132"><span data-line="40;document\AnnexE-Determinism:132"></span>SARIF<span data-line="40;document\AnnexE-Determinism:132"></span>&#39;<span data-line="40;document\AnnexE-Determinism:132"></span>s baselining feature poses a particular challenge for determinism.
+</p><h3 id="annex-e-baselining"  data-line="40;document\AnnexE-Determinism.mdk:130"  style="bookmark:Interaction between determinism and baselining"><span data-line="40;document\AnnexE-Determinism.mdk:130"></span>Interaction between determinism and baselining</h3>
+<p data-line="40;document\AnnexE-Determinism.mdk:132"><span data-line="40;document\AnnexE-Determinism.mdk:132"></span>SARIF<span data-line="40;document\AnnexE-Determinism.mdk:132"></span>&#39;<span data-line="40;document\AnnexE-Determinism.mdk:132"></span>s baselining feature poses a particular challenge for determinism.
 We illustrate the problem with the following scenario:
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:135"><span data-line="40;document\AnnexE-Determinism:135"></span>On a particular date, a project<span data-line="40;document\AnnexE-Determinism:135"></span>&#39;<span data-line="40;document\AnnexE-Determinism:135"></span>s nightly build runs an analysis tool ToolX,
-which produces a log file, say, <span data-line="40;document\AnnexE-Determinism:136"></span><code class="code code1">log_20160614.sarif</code><span data-line="40;document\AnnexE-Determinism:136"></span>.
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:135"><span data-line="40;document\AnnexE-Determinism.mdk:135"></span>On a particular date, a project<span data-line="40;document\AnnexE-Determinism.mdk:135"></span>&#39;<span data-line="40;document\AnnexE-Determinism.mdk:135"></span>s nightly build runs an analysis tool ToolX,
+which produces a log file, say, <span data-line="40;document\AnnexE-Determinism.mdk:136"></span><code class="code code1">log_20160614.sarif</code><span data-line="40;document\AnnexE-Determinism.mdk:136"></span>.
 The next day, a developer modifies one of the files scanned by the tool
 in a way that introduces a new problem.
 That night, the nightly build tool runs again, this time producing a log file which
 compares the current set of results to those that appeared in the previous run:
 </p>
-<pre class="para-block pre-fenced pre-fenced3" data-line="40;document\AnnexE-Determinism:141" data-line-code="40;document\AnnexE-Determinism:142"><code data-line="40;document\AnnexE-Determinism:142">ToolX --input a.c b.c --baseline log_20160614.sarif --output log_20160615.sarif</code></pre>
-<p data-line="40;document\AnnexE-Determinism:144"><span data-line="40;document\AnnexE-Determinism:144"></span>Because a new problem has been introduced, <span data-line="40;document\AnnexE-Determinism:144"></span><code class="code code1">log_20160614.sarif</code><span data-line="40;document\AnnexE-Determinism:144"></span> will contain a <span data-line="40;document\AnnexE-Determinism:144"></span><code class="code code1">result</code><span data-line="40;document\AnnexE-Determinism:144"></span> object
-whose <span data-line="40;document\AnnexE-Determinism:145"></span><code class="code code1">baselineState</code><span data-line="40;document\AnnexE-Determinism:145"></span> is <span data-line="40;document\AnnexE-Determinism:145"></span><code class="code code1">&quot;new&quot;</code><span data-line="40;document\AnnexE-Determinism:145"></span>.
+<pre class="para-block pre-fenced pre-fenced3" data-line="40;document\AnnexE-Determinism.mdk:141" data-line-code="40;document\AnnexE-Determinism.mdk:142"><code data-line="40;document\AnnexE-Determinism.mdk:142">ToolX --input a.c b.c --baseline log_20160614.sarif --output log_20160615.sarif</code></pre>
+<p data-line="40;document\AnnexE-Determinism.mdk:144"><span data-line="40;document\AnnexE-Determinism.mdk:144"></span>Because a new problem has been introduced, <span data-line="40;document\AnnexE-Determinism.mdk:144"></span><code class="code code1">log_20160614.sarif</code><span data-line="40;document\AnnexE-Determinism.mdk:144"></span> will contain a <span data-line="40;document\AnnexE-Determinism.mdk:144"></span><code class="code code1">result</code><span data-line="40;document\AnnexE-Determinism.mdk:144"></span> object
+whose <span data-line="40;document\AnnexE-Determinism.mdk:145"></span><code class="code code1">baselineState</code><span data-line="40;document\AnnexE-Determinism.mdk:145"></span> is <span data-line="40;document\AnnexE-Determinism.mdk:145"></span><code class="code code1">&quot;new&quot;</code><span data-line="40;document\AnnexE-Determinism.mdk:145"></span>.
 The next night, without any further changes to the source files, the tool is run yet again:
 </p>
-<pre class="para-block pre-fenced pre-fenced3" data-line="40;document\AnnexE-Determinism:147" data-line-code="40;document\AnnexE-Determinism:148"><code data-line="40;document\AnnexE-Determinism:148">ToolX --input a.c b.c --baseline log_20160615.sarif --output log_20160616.sarif</code></pre>
-<p data-line="40;document\AnnexE-Determinism:150"><span data-line="40;document\AnnexE-Determinism:150"></span>The <span data-line="40;document\AnnexE-Determinism:150"></span><code class="code code1">result</code><span data-line="40;document\AnnexE-Determinism:150"></span> object that first appeared in <span data-line="40;document\AnnexE-Determinism:150"></span><code class="code code1">log_20160615.sarif</code><span data-line="40;document\AnnexE-Determinism:150"></span> still appears in <span data-line="40;document\AnnexE-Determinism:150"></span><code class="code code1">log_20160616.sarif</code><span data-line="40;document\AnnexE-Determinism:150"></span>,
-but since it existed in the baseline, its <span data-line="40;document\AnnexE-Determinism:151"></span><code class="code code1">baselineState</code><span data-line="40;document\AnnexE-Determinism:151"></span> will now be <span data-line="40;document\AnnexE-Determinism:151"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism:151"></span>.
+<pre class="para-block pre-fenced pre-fenced3" data-line="40;document\AnnexE-Determinism.mdk:147" data-line-code="40;document\AnnexE-Determinism.mdk:148"><code data-line="40;document\AnnexE-Determinism.mdk:148">ToolX --input a.c b.c --baseline log_20160615.sarif --output log_20160616.sarif</code></pre>
+<p data-line="40;document\AnnexE-Determinism.mdk:150"><span data-line="40;document\AnnexE-Determinism.mdk:150"></span>The <span data-line="40;document\AnnexE-Determinism.mdk:150"></span><code class="code code1">result</code><span data-line="40;document\AnnexE-Determinism.mdk:150"></span> object that first appeared in <span data-line="40;document\AnnexE-Determinism.mdk:150"></span><code class="code code1">log_20160615.sarif</code><span data-line="40;document\AnnexE-Determinism.mdk:150"></span> still appears in <span data-line="40;document\AnnexE-Determinism.mdk:150"></span><code class="code code1">log_20160616.sarif</code><span data-line="40;document\AnnexE-Determinism.mdk:150"></span>,
+but since it existed in the baseline, its <span data-line="40;document\AnnexE-Determinism.mdk:151"></span><code class="code code1">baselineState</code><span data-line="40;document\AnnexE-Determinism.mdk:151"></span> will now be <span data-line="40;document\AnnexE-Determinism.mdk:151"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism.mdk:151"></span>.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:153"><span data-line="40;document\AnnexE-Determinism:153"></span>The result is that even though none of the analysis target files have changed,
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:153"><span data-line="40;document\AnnexE-Determinism.mdk:153"></span>The result is that even though none of the analysis target files have changed,
 the log file has changed, or at least, a simple file comparison (such as comparing the hash
 of the new log with the hash of the baseline) will report that is has changed.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:157"><span data-line="40;document\AnnexE-Determinism:157"></span>Strictly speaking, this does not violate determinism. After all, the baseline file has changed,
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:157"><span data-line="40;document\AnnexE-Determinism.mdk:157"></span>Strictly speaking, this does not violate determinism. After all, the baseline file has changed,
 and the baseline file is one of the inputs to the analysis.
 But from a practical standpoint, this is still a problem, albeit a small one.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:161"><span data-line="40;document\AnnexE-Determinism:161"></span>If the build uses a simple mechanism such as hash value comparison to determine if a file has changed,
-then on those occasions when the <span data-line="40;document\AnnexE-Determinism:162"></span><em>only</em><span data-line="40;document\AnnexE-Determinism:162"></span> difference between the newest log and the baseline
-is that some results that were previously <span data-line="40;document\AnnexE-Determinism:163"></span><code class="code code1">&quot;new&quot;</code><span data-line="40;document\AnnexE-Determinism:163"></span> are now <span data-line="40;document\AnnexE-Determinism:163"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism:163"></span>,
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:161"><span data-line="40;document\AnnexE-Determinism.mdk:161"></span>If the build uses a simple mechanism such as hash value comparison to determine if a file has changed,
+then on those occasions when the <span data-line="40;document\AnnexE-Determinism.mdk:162"></span><em>only</em><span data-line="40;document\AnnexE-Determinism.mdk:162"></span> difference between the newest log and the baseline
+is that some results that were previously <span data-line="40;document\AnnexE-Determinism.mdk:163"></span><code class="code code1">&quot;new&quot;</code><span data-line="40;document\AnnexE-Determinism.mdk:163"></span> are now <span data-line="40;document\AnnexE-Determinism.mdk:163"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism.mdk:163"></span>,
 subsequent build steps which consume the SARIF log file will run, even if they might not actually be necessary.
 For example, a build step which automatically files bugs for new results will run, even though
 the log contains no new results.
 Or a build step which tracks the number of open issues will run,
 even though the number of open issues has not actually changed.
 </p>
-<p class="indent" data-line="40;document\AnnexE-Determinism:170"><span data-line="40;document\AnnexE-Determinism:170"></span>If the build engineers for a project wish to absolutely minimize the execution of unnecessary build steps,
+<p class="indent" data-line="40;document\AnnexE-Determinism.mdk:170"><span data-line="40;document\AnnexE-Determinism.mdk:170"></span>If the build engineers for a project wish to absolutely minimize the execution of unnecessary build steps,
 they have various options.
-They might perform an <span data-line="40;document\AnnexE-Determinism:172"></span>&#8220;intelligent&#8221;<span data-line="40;document\AnnexE-Determinism:172"></span> comparison between the baseline and the new log, treating
-<span data-line="40;document\AnnexE-Determinism:173"></span><code class="code code1">&quot;new&quot;</code><span data-line="40;document\AnnexE-Determinism:173"></span> results in the baseline as equivalent to <span data-line="40;document\AnnexE-Determinism:173"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism:173"></span> results.
-Or they might rewrite the baseline (marking all <span data-line="40;document\AnnexE-Determinism:174"></span><code class="code code1">&quot;new&quot;</code><span data-line="40;document\AnnexE-Determinism:174"></span> results as <span data-line="40;document\AnnexE-Determinism:174"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism:174"></span>) before performing
+They might perform an <span data-line="40;document\AnnexE-Determinism.mdk:172"></span>&#8220;intelligent&#8221;<span data-line="40;document\AnnexE-Determinism.mdk:172"></span> comparison between the baseline and the new log, treating
+<span data-line="40;document\AnnexE-Determinism.mdk:173"></span><code class="code code1">&quot;new&quot;</code><span data-line="40;document\AnnexE-Determinism.mdk:173"></span> results in the baseline as equivalent to <span data-line="40;document\AnnexE-Determinism.mdk:173"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism.mdk:173"></span> results.
+Or they might rewrite the baseline (marking all <span data-line="40;document\AnnexE-Determinism.mdk:174"></span><code class="code code1">&quot;new&quot;</code><span data-line="40;document\AnnexE-Determinism.mdk:174"></span> results as <span data-line="40;document\AnnexE-Determinism.mdk:174"></span><code class="code code1">&quot;existing&quot;</code><span data-line="40;document\AnnexE-Determinism.mdk:174"></span>) before performing
 the comparison.
-Of course, there is no guarantee that such an <span data-line="40;document\AnnexE-Determinism:176"></span>&#8220;intelligent&#8221;<span data-line="40;document\AnnexE-Determinism:176"></span> comparison or baseline rewriting process will actually take less time
+Of course, there is no guarantee that such an <span data-line="40;document\AnnexE-Determinism.mdk:176"></span>&#8220;intelligent&#8221;<span data-line="40;document\AnnexE-Determinism.mdk:176"></span> comparison or baseline rewriting process will actually take less time
 than the unnecessary build steps it is intended to avoid.
-</p><h2 id="sec-bibliography"  data-line="42;document\Bibliography.mdk:1"  style="bookmark:Bibliography"><span data-line="42;document\Bibliography.mdk:1"></span>Bibliography</h2>
-<p data-line="42;document\Bibliography.mdk:3"><span data-line="42;document\Bibliography.mdk:3"></span>ISO/IEC 9899, <span data-line="42;document\Bibliography.mdk:3"></span><em>Information technology - Programming languages – C</em><span data-line="42;document\Bibliography.mdk:3"></span>
+</p><h2 id="annex-f"  data-line="42;document\AnnexF-Fixes.mdk:1"  style="bookmark:Annex F (informative) Guidance on fixes"><span data-line="42;document\AnnexF-Fixes.mdk:1"></span>Annex F (informative) Guidance on fixes</h2>
+<p data-line="42;document\AnnexF-Fixes.mdk:3"><span data-line="42;document\AnnexF-Fixes.mdk:3"></span>Tools that produce SARIF files which include <span data-line="42;document\AnnexF-Fixes.mdk:3"></span><code class="code code1">fix</code><span data-line="42;document\AnnexF-Fixes.mdk:3"></span> objects should take care to structure
+those fixes in such a way as to affect a minimal range of bytes.
+This maximizes the likelihood that an automated tool can safely apply multiple fixes to the same file.
 </p>
-<p class="indent" data-line="42;document\Bibliography.mdk:5"><span data-line="42;document\Bibliography.mdk:5"></span>ISO/IEC 14882, <span data-line="42;document\Bibliography.mdk:5"></span><em>Information technology - Programming languages - C++</em><span data-line="42;document\Bibliography.mdk:5"></span>
+<p class="indent" data-line="42;document\AnnexF-Fixes.mdk:7"><span data-line="42;document\AnnexF-Fixes.mdk:7"></span>The following example will clarify what this means and why it is important. 
+Consider an XML file containing the following element:
 </p>
-<p class="indent" data-line="42;document\Bibliography.mdk:7"><span data-line="42;document\Bibliography.mdk:7"></span>ISO/IEC 23270, <span data-line="42;document\Bibliography.mdk:7"></span><em>Information technology - Programming languages - C#</em><span data-line="42;document\Bibliography.mdk:7"></span>
+<pre class="para-block pre-fenced pre-fenced3" data-line="42;document\AnnexF-Fixes.mdk:10" data-line-code="42;document\AnnexF-Fixes.mdk:11"><code data-line="42;document\AnnexF-Fixes.mdk:11">    &lt;lineItem partNumber=A3101 /&gt;</code></pre>
+<p class="para-continue" data-line="42;document\AnnexF-Fixes.mdk:14"><span data-line="42;document\AnnexF-Fixes.mdk:14"></span>Suppose that a (domain-specific) XML scanning tool reported two results:
 </p>
-<p class="indent" data-line="42;document\Bibliography.mdk:9"><span data-line="42;document\Bibliography.mdk:9"></span>RFC 2045, <span data-line="42;document\Bibliography.mdk:9"></span><em>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies</em><span data-line="42;document\Bibliography.mdk:9"></span>.
-Available from <span data-line="42;document\Bibliography.mdk:10"></span>&#60;<span data-line="42;document\Bibliography.mdk:10"></span><a href="https://tools.ietf.org/html/rfc2045">https://tools.ietf.org/html/rfc2045</a><span data-line="42;document\Bibliography.mdk:10"></span>&#62;<span data-line="42;document\Bibliography.mdk:10"></span>
+<ol class="ol loose" data-line="42;document\AnnexF-Fixes.mdk:16">
+<li class="li ol-li loose-li" data-line="42;document\AnnexF-Fixes.mdk:16">
+<p data-line="42;document\AnnexF-Fixes.mdk:16"><span data-line="42;document\AnnexF-Fixes.mdk:16"></span>The value of the <span data-line="42;document\AnnexF-Fixes.mdk:16"></span><code class="code code1">partNumber</code><span data-line="42;document\AnnexF-Fixes.mdk:16"></span> attribute is not enclosed in quotes.
+</p></li>
+<li class="li ol-li loose-li" data-line="42;document\AnnexF-Fixes.mdk:18">
+<p data-line="42;document\AnnexF-Fixes.mdk:18"><span data-line="42;document\AnnexF-Fixes.mdk:18"></span>The part numbering scheme has changed, and part numbers beginning with <span data-line="42;document\AnnexF-Fixes.mdk:18"></span>&#8220;A&#8221;<span data-line="42;document\AnnexF-Fixes.mdk:18"></span> now begin with <span data-line="42;document\AnnexF-Fixes.mdk:18"></span>&#8220;AA&#8221;<span data-line="42;document\AnnexF-Fixes.mdk:18"></span>.
+</p></li></ol>
+
+<p data-line="42;document\AnnexF-Fixes.mdk:20"><span data-line="42;document\AnnexF-Fixes.mdk:20"></span>Fixing only result <span data-line="42;document\AnnexF-Fixes.mdk:20"></span>#<span data-line="42;document\AnnexF-Fixes.mdk:20"></span>1 would produce the element
 </p>
-<p class="indent" data-line="42;document\Bibliography.mdk:12"><span data-line="42;document\Bibliography.mdk:12"></span>RFC 3066, <span data-line="42;document\Bibliography.mdk:12"></span><em>Tags for the Identification of Languages</em><span data-line="42;document\Bibliography.mdk:12"></span>.
-Available from <span data-line="42;document\Bibliography.mdk:13"></span>&#60;<span data-line="42;document\Bibliography.mdk:13"></span><a href="https://www.ietf.org/rfc/rfc3066.txt">https://www.ietf.org/rfc/rfc3066.txt</a><span data-line="42;document\Bibliography.mdk:13"></span>&#62;<span data-line="42;document\Bibliography.mdk:13"></span>
+<pre class="para-block pre-fenced pre-fenced3" data-line="42;document\AnnexF-Fixes.mdk:22" data-line-code="42;document\AnnexF-Fixes.mdk:23"><code data-line="42;document\AnnexF-Fixes.mdk:23">    &lt;lineItem partNumber=&quot;A3101&quot; /&gt;</code></pre>
+<p data-line="42;document\AnnexF-Fixes.mdk:26"><span data-line="42;document\AnnexF-Fixes.mdk:26"></span>Fixing only result <span data-line="42;document\AnnexF-Fixes.mdk:26"></span>#<span data-line="42;document\AnnexF-Fixes.mdk:26"></span>2 would produce the element
 </p>
-<p class="indent" data-line="42;document\Bibliography.mdk:15"><span data-line="42;document\Bibliography.mdk:15"></span>RFC 3629, <span data-line="42;document\Bibliography.mdk:15"></span><em>UTF-8, a transformation format of ISO 10646</em><span data-line="42;document\Bibliography.mdk:15"></span>.
-Available from <span data-line="42;document\Bibliography.mdk:16"></span>&#60;<span data-line="42;document\Bibliography.mdk:16"></span><a href="https://tools.ietf.org/html/rfc3629">https://tools.ietf.org/html/rfc3629</a><span data-line="42;document\Bibliography.mdk:16"></span>&#62;<span data-line="42;document\Bibliography.mdk:16"></span>
+<pre class="para-block pre-fenced pre-fenced3" data-line="42;document\AnnexF-Fixes.mdk:28" data-line-code="42;document\AnnexF-Fixes.mdk:29"><code data-line="42;document\AnnexF-Fixes.mdk:29">    &lt;lineItem partNumber=AA3101 /&gt;</code></pre>
+<p data-line="42;document\AnnexF-Fixes.mdk:32"><span data-line="42;document\AnnexF-Fixes.mdk:32"></span>Fixing both results would produce the element
+</p>
+<pre class="para-block pre-fenced pre-fenced3" data-line="42;document\AnnexF-Fixes.mdk:34" data-line-code="42;document\AnnexF-Fixes.mdk:35"><code data-line="42;document\AnnexF-Fixes.mdk:35">    &lt;lineItem partNumber=&quot;AA3101&quot; /&gt;</code></pre>
+<p class="para-continue" data-line="42;document\AnnexF-Fixes.mdk:38"><span data-line="42;document\AnnexF-Fixes.mdk:38"></span>The fix for result <span data-line="42;document\AnnexF-Fixes.mdk:38"></span>#<span data-line="42;document\AnnexF-Fixes.mdk:38"></span>1 might be specified in various ways, for example:
+</p>
+<ol class="ol loose" data-line="42;document\AnnexF-Fixes.mdk:40">
+<li class="li ol-li loose-li" data-line="42;document\AnnexF-Fixes.mdk:40">
+<p data-line="42;document\AnnexF-Fixes.mdk:40"><span data-line="42;document\AnnexF-Fixes.mdk:40"></span>As a single replacement:
+</p>
+<ul class="ul list-star compact" data-line="42;document\AnnexF-Fixes.mdk:42">
+<li class="li ul-li list-star-li compact-li" data-line="42;document\AnnexF-Fixes.mdk:42"><span data-line="42;document\AnnexF-Fixes.mdk:42"></span>Replace the characters <span data-line="42;document\AnnexF-Fixes.mdk:42"></span><code class="code code1">A3101</code><span data-line="42;document\AnnexF-Fixes.mdk:42"></span> with the characters <span data-line="42;document\AnnexF-Fixes.mdk:42"></span><code class="code code1">&quot;A3101&quot;</code><span data-line="42;document\AnnexF-Fixes.mdk:42"></span>.
+</li></ul>
+</li>
+<li class="li ol-li loose-li" data-line="42;document\AnnexF-Fixes.mdk:44">
+<p data-line="42;document\AnnexF-Fixes.mdk:44"><span data-line="42;document\AnnexF-Fixes.mdk:44"></span>As a sequence of two replacements:
+</p>
+<ol class="ol compact" data-line="42;document\AnnexF-Fixes.mdk:46">
+<li class="li ol-li compact-li" data-line="42;document\AnnexF-Fixes.mdk:46"><span data-line="42;document\AnnexF-Fixes.mdk:46"></span>Insert a quotation mark before <span data-line="42;document\AnnexF-Fixes.mdk:46"></span><code class="code code1">A3101</code><span data-line="42;document\AnnexF-Fixes.mdk:46"></span>.
+</li>
+<li class="li ol-li compact-li" data-line="42;document\AnnexF-Fixes.mdk:47"><span data-line="42;document\AnnexF-Fixes.mdk:47"></span>Insert a quotation mark after <span data-line="42;document\AnnexF-Fixes.mdk:47"></span><code class="code code1">A3101</code><span data-line="42;document\AnnexF-Fixes.mdk:47"></span>.
+</li></ol>
+</li></ol>
+
+<p class="para-continue" data-line="42;document\AnnexF-Fixes.mdk:49"><span data-line="42;document\AnnexF-Fixes.mdk:49"></span>The fix for result <span data-line="42;document\AnnexF-Fixes.mdk:49"></span>#<span data-line="42;document\AnnexF-Fixes.mdk:49"></span>2 is most simply specified as a single replacement:
+</p>
+<ul class="ul list-star compact" data-line="42;document\AnnexF-Fixes.mdk:51">
+<li class="li ul-li list-star-li compact-li" data-line="42;document\AnnexF-Fixes.mdk:51"><span data-line="42;document\AnnexF-Fixes.mdk:51"></span>Replace the characters <span data-line="42;document\AnnexF-Fixes.mdk:51"></span><code class="code code1">A3101</code><span data-line="42;document\AnnexF-Fixes.mdk:51"></span> with the characters <span data-line="42;document\AnnexF-Fixes.mdk:51"></span><code class="code code1">AA3101</code><span data-line="42;document\AnnexF-Fixes.mdk:51"></span>.
+</li></ul>
+
+<p data-line="42;document\AnnexF-Fixes.mdk:53"><span data-line="42;document\AnnexF-Fixes.mdk:53"></span>Suppose there exists an automated tool which reads a SARIF file containing <span data-line="42;document\AnnexF-Fixes.mdk:53"></span><code class="code code1">fix</code><span data-line="42;document\AnnexF-Fixes.mdk:53"></span> objects
+and applies as many of the specified fixes as possible to the source files.
+</p>
+<p class="indent" data-line="42;document\AnnexF-Fixes.mdk:56"><span data-line="42;document\AnnexF-Fixes.mdk:56"></span>If the fix for result <span data-line="42;document\AnnexF-Fixes.mdk:56"></span>#<span data-line="42;document\AnnexF-Fixes.mdk:56"></span>1 were structured as a single replacement, then after applying the fix,
+the tool would not be able to fix result <span data-line="42;document\AnnexF-Fixes.mdk:57"></span>#<span data-line="42;document\AnnexF-Fixes.mdk:57"></span>2, because the range of characters specified by the fix
+for result <span data-line="42;document\AnnexF-Fixes.mdk:58"></span>#<span data-line="42;document\AnnexF-Fixes.mdk:58"></span>2 would have been replaced.
+On the other hand, if the fix for result <span data-line="42;document\AnnexF-Fixes.mdk:59"></span>#<span data-line="42;document\AnnexF-Fixes.mdk:59"></span>1 were structured
+as two replacements (with a separate insertion for each quotation mark), the tool would still be
+able to apply the fix for result <span data-line="42;document\AnnexF-Fixes.mdk:61"></span>#<span data-line="42;document\AnnexF-Fixes.mdk:61"></span>2, because the targeted range of characters would still exist.
+</p>
+<p class="indent" data-line="42;document\AnnexF-Fixes.mdk:63"><span data-line="42;document\AnnexF-Fixes.mdk:63"></span>Therefore structuring fixes as sequences of minimal, disjoint byte range replacements
+maximizes the amount of work that can be done by automated fixup tools.
+</p><h2 id="sec-bibliography"  data-line="44;document\Bibliography.mdk:1"  style="bookmark:Bibliography"><span data-line="44;document\Bibliography.mdk:1"></span>Bibliography</h2>
+<p data-line="44;document\Bibliography.mdk:3"><span data-line="44;document\Bibliography.mdk:3"></span>ISO/IEC 9899, <span data-line="44;document\Bibliography.mdk:3"></span><em>Information technology - Programming languages – C</em><span data-line="44;document\Bibliography.mdk:3"></span>
+</p>
+<p class="indent" data-line="44;document\Bibliography.mdk:5"><span data-line="44;document\Bibliography.mdk:5"></span>ISO/IEC 14882, <span data-line="44;document\Bibliography.mdk:5"></span><em>Information technology - Programming languages - C++</em><span data-line="44;document\Bibliography.mdk:5"></span>
+</p>
+<p class="indent" data-line="44;document\Bibliography.mdk:7"><span data-line="44;document\Bibliography.mdk:7"></span>ISO/IEC 23270, <span data-line="44;document\Bibliography.mdk:7"></span><em>Information technology - Programming languages - C#</em><span data-line="44;document\Bibliography.mdk:7"></span>
+</p>
+<p class="indent" data-line="44;document\Bibliography.mdk:9"><span data-line="44;document\Bibliography.mdk:9"></span>RFC 2045, <span data-line="44;document\Bibliography.mdk:9"></span><em>Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies</em><span data-line="44;document\Bibliography.mdk:9"></span>.
+Available from <span data-line="44;document\Bibliography.mdk:10"></span>&#60;<span data-line="44;document\Bibliography.mdk:10"></span><a href="https://tools.ietf.org/html/rfc2045">https://tools.ietf.org/html/rfc2045</a><span data-line="44;document\Bibliography.mdk:10"></span>&#62;<span data-line="44;document\Bibliography.mdk:10"></span>
+</p>
+<p class="indent" data-line="44;document\Bibliography.mdk:12"><span data-line="44;document\Bibliography.mdk:12"></span>RFC 3066, <span data-line="44;document\Bibliography.mdk:12"></span><em>Tags for the Identification of Languages</em><span data-line="44;document\Bibliography.mdk:12"></span>.
+Available from <span data-line="44;document\Bibliography.mdk:13"></span>&#60;<span data-line="44;document\Bibliography.mdk:13"></span><a href="https://www.ietf.org/rfc/rfc3066.txt">https://www.ietf.org/rfc/rfc3066.txt</a><span data-line="44;document\Bibliography.mdk:13"></span>&#62;<span data-line="44;document\Bibliography.mdk:13"></span>
+</p>
+<p class="indent" data-line="44;document\Bibliography.mdk:15"><span data-line="44;document\Bibliography.mdk:15"></span>RFC 3629, <span data-line="44;document\Bibliography.mdk:15"></span><em>UTF-8, a transformation format of ISO 10646</em><span data-line="44;document\Bibliography.mdk:15"></span>.
+Available from <span data-line="44;document\Bibliography.mdk:16"></span>&#60;<span data-line="44;document\Bibliography.mdk:16"></span><a href="https://tools.ietf.org/html/rfc3629">https://tools.ietf.org/html/rfc3629</a><span data-line="44;document\Bibliography.mdk:16"></span>&#62;<span data-line="44;document\Bibliography.mdk:16"></span>
 </p><span data-line=""></span>
 </body>
 
