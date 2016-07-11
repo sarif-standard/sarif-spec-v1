@@ -329,8 +329,11 @@ Multiple runs of the same type may have the same `stableId`.
 A `run` object may contain a property named `baselineId` whose value is a string which shall match
 the `id` property (&sect;[#run-id]) of some previous run.
 
-If the `baselineId` property is present, the `baselineState` property (&sect;[#result-baselineState]) of every `result` object (&sect;[#result])
+If the `baselineId` property is present, the `result.baselineState` property (&sect;[#result-baselineState]) of every `result` object (&sect;[#result])
 in the current run shall be computed with respect to the run specified by `baselineId`.
+
+If the `baselineId` property is absent, there must be out of band information available
+to determine the run with respect to which `result.baselineState` has been computed.
 
 ### `automationId` property { #run-automationId }
 
@@ -1678,11 +1681,14 @@ in that database, then the `suppressionStates` array shall not include the value
 
 ### `baselineState` property { #result-baselineState }
 
-If the `baselineId` property (&sect;[#run-baselineId]) of the current `run` object (&sect;[#run]) is present,
-then the `result` object may contain a property named `baselineState` whose value is a string that shall specify
-the state of this `result` with respect to the run specified by `baselineId`.
+A `result` object may contain a property named `baselineState` whose value is a string that specifies
+the state of this `result` with respect to some previous run.
 
-If the `run.baselineId` property is absent, the `baselineState` property shall be absent.
+If the `run.baselineId` property (&sect;[#run-baselineId]) of the current run is present, the `baselineState` property
+shall be computed with respect to the run specified by `run.baselineId`.
+
+If the `run.baselineId` property of the current run is absent, then there must be out of band information
+available to determine the run with respect to which the `baselineState` property has been computed.
 
 This property shall have one of the following values, with the specified meanings:
 
