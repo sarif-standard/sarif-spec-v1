@@ -1274,7 +1274,7 @@ A `result` object describes a single result detected by an analysis tool.
 
 ### `ruleId` property { #result-ruleId }
 
-Depending on the circumstances, a `rule` object either shall, may, or shall not contain
+Depending on the circumstances, a `rule` object either shall or shall not contain
 a property named `ruleId` whose value is a string containing
 the stable, opaque identifier for the rule that was evaluated to produce the result.
 
@@ -1282,11 +1282,8 @@ the stable, opaque identifier for the rule that was evaluated to produce the res
 `"CA2101"`
 ~
 
-If the log was created by an analysis tool (as opposed to a conversion tool), and if the `level` property (&sect;[#result-level]) is anything other than `note`,
+If the log was created by an analysis tool (as opposed to a conversion tool),
 then `ruleId` shall be present.
-
-If the `level` property of the `result` object is `note`,
-then the `ruleId` property may be present.
 
 Not all existing analysis tools emit the equivalent of a `ruleId` in their output.
 A conversion tool which converts the output of such an analysis tool to the SARIF format
