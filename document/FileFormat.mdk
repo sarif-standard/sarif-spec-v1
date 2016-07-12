@@ -2637,6 +2637,24 @@ the fully qualified logical name of the function being called.
 
 If the value of the `kind` property is anything other than `call`, the `callee` property shall be absent.
 
+The format of the `callee` string shall be consistent with the programming language
+in which the function specified by that string was written.
+
+If the `run.logicalLocations` property (&sect;[#run-logicalLocations]) is present,
+the value of the `callee` property should be equal to the name of one of the properties on the `run.logicalLocations` object,
+with one exception, described in &sect;[#annotatedCodeLocation-calleeKey].
+
+### `calleeKey` { #annotatedCodeLocation-calleeKey }
+
+The `annotatedCodeLocation` object may contain a property named `calleeKey` whose value is a string.
+If present, this string shall be equal to the name of one of the properties on the `run.logicalLocations` object (&sect;[#run-logicalLocations]),
+which provides additional information about the function specified by `callee` (&sect;[#annotatedCodeLocation-callee]).
+
+`calleeKey` is only necessary if, in the course of a run, the tool encounters two or more
+distinct functions with the same fully qualified logical name.
+In that case, the tool shall synthesize a unique name by appending a suffix to `callee`,
+assign the resulting string to `calleeKey`, and use that string as the key into the `run.logicalLocations` dictionary.
+
 ### `importance` property { #annotatedCodeLocation-importance }
 
 An `annotatedCodeLocation` object may contain a property named `importance` whose value is a string
