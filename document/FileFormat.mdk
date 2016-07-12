@@ -2629,6 +2629,14 @@ The tool might provide a "related location" (&sect;[#result-relatedLocations]) w
 an `annotatedCodeLocation` object with the message "Insecure data entered the system here". 
 ~
 
+### `callee` property { #annotatedCodeLocation-callee }
+
+If the value of the `kind` property (&sect;[#annotatedCodeLocation-kind]) of this `annotatedCodeLocation` object
+is `call`, then the `annotatedCodeLocation` object should contain a property named `callee` whose value is
+the fully qualified logical name of the function being called.
+
+If the value of the `kind` property is anything other than `call`, the `callee` property shall be absent.
+
 ### `importance` property { #annotatedCodeLocation-importance }
 
 An `annotatedCodeLocation` object may contain a property named `importance` whose value is a string
