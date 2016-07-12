@@ -212,6 +212,33 @@ When a property is so described, it shall mean that no two elements of the array
 For purposes of this specification, two array elements are considered equal when they satisfy the
 condition for equality described in _JSON Schema: core definitions and terminology_, &sect;3.6, "JSON value equality".
 
+## Message properties { #message-properties }
+
+Certain properties in this specification are string values containing messages intended
+to be viewed by a user.
+Such properties should conform to the following guidelines.
+
+The message should be expressed as a single paragraph of plain text,
+consisting of one or more complete sentences, each ending with a period
+(or appropriate punctuation for the language in which the message is written).
+The message should not contain formatting information such as HTML tags.
+The message should not contain JSON escaped line breaks (`\r` or `\n`).
+
+If the message consists of more than one sentence, 
+the first sentence of the message should provide a useful summary of the message,
+suitable for display in cases where UI is limited.
+
+~ IsoNumberedNote { @IsoNumberedNote=1 }
+If a tool does not construct the message in this way, the initial portion of the message
+that a viewer displays where UI space is limited might not be understandable.
+~
+
+~ IsoNumberedNote
+The rationale for these guidelines is that the SARIF format is intended to make it feasible
+to merge the outputs of multiple tools into a single user experience.
+A uniform approach to message authoring enhances the quality of that experience.
+~
+
 ## `sarifLog` object { #sarifLog }
 
 ### General { #sarifLog-General }
@@ -329,8 +356,11 @@ Multiple runs of the same type may have the same `stableId`.
 A `run` object may contain a property named `baselineId` whose value is a string which shall match
 the `id` property (&sect;[#run-id]) of some previous run.
 
-If the `baselineId` property is present, the `baselineState` property (&sect;[#result-baselineState]) of every `result` object (&sect;[#result])
+If the `baselineId` property is present, the `result.baselineState` property (&sect;[#result-baselineState]) of every `result` object (&sect;[#result])
 in the current run shall be computed with respect to the run specified by `baselineId`.
+
+If the `baselineId` property is absent, there must be out of band information available
+to determine the run with respect to which `result.baselineState` has been computed.
 
 ### `automationId` property { #run-automationId }
 
@@ -1271,7 +1301,7 @@ A `result` object describes a single result detected by an analysis tool.
 
 ### `ruleId` property { #result-ruleId }
 
-Depending on the circumstances, a `rule` object either shall, may, or shall not contain
+Depending on the circumstances, a `rule` object either shall or shall not contain
 a property named `ruleId` whose value is a string containing
 the stable, opaque identifier for the rule that was evaluated to produce the result.
 
@@ -1279,11 +1309,8 @@ the stable, opaque identifier for the rule that was evaluated to produce the res
 `"CA2101"`
 ~
 
-If the log was created by an analysis tool (as opposed to a conversion tool), and if the `level` property (&sect;[#result-level]) is anything other than `note`,
+If the log was created by an analysis tool (as opposed to a conversion tool),
 then `ruleId` shall be present.
-
-If the `level` property of the `result` object is `note`,
-then the `ruleId` property may be present.
 
 Not all existing analysis tools emit the equivalent of a `ruleId` in their output.
 A conversion tool which converts the output of such an analysis tool to the SARIF format
@@ -1419,7 +1446,7 @@ and is not an observation about the code.
 ```
 ~
 
-If the `level` property is absent, it value shall be considered to be the value of the `defaultLevel` property (&sect;[#rule-defaultLevel])
+If the `level` property is absent, its value shall be considered to be the value of the `defaultLevel` property (&sect;[#rule-defaultLevel])
 of the `rule` object specified by this `result` object's `ruleId` property (&sect;[#result-ruleId]) or `ruleKey` property (&sect;[#result-ruleKey]).
 
 In that case, if the `run` object (&sect;[#run]) containing this result does not include a `rules` property (&sect;[#run-rules]),
@@ -1430,6 +1457,8 @@ then the value of the `level` property shall be considered to be `"warning"`.
 ### `message` property { #result-message }
 
 A `result` object shall contain a property named `message` whose value is a string that describes the result.
+
+The `message` property should conform to the guidelines for message properties (&sect;[#message-properties]).
 
 The `message` property should provide sufficient details to allow an end user to resolve any problem that the result might indicate.
 In particular, `message` shall include all of the following information that is available and relevant to the result:
@@ -1442,14 +1471,6 @@ In particular, `message` shall include all of the following information that is 
 
 *	The full range of responses to the problem that the end user could take
 (including the definition of conditions where it might be appropriate not to fix the problem, or to conclude that the result is a false positive).
-
-The first sentence of the `message` property should provide a useful summary of the result,
-suitable for display in cases where UI is limited.
-
-~ IsoNote
-If a tool does not construct `message` in this way, the initial portion of `message` that a viewer displays where UI space is limited
-might not be understandable.
-~
 
 ~ IsoExample
 This is an example of a `message`:
@@ -1678,11 +1699,14 @@ in that database, then the `suppressionStates` array shall not include the value
 
 ### `baselineState` property { #result-baselineState }
 
-If the `baselineId` property (&sect;[#run-baselineId]) of the current `run` object (&sect;[#run]) is present,
-then the `result` object may contain a property named `baselineState` whose value is a string that shall specify
-the state of this `result` with respect to the run specified by `baselineId`.
+A `result` object may contain a property named `baselineState` whose value is a string that specifies
+the state of this `result` with respect to some previous run.
 
-If the `run.baselineId` property is absent, the `baselineState` property shall be absent.
+If the `run.baselineId` property (&sect;[#run-baselineId]) of the current run is present, the `baselineState` property
+shall be computed with respect to the run specified by `run.baselineId`.
+
+If the `run.baselineId` property of the current run is absent, then there must be out of band information
+available to determine the run with respect to which the `baselineState` property has been computed.
 
 This property shall have one of the following values, with the specified meanings:
 
@@ -2712,7 +2736,8 @@ An `rule` object should contain a property named `fullDescription` whose value i
 
 The `fullDescription` property should, as far as possible, provide details sufficient to enable resolution of any problem indicated by the result. 
 
-The first sentence of the `fullDescription` property should provide a concise description of the rule,
+The `fullDescription` property should conform to the guidelines for message properties (&sect;[#message-properties]);
+in particular, the first sentence of the `fullDescription` property should provide a concise description of the rule,
 suitable for display in cases where available space is limited.
 Tools that construct `fullDescription` in this way need not provide a value for the `shortDescription` property.
 Tools that do not construct `fullDescription` in this way should provide a value for the `shortDescription` property,
@@ -2748,6 +2773,9 @@ message format, it shall replace every occurrence of the placeholder `{`_n_`}`
 with the string value at index _n_ in the list of arguments.
 Within a message format, the characters "`{`" and "`}`" shall be represented by
 the character sequences "`{{`" and "`}}`" respectively.
+
+Aside from the presence of the placeholders, a message format should conform to
+the guidelines for message properties (&sect;[#message-properties]).
 
 ~ IsoExample
 Given a message format:
