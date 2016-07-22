@@ -409,22 +409,6 @@ A `run` object shall contain a property named `tool` whose value is a `tool` obj
 
 A `run` object may contain a property named `invocation` whose value is an `invocation` object (&sect;[#invocation]).
 
-### `defaultAnalysisTargetUri` property { #run-defaultAnalysisTargetUri }
-
-A `run` object may contain a property named `defaultAnalysisTargetUri` whose value is a string that represents the
-location of an analysis target as a valid URI (&sect;[#fileFormat-uriProperties]).
-
-If this property is present, then for any `location` object in `run.results.locations` (&sect;[#result-locations])
-whose `analysisTarget` property (&sect;[#location-analysisTarget]) is absent,
-its `analysisTarget` shall be considered to be a `physicalLocation` object (&sect;[#physicalLocation])
-whose `uri` property (&sect;[#physicalLocation-uri]) is equal to `defaultAnalysisTargetUri`,
-and whose `region` property (&sect;[#physicalLocation-region]) is absent.
-
-~ IsoNote
-The purpose of this property is to reduce the size of log files in the common case where
-an analysis tool analyzes a single target.
-~
-
 ### `files` property { #run-files }
 
 A `run` object should contain a property named `files` whose value is a JSON object,
@@ -1242,7 +1226,7 @@ A `hash` object represents a hash value of some file or collection of files, tog
 ```
 {
     "value":"b13ce2678a8807ba0765ab94a0ecd394f869bc81",   # see \(&sect;[#hash-value]\)
-    "algorithm":"SHA-256"                                 # see \(&sect;[#hash-algorithm]\)
+    "algorithm":"sha256"                                  # see \(&sect;[#hash-algorithm]\)
 }
 ```
 ~
@@ -1618,17 +1602,13 @@ results: [
         "relatedLocations": [           # An array of annotatedCodeLocation objects (see \(&sect;[#annotatedCodeLocation]\))
             { 
                 "message": "The previous declaration of 'index' was here.",
-                "physicalLocations": [
-                    [
-                        {
-                            "uri": "file:///C:/Code/a.js",
-                            "region": {
-                                "startLine": "2",
-                                "startColumn": "6"
-                            }
-                        }
-                    ]
-                ]
+                "physicalLocation": {
+                    "uri": "file:///C:/Code/a.js",
+                    "region": {
+                        "startLine": "2",
+                        "startColumn": "6"
+                    }
+                }
             }
         ]
     },
@@ -1841,11 +1821,6 @@ This need not be the same as the file where the result actually occurred. See `r
 
 Whether `analysisTarget` is present depends on the information available to the tool that produces the log file
 (see &sect;[#location-Constraints]).
-
-If `analysisTarget` is absent and the `defaultAnalysisTargetUri` property (&sect;[#run-defaultAnalysisTargetUri]) for the
-current `run` is present, then `analysisTarget` shall be considered to be a `physicalLocation` object (&sect;[#physicalLocation])
-whose `uri` property (&sect;[#physicalLocation-uri]) is `run.defaultAnalysisTargetUri`
-and whose `region` property (&sect;[#physicalLocation-region]) is absent.
 
 ### `resultFile` property { #location-resultFile }
 

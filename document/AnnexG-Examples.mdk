@@ -1,0 +1,417 @@
+# Annex G (informative) Examples { - #Annex-G }
+
+This Annex contains examples of complete, valid SARIF files,
+to complement the fragments shown in examples throughout this document.
+
+## Minimal valid SARIF file resulting from a scan { - #AnnexG-Minimal }
+
+This is a minimal valid SARIF file for the case where the analysis tool was run with the
+intent of scanning files and producing results (see &sect;[#run-results]).
+The file contains only those elements required by the specification
+(that is, those elements which the specification states "shall" be present).
+
+The file contains a single `run` object (&sect;[#run]) with an empty `results` array (&sect;[#run-results]),
+as would happen if the tool detected no issues in any of the files it scanned.
+
+```
+{
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "CodeScanner",
+        "semanticVersion": "2.1.0"
+      },
+      "results": [
+      ]
+    }
+  ]
+}
+```
+
+## Minimal recommended SARIF file resulting from a scan { - #AnnexG-Recommended }
+
+This is a minimal recommended SARIF file for the case where the analysis tool was run with the
+intent of scanning files and producing results (see &sect;[#run-results]).
+The file contains those elements recommended by the specification
+(that is, those elements which the specification states "should" be present),
+in addition to the required elements.
+
+The file contains a single `run` object (&sect;[#run]) with a `results` array (&sect;[#run-results]).
+The `results` array contains a single `result` object (&sect;[#result]) 
+so the recommended elements of the `result` object can be shown.
+
+It contains a `files` object (&sect;[#run-files]) specifying only those files in which the tool detected a result.
+It contains a `logicalLocations` object (&sect;[#run-logicalLocations]) specifying only those logical locations in which the tool detected a result.
+
+This example also includes rule metadata (&sect;[#run-rules]), even though rule metadata is optional,
+to show how a SARIF log file can be self-contained, in the sense of containing all the information
+necessary to interpret the results.
+
+```
+{
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "CodeScanner",
+        "semanticVersion": "2.1.0"
+      },
+      "files": {
+        "file:///user/builder/work/src/collections/list.cpp": {
+          "mimeType": "text/x-c"
+        }
+      },
+      "logicalLocations": {
+        "collections::list::add": {
+          "name": "add",
+          "kind": "function",
+          "parentKey": "collections::list"
+        },
+        "collections::list": {
+          "name": "list",
+          "kind": "type",
+          "parentKey": "collections"
+        },
+        "collections": {
+          "name": "collections",
+          "kind": "namespace"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "C2001",
+          "message": "Variable \"count\" was used without being initialized.",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///user/builder/work/src/collections/list.cpp",
+                "region": {
+                  "startLine": 15
+                }
+              },
+              "fullyQualifiedLogicalName": "collections::list:add"
+            }
+          ]
+        }
+      ],
+      "rules": {
+        "C2001": {
+          "id": "C2001",
+          "fullDescription": "A variable was used without being initialized. This can result in runtime errors such as null reference exceptions"
+        }
+      }
+    }
+  ]
+}
+```
+
+## SARIF file for exporting rule metadata { - #AnnexG-RuleMetadata }
+
+This sample demonstrates the use of SARIF for exporting a tool's rule metadata.
+The file contains a single `run` object (&sect;[#run]) with no `results` array,
+but with a `rules` object (&sect;[#run-rules]) containing rule metadata.
+
+```
+{
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "BinaryAnalyzer",
+        "semanticVersion": "2.1.0"
+      },
+      "rules": {
+        "BA2006": {
+          "id": "BA2006",
+          "name": "BuildWithSecureTools",
+          "shortDescription": "Application code should be compiled with the most up-to-date tool sets ..."
+          "fullDescription": "Application code should be compiled with the most up-to-date tool sets ...",
+          "messageFormats": {
+            "Error_BadModule": "built with {0} compiler version {1} (Front end version {2})",
+            "Pass": "'{0}' was built with tools that satisfy configured policy.",
+            "Error": "'{0}' was compiled with one or tools that do not satisfy configured policy ..."
+            "NotApplicable_InvalidMetadata": "'{0}' was not evaluated for check '{1}' ..."
+          }
+          "defaultLevel": "warning",
+          "helpUri": "http://www.example.com/tools/BinaryAnalyzer/rules/BA2006"
+        }
+      }
+    }
+  ]
+}
+```
+
+## Comprehensive SARIF file { - #AnnexG-Comprehensive }
+
+The purpose of this example is to demonstrate the usage of as many SARIF elements as possible.
+Not all elements are shown, because some are mutually exclusive.
+
+Because the purpose is to present as many elements as possibly,
+the file as a whole does not represent best practices for SARIF usage,
+nor does it represent the output of a single, coherent analysis.
+For example, the result presented in the file involves a runtime exception, but at the same time
+it is marked as `suppressedExternally` (to demonstrate the `result.suppressionStates` property),
+which is unrealistic.
+
+```
+{
+  "version": "1.0.0",
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "runs": [
+    {
+      "id": "BC650830-A9FE-44CB-8818-AD6C387279A0",
+      "stableId": "Nightly code scan",
+      "baselineId": "0A106451-C9B1-4309-A7EE-06988B95F723",
+      "automationId": "Build-14.0.1.2-Release-20160716-13:22:18",
+      "architecture": "x86",
+      "tool": {
+        "name": "CodeScanner",
+        "fullName": "CodeScanner 1.1 for Unix (en-US)",
+        "version": "2.1",
+        "semanticVersion": "2.1.0",
+        "fileVersion": "2.1.0.0",
+        "language": "en-US",
+        "sarifLoggerVersion": "1.25.0",
+        "properties": {
+          "copyright": "Copyright (c) 2016 by Example Corporation. All rights reserved."
+        }
+      },
+      "invocation": {
+        "commandLine": "CodeScanner @collections.rsp",
+        "responseFiles": {
+          "collections.rsp": "-input src/collections/*.cpp -log out/collections.sarif -rules all -disable C9999"
+        },
+        "startTime": "2016-07-16T14:18:25Z",
+        "endTime": "2016-07-16T14:19:01Z",
+        "machine": "BLD01",
+        "account": "build",
+        "processId": 1218,
+        "fileName": "/bin/tools/CodeScanner",
+        "workingDirectory": "/home/build/src",
+        "environmentVariables": {
+          "PATH": "/usr/local/bin:/bin:/bin/tools:/home/build/bin",
+          "HOME": "/home/build",
+          "TZ": "EST"
+        }
+      },
+      "files": {
+        "file:///home/build/src/collections/list.cpp": {
+          "mimeType": "text/x-c",
+          "length": 980,
+          "hashes": [
+            {
+              "algorithm": "sha256",
+              "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81"
+            }
+          ]
+        }
+      },
+      "logicalLocations": {
+        "collections::list::add": {
+          "name": "add",
+          "kind": "function",
+          "parentKey": "collections::list"
+        },
+        "collections::list": {
+          "name": "list",
+          "kind": "type",
+          "parentKey": "collections"
+        },
+        "collections": {
+          "name": "collections",
+          "kind": "namespace"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "C2001",
+          "formattedRuleMessage": {
+            "formatId": "default",
+            "arguments": [
+              "p"
+            ]
+          },
+          "suppressionStates": [ "suppressedExternally" ],
+          "baselineState": "existing",
+          "level": "error",
+          "snippet": "add_core(p, offset, val);\n    return;",
+          "locations": [
+            {
+              "analysisTarget": {
+                "uri": "file:///home/build/src/collections/list.cpp"
+              },
+              "resultFile": {
+                "uri": "file:///home/build/src/collections/list.h",
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 9,
+                  "endLine": 15,
+                  "endColumn": 10,
+                  "length": 1,
+                  "offset": 254
+                }
+              },
+              "fullyQualifiedLogicalName": "collections::list:add"
+            }
+          ],
+          "relatedLocations": [
+            {
+              "message": "\"count\" was declared here.",
+              "physicalLocation": {
+                "uri": "file:///home/build/src/collections/list.h",
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 5
+                }
+              },
+              "fullyQualifiedLogicalName": "collections::list:add"
+            }
+          ],
+          "codeFlows": [
+            {
+              "message": "Path from declaration to usage",
+              "locations": [
+                {
+                  "step": 0,
+                  "kind": "declaration",
+                  "importance": "essential",
+                  "message": "Variable \"p\" declared.",
+                  "snippet": "int *p;",
+                  "physicalLocation": {
+                    "uri": "file:///home/build/src/collections/list.h",
+                    "region": {
+                      "startLine": 15
+                    }
+                  },
+                  "fullyQualifiedLogicalName": "collections::list:add",
+                  "module": "collections",
+                  "threadId": 52
+                },
+                {
+                  "step": 1,
+                  "kind": "assignment",
+                  "importance": "unimportant",
+                  "snippet": "offset = 0",
+                  "physicalLocation": {
+                    "uri": "file:///home/build/src/collections/list.h",
+                    "region": {
+                      "startLine": 15
+                    }
+                  },
+                  "fullyQualifiedLogicalName": "collections::list:add",
+                  "module": "collections",
+                  "threadId": 52
+                },
+                {
+                  "step": 2,
+                  "kind": "call",
+                  "importance": "essential",
+                  "message": "Uninitialized variable \"p\" passed to method \"add_core\".",
+                  "snippet": "add_core(p, offset, val)",
+                  "callee": "collections::list:add_core",
+                  "physicalLocation": {
+                    "uri": "file:///home/build/src/collections/list.h",
+                    "region": {
+                      "startLine": 25
+                    }
+                  },
+                  "fullyQualifiedLogicalName": "collections::list:add",
+                  "module": "collections",
+                  "threadId": 52
+                }
+              ]
+            }
+          ],
+          "stacks": [
+            {
+              "message": "Call stack resulting from usage of uninitialized variable.",
+              "frames": [
+                {
+                  "uri": "file:///home/build/src/collections/list.h",
+                  "line": 43,
+                  "column": 15,
+                  "module": "collections",
+                  "threadId": 52,
+                  "fullyQualifiedLogicalName": "collections::list:add_core",
+                  "address": 10092852,
+                  "offset": 16,
+                  "parameters": [ "null", "0", "14" ]
+                },
+                {
+                  "uri": "file:///home/build/src/collections/list.h",
+                  "line": 43,
+                  "column": 15,
+                  "module": "collections",
+                  "threadId": 52,
+                  "fullyQualifiedLogicalName": "collections::list:add",
+                  "address": 10092176,
+                  "offset": 84,
+                  "parameters": [ "14" ]
+                },
+                {
+                  "uri": "file:///home/build/src/application/main.cpp",
+                  "line": 28,
+                  "column": 9,
+                  "module": "application",
+                  "threadId": 52,
+                  "fullyQualifiedLogicalName": "main",
+                  "address": 10091200,
+                  "offset": 156
+                }
+              ]
+            } 
+          ],
+          "fixes": [
+            {
+              "description": "Initialize the variable to null",
+              "fileChanges": [
+                {
+                  "uri": "file:///home/build/src/collections/list.h",
+                  "replacements": [
+                    {
+                      "offset": 109,
+                      "insertedBytes": "PSBudWxs"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "configurationNotifications": [
+        {
+          "id": "UnknownRule",
+          "ruleId": "ABC0001",
+          "level": "warning",
+          "message": "Could not disable rule \"C9999\" because there is no rule with that id." 
+        }
+      ],
+      "toolNotifications": [
+        {
+          "id": "CTN0001",
+          "level": "note",
+          "message": "Run started."
+        },
+        {
+          "id": "CTN0002",
+          "level": "note",
+          "message": "Run ended."
+        }
+      ],
+      "rules": {
+        "C2001": {
+          "id": "C2001",
+          "shortDescription": "A variable was used without being initialized.",
+          "fullDescription": "A variable was used without being initialized. This can result in runtime errors such as null reference exceptions.",
+          "messageFormats": {
+            "default": "Variable \"{0}\" was used without being initialized."
+          }
+        }
+      }
+    }
+  ]
+}
+
+```
