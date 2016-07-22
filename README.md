@@ -52,9 +52,3 @@ To regenerate the HTML document:
 1. Change to your repo root directory, and then run the Windows command file `build.cmd` without arguments. This will regenerate the file "Static Analysis Results Interchange Format (SARIF).html" in the repo root directory.
 
 1. Don't forget to add the regenerated HTML file to your commit.
-
-
-## ISO format
-
-ISO supplies a Microsoft Word template for their specifications.
-Before we submit SARIF to ISO, we will transfer the content to their template. 
