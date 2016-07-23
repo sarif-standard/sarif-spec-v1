@@ -4234,14 +4234,14 @@ but with a <span data-line="44;document\AnnexG-Examples.mdk:113"></span><code cl
         &quot;BA2006&quot;: {
           &quot;id&quot;: &quot;BA2006&quot;,
           &quot;name&quot;: &quot;BuildWithSecureTools&quot;,
-          &quot;shortDescription&quot;: &quot;Application code should be compiled with the most up-to-date tool sets ...&quot;
+          &quot;shortDescription&quot;: &quot;Application code should be compiled with the most up-to-date tool sets ...&quot;,
           &quot;fullDescription&quot;: &quot;Application code should be compiled with the most up-to-date tool sets ...&quot;,
           &quot;messageFormats&quot;: {
             &quot;Error_BadModule&quot;: &quot;built with {0} compiler version {1} (Front end version {2})&quot;,
             &quot;Pass&quot;: &quot;&#39;{0}&#39; was built with tools that satisfy configured policy.&quot;,
-            &quot;Error&quot;: &quot;&#39;{0}&#39; was compiled with one or tools that do not satisfy configured policy ...&quot;
+            &quot;Error&quot;: &quot;&#39;{0}&#39; was compiled with one or tools that do not satisfy configured policy ...&quot;,
             &quot;NotApplicable_InvalidMetadata&quot;: &quot;&#39;{0}&#39; was not evaluated for check &#39;{1}&#39; ...&quot;
-          }
+          },
           &quot;defaultLevel&quot;: &quot;warning&quot;,
           &quot;helpUri&quot;: &quot;http://www.example.com/tools/BinaryAnalyzer/rules/BA2006&quot;
         }
@@ -4309,6 +4309,16 @@ which is unrealistic.
               &quot;value&quot;: &quot;b13ce2678a8807ba0765ab94a0ecd394f869bc81&quot;
             }
           ]
+        },
+        &quot;file:///home/build/bin/app.zip&quot;: {
+           &quot;mimeType&quot;: &quot;application/zip&quot;
+         },
+         &quot;file:///home/build/bin/app.zip#/docs/intro.docx&quot;: {
+           &quot;uri&quot;: &quot;/docs/intro.docx&quot;,
+           &quot;mimeType&quot;: &quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;,
+           &quot;parentKey&quot;: &quot;file:///home/build/bin/app.zip&quot;,
+           &quot;offset&quot;: 17522,
+           &quot;length&quot;: 4050
         }
       },
       &quot;logicalLocations&quot;: {
@@ -4356,7 +4366,8 @@ which is unrealistic.
                   &quot;offset&quot;: 254
                 }
               },
-              &quot;fullyQualifiedLogicalName&quot;: &quot;collections::list:add&quot;
+              &quot;fullyQualifiedLogicalName&quot;: &quot;collections::list:add&quot;,
+              &quot;decoratedName&quot;: &quot;?add@list@collections@@QAEXH@Z&quot;
             }
           ],
           &quot;relatedLocations&quot;: [
@@ -4432,6 +4443,7 @@ which is unrealistic.
               &quot;message&quot;: &quot;Call stack resulting from usage of uninitialized variable.&quot;,
               &quot;frames&quot;: [
                 {
+                  &quot;message&quot;: &quot;Exception thrown&quot;,
                   &quot;uri&quot;: &quot;file:///home/build/src/collections/list.h&quot;,
                   &quot;line&quot;: 43,
                   &quot;column&quot;: 15,
@@ -4489,7 +4501,7 @@ which is unrealistic.
           &quot;id&quot;: &quot;UnknownRule&quot;,
           &quot;ruleId&quot;: &quot;ABC0001&quot;,
           &quot;level&quot;: &quot;warning&quot;,
-          &quot;message&quot;: &quot;Could not disable rule \&quot;C9999\&quot; because there is no rule with that id.&quot; 
+          &quot;message&quot;: &quot;Could not disable rule \&quot;ABC0001\&quot; because there is no rule with that id.&quot; 
         }
       ],
       &quot;toolNotifications&quot;: [
@@ -4497,6 +4509,44 @@ which is unrealistic.
           &quot;id&quot;: &quot;CTN0001&quot;,
           &quot;level&quot;: &quot;note&quot;,
           &quot;message&quot;: &quot;Run started.&quot;
+        },
+        {
+          &quot;id&quot;: &quot;CTN9999&quot;,
+          &quot;ruleId&quot;: &quot;C2152&quot;,
+          &quot;level&quot;: &quot;error&quot;,
+          &quot;message&quot;: &quot;Exception evaluating rule \&quot;C2152\&quot;. Rule disabled; run continues.&quot;,
+          &quot;analysisTarget&quot;: {
+            &quot;uri&quot;: &quot;file:///home/build/src/crypto/hash.cpp&quot;
+          },
+          &quot;threadId&quot;: 52,
+          &quot;time&quot;: &quot;2016-07-16T14:18:43.119Z&quot;,
+          &quot;exception&quot;: {
+            &quot;kind&quot;: &quot;ExecutionEngine.RuleFailureException&quot;,
+            &quot;message&quot;: &quot;Unhandled exception during rule evaluation.&quot;,
+            &quot;stack&quot;: {
+              &quot;frames&quot;: [
+                {
+                  &quot;message&quot;: &quot;Exception thrown&quot;,
+                  &quot;module&quot;: &quot;RuleLibrary&quot;,
+                  &quot;threadId&quot;: 52,
+                  &quot;fullyQualifiedLogicalName&quot;: &quot;Rules.SecureHashAlgorithmRule.Evaluate&quot;,
+                  &quot;address&quot;: 10092852
+                },
+                {
+                  &quot;module&quot;: &quot;ExecutionEngine&quot;,
+                  &quot;threadId&quot;: 52,
+                  &quot;fullyQualifiedLogicalName&quot;: &quot;ExecutionEngine.Engine.EvaluateRule&quot;,
+                  &quot;address&quot;: 10073356
+                }
+              ]
+            },
+            &quot;innerExceptions&quot;: [
+              {
+                &quot;kind&quot;: &quot;System.ArgumentException&quot;,
+                &quot;message&quot;: &quot;length is &lt; 0&quot;
+              }
+            ]
+          }
         },
         {
           &quot;id&quot;: &quot;CTN0002&quot;,
@@ -4516,8 +4566,7 @@ which is unrealistic.
       }
     }
   ]
-}
-</code></pre><h2 id="sec-bibliography"  data-line="46;document\Bibliography.mdk:1"  style="bookmark:Bibliography"><span data-line="46;document\Bibliography.mdk:1"></span>Bibliography</h2>
+}</code></pre><h2 id="sec-bibliography"  data-line="46;document\Bibliography.mdk:1"  style="bookmark:Bibliography"><span data-line="46;document\Bibliography.mdk:1"></span>Bibliography</h2>
 <p data-line="46;document\Bibliography.mdk:3"><span data-line="46;document\Bibliography.mdk:3"></span>ISO/IEC 9899, <span data-line="46;document\Bibliography.mdk:3"></span><em>Information technology - Programming languages – C</em><span data-line="46;document\Bibliography.mdk:3"></span>
 </p>
 <p class="indent" data-line="46;document\Bibliography.mdk:5"><span data-line="46;document\Bibliography.mdk:5"></span>ISO/IEC 14882, <span data-line="46;document\Bibliography.mdk:5"></span><em>Information technology - Programming languages - C++</em><span data-line="46;document\Bibliography.mdk:5"></span>

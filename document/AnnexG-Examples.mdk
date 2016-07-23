@@ -125,14 +125,14 @@ but with a `rules` object (&sect;[#run-rules]) containing rule metadata.
         "BA2006": {
           "id": "BA2006",
           "name": "BuildWithSecureTools",
-          "shortDescription": "Application code should be compiled with the most up-to-date tool sets ..."
+          "shortDescription": "Application code should be compiled with the most up-to-date tool sets ...",
           "fullDescription": "Application code should be compiled with the most up-to-date tool sets ...",
           "messageFormats": {
             "Error_BadModule": "built with {0} compiler version {1} (Front end version {2})",
             "Pass": "'{0}' was built with tools that satisfy configured policy.",
-            "Error": "'{0}' was compiled with one or tools that do not satisfy configured policy ..."
+            "Error": "'{0}' was compiled with one or tools that do not satisfy configured policy ...",
             "NotApplicable_InvalidMetadata": "'{0}' was not evaluated for check '{1}' ..."
-          }
+          },
           "defaultLevel": "warning",
           "helpUri": "http://www.example.com/tools/BinaryAnalyzer/rules/BA2006"
         }
@@ -262,7 +262,8 @@ which is unrealistic.
                   "offset": 254
                 }
               },
-              "fullyQualifiedLogicalName": "collections::list:add"
+              "fullyQualifiedLogicalName": "collections::list:add",
+              "decoratedName": "?add@list@collections@@QAEXH@Z"
             }
           ],
           "relatedLocations": [
@@ -338,6 +339,7 @@ which is unrealistic.
               "message": "Call stack resulting from usage of uninitialized variable.",
               "frames": [
                 {
+                  "message": "Exception thrown",
                   "uri": "file:///home/build/src/collections/list.h",
                   "line": 43,
                   "column": 15,
@@ -395,7 +397,7 @@ which is unrealistic.
           "id": "UnknownRule",
           "ruleId": "ABC0001",
           "level": "warning",
-          "message": "Could not disable rule \"C9999\" because there is no rule with that id." 
+          "message": "Could not disable rule \"ABC0001\" because there is no rule with that id." 
         }
       ],
       "toolNotifications": [
@@ -403,6 +405,44 @@ which is unrealistic.
           "id": "CTN0001",
           "level": "note",
           "message": "Run started."
+        },
+        {
+          "id": "CTN9999",
+          "ruleId": "C2152",
+          "level": "error",
+          "message": "Exception evaluating rule \"C2152\". Rule disabled; run continues.",
+          "analysisTarget": {
+            "uri": "file:///home/build/src/crypto/hash.cpp"
+          },
+          "threadId": 52,
+          "time": "2016-07-16T14:18:43.119Z",
+          "exception": {
+            "kind": "ExecutionEngine.RuleFailureException",
+            "message": "Unhandled exception during rule evaluation.",
+            "stack": {
+              "frames": [
+                {
+                  "message": "Exception thrown",
+                  "module": "RuleLibrary",
+                  "threadId": 52,
+                  "fullyQualifiedLogicalName": "Rules.SecureHashAlgorithmRule.Evaluate",
+                  "address": 10092852
+                },
+                {
+                  "module": "ExecutionEngine",
+                  "threadId": 52,
+                  "fullyQualifiedLogicalName": "ExecutionEngine.Engine.EvaluateRule",
+                  "address": 10073356
+                }
+              ]
+            },
+            "innerExceptions": [
+              {
+                "kind": "System.ArgumentException",
+                "message": "length is < 0"
+              }
+            ]
+          }
         },
         {
           "id": "CTN0002",
