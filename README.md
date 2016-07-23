@@ -1,5 +1,5 @@
 # sarif-spec
-This repo contains an early draft of the specification document for the Static Analysis Results Interchange Format (SARIF).
+This repo contains the draft of the specification document for the Static Analysis Results Interchange Format (SARIF).
 The current HTML is always available [here](https://rawgit.com/sarif-standard/sarif-spec/master/Static%20Analysis%20Results%20Interchange%20Format%20(SARIF).html#result-codeflows).
 
 ## Please read the license
