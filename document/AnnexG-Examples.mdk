@@ -205,6 +205,16 @@ which is unrealistic.
               "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81"
             }
           ]
+        },
+        "file:///home/build/bin/app.zip": {
+           "mimeType": "application/zip"
+         },
+         "file:///home/build/bin/app.zip#/docs/intro.docx": {
+           "uri": "/docs/intro.docx",
+           "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+           "parentKey": "file:///home/build/bin/app.zip",
+           "offset": 17522,
+           "length": 4050
         }
       },
       "logicalLocations": {
@@ -413,5 +423,4 @@ which is unrealistic.
     }
   ]
 }
-
 ```
