@@ -2511,8 +2511,14 @@ This property has two primary purposes:
 
 ### `physicalLocation` property { #annotatedCodeLocation-physicalLocation }
 
-An `annotatedCodeLocation` object shall contain a property named `physicalLocation` whose value is a `physicalLocation` object
+An `annotatedCodeLocation` object should contain a property named `physicalLocation` whose value is a `physicalLocation` object
 (&sect;[#physicalLocation]) that specifies the file location to which the `annotatedCodeLocation` object refers.
+
+This property should be absent only if the tool does not have physical location information for this
+`annotatedCodeLocation`.
+
+NOTE: This could happen, for example, if this `annotatedCodeLocation` occurs within a binary for which
+the tool does not have associated symbol information.
 
 ### `fullyQualifiedLogicalName` property { #annotatedCodeLocation-fullyQualifiedLogicalName }
 
