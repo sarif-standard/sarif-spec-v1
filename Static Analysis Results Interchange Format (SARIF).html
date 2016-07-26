@@ -4240,13 +4240,13 @@ but with a <span data-line="44;document\AnnexG-Examples.mdk:113"></span><code cl
         &quot;BA2006&quot;: {
           &quot;id&quot;: &quot;BA2006&quot;,
           &quot;name&quot;: &quot;BuildWithSecureTools&quot;,
-          &quot;shortDescription&quot;: &quot;Application code should be compiled with the most up-to-date tool sets ...&quot;,
-          &quot;fullDescription&quot;: &quot;Application code should be compiled with the most up-to-date tool sets ...&quot;,
+          &quot;shortDescription&quot;: &quot;Application code should be compiled with the most up-to-date tool sets.&quot;,
+          &quot;fullDescription&quot;: &quot;Application code should be compiled with the most up-to-date tool sets. The latest version is 2.2.&quot;,
           &quot;messageFormats&quot;: {
             &quot;Error_BadModule&quot;: &quot;built with {0} compiler version {1} (Front end version {2})&quot;,
-            &quot;Pass&quot;: &quot;&#39;{0}&#39; was built with tools that satisfy configured policy.&quot;,
-            &quot;Error&quot;: &quot;&#39;{0}&#39; was compiled with one or tools that do not satisfy configured policy ...&quot;,
-            &quot;NotApplicable_InvalidMetadata&quot;: &quot;&#39;{0}&#39; was not evaluated for check &#39;{1}&#39; ...&quot;
+            &quot;Pass&quot;: &quot;{0} was built with tools that satisfy configured policy.&quot;,
+            &quot;Error&quot;: &quot;{0} was compiled with one or tools that do not satisfy configured policy.&quot;,
+            &quot;NotApplicable_InvalidMetadata&quot;: &quot;{0} was not evaluated for check &#39;{1}&#39;.&quot;
           },
           &quot;defaultLevel&quot;: &quot;warning&quot;,
           &quot;helpUri&quot;: &quot;http://www.example.com/tools/BinaryAnalyzer/rules/BA2006&quot;
@@ -4295,18 +4295,18 @@ which is unrealistic.
         &quot;startTime&quot;: &quot;2016-07-16T14:18:25Z&quot;,
         &quot;endTime&quot;: &quot;2016-07-16T14:19:01Z&quot;,
         &quot;machine&quot;: &quot;BLD01&quot;,
-        &quot;account&quot;: &quot;build&quot;,
+        &quot;account&quot;: &quot;buildAgent&quot;,
         &quot;processId&quot;: 1218,
         &quot;fileName&quot;: &quot;/bin/tools/CodeScanner&quot;,
-        &quot;workingDirectory&quot;: &quot;/home/build/src&quot;,
+        &quot;workingDirectory&quot;: &quot;/home/buildAgent/src&quot;,
         &quot;environmentVariables&quot;: {
-          &quot;PATH&quot;: &quot;/usr/local/bin:/bin:/bin/tools:/home/build/bin&quot;,
-          &quot;HOME&quot;: &quot;/home/build&quot;,
+          &quot;PATH&quot;: &quot;/usr/local/bin:/bin:/bin/tools:/home/buildAgent/bin&quot;,
+          &quot;HOME&quot;: &quot;/home/buildAgent&quot;,
           &quot;TZ&quot;: &quot;EST&quot;
         }
       },
       &quot;files&quot;: {
-        &quot;file:///home/build/src/collections/list.cpp&quot;: {
+        &quot;file:///home/buildAgent/src/collections/list.cpp&quot;: {
           &quot;mimeType&quot;: &quot;text/x-c&quot;,
           &quot;length&quot;: 980,
           &quot;hashes&quot;: [
@@ -4316,13 +4316,13 @@ which is unrealistic.
             }
           ]
         },
-        &quot;file:///home/build/bin/app.zip&quot;: {
+        &quot;file:///home/buildAgent/bin/app.zip&quot;: {
            &quot;mimeType&quot;: &quot;application/zip&quot;
          },
-         &quot;file:///home/build/bin/app.zip#/docs/intro.docx&quot;: {
+         &quot;file:///home/buildAgent/bin/app.zip#/docs/intro.docx&quot;: {
            &quot;uri&quot;: &quot;/docs/intro.docx&quot;,
            &quot;mimeType&quot;: &quot;application/vnd.openxmlformats-officedocument.wordprocessingml.document&quot;,
-           &quot;parentKey&quot;: &quot;file:///home/build/bin/app.zip&quot;,
+           &quot;parentKey&quot;: &quot;file:///home/buildAgent/bin/app.zip&quot;,
            &quot;offset&quot;: 17522,
            &quot;length&quot;: 4050
         }
@@ -4349,20 +4349,20 @@ which is unrealistic.
           &quot;formattedRuleMessage&quot;: {
             &quot;formatId&quot;: &quot;default&quot;,
             &quot;arguments&quot;: [
-              &quot;p&quot;
+              &quot;ptr&quot;
             ]
           },
           &quot;suppressionStates&quot;: [ &quot;suppressedExternally&quot; ],
           &quot;baselineState&quot;: &quot;existing&quot;,
           &quot;level&quot;: &quot;error&quot;,
-          &quot;snippet&quot;: &quot;add_core(p, offset, val);\n    return;&quot;,
+          &quot;snippet&quot;: &quot;add_core(ptr, offset, val);\n    return;&quot;,
           &quot;locations&quot;: [
             {
               &quot;analysisTarget&quot;: {
-                &quot;uri&quot;: &quot;file:///home/build/src/collections/list.cpp&quot;
+                &quot;uri&quot;: &quot;file:///home/buildAgent/src/collections/list.cpp&quot;
               },
               &quot;resultFile&quot;: {
-                &quot;uri&quot;: &quot;file:///home/build/src/collections/list.h&quot;,
+                &quot;uri&quot;: &quot;file:///home/buildAgent/src/collections/list.h&quot;,
                 &quot;region&quot;: {
                   &quot;startLine&quot;: 15,
                   &quot;startColumn&quot;: 9,
@@ -4380,7 +4380,7 @@ which is unrealistic.
             {
               &quot;message&quot;: &quot;\&quot;count\&quot; was declared here.&quot;,
               &quot;physicalLocation&quot;: {
-                &quot;uri&quot;: &quot;file:///home/build/src/collections/list.h&quot;,
+                &quot;uri&quot;: &quot;file:///home/buildAgent/src/collections/list.h&quot;,
                 &quot;region&quot;: {
                   &quot;startLine&quot;: 8,
                   &quot;startColumn&quot;: 5
@@ -4397,48 +4397,48 @@ which is unrealistic.
                   &quot;step&quot;: 0,
                   &quot;kind&quot;: &quot;declaration&quot;,
                   &quot;importance&quot;: &quot;essential&quot;,
-                  &quot;message&quot;: &quot;Variable \&quot;p\&quot; declared.&quot;,
-                  &quot;snippet&quot;: &quot;int *p;&quot;,
+                  &quot;message&quot;: &quot;Variable \&quot;ptr\&quot; declared.&quot;,
+                  &quot;snippet&quot;: &quot;int *ptr;&quot;,
                   &quot;physicalLocation&quot;: {
-                    &quot;uri&quot;: &quot;file:///home/build/src/collections/list.h&quot;,
+                    &quot;uri&quot;: &quot;file:///home/buildAgent/src/collections/list.h&quot;,
                     &quot;region&quot;: {
                       &quot;startLine&quot;: 15
                     }
                   },
                   &quot;fullyQualifiedLogicalName&quot;: &quot;collections::list:add&quot;,
-                  &quot;module&quot;: &quot;collections&quot;,
+                  &quot;module&quot;: &quot;platform&quot;,
                   &quot;threadId&quot;: 52
                 },
                 {
                   &quot;step&quot;: 1,
                   &quot;kind&quot;: &quot;assignment&quot;,
                   &quot;importance&quot;: &quot;unimportant&quot;,
-                  &quot;snippet&quot;: &quot;offset = 0&quot;,
+                  &quot;snippet&quot;: &quot;offset = 0;&quot;,
                   &quot;physicalLocation&quot;: {
-                    &quot;uri&quot;: &quot;file:///home/build/src/collections/list.h&quot;,
+                    &quot;uri&quot;: &quot;file:///home/buildAgent/src/collections/list.h&quot;,
                     &quot;region&quot;: {
                       &quot;startLine&quot;: 15
                     }
                   },
                   &quot;fullyQualifiedLogicalName&quot;: &quot;collections::list:add&quot;,
-                  &quot;module&quot;: &quot;collections&quot;,
+                  &quot;module&quot;: &quot;platform&quot;,
                   &quot;threadId&quot;: 52
                 },
                 {
                   &quot;step&quot;: 2,
                   &quot;kind&quot;: &quot;call&quot;,
                   &quot;importance&quot;: &quot;essential&quot;,
-                  &quot;message&quot;: &quot;Uninitialized variable \&quot;p\&quot; passed to method \&quot;add_core\&quot;.&quot;,
-                  &quot;snippet&quot;: &quot;add_core(p, offset, val)&quot;,
+                  &quot;message&quot;: &quot;Uninitialized variable \&quot;ptr\&quot; passed to method \&quot;add_core\&quot;.&quot;,
+                  &quot;snippet&quot;: &quot;add_core(ptr, offset, val)&quot;,
                   &quot;callee&quot;: &quot;collections::list:add_core&quot;,
                   &quot;physicalLocation&quot;: {
-                    &quot;uri&quot;: &quot;file:///home/build/src/collections/list.h&quot;,
+                    &quot;uri&quot;: &quot;file:///home/buildAgent/src/collections/list.h&quot;,
                     &quot;region&quot;: {
                       &quot;startLine&quot;: 25
                     }
                   },
                   &quot;fullyQualifiedLogicalName&quot;: &quot;collections::list:add&quot;,
-                  &quot;module&quot;: &quot;collections&quot;,
+                  &quot;module&quot;: &quot;platform&quot;,
                   &quot;threadId&quot;: 52
                 }
               ]
@@ -4449,11 +4449,11 @@ which is unrealistic.
               &quot;message&quot;: &quot;Call stack resulting from usage of uninitialized variable.&quot;,
               &quot;frames&quot;: [
                 {
-                  &quot;message&quot;: &quot;Exception thrown&quot;,
-                  &quot;uri&quot;: &quot;file:///home/build/src/collections/list.h&quot;,
-                  &quot;line&quot;: 43,
+                  &quot;message&quot;: &quot;Exception thrown.&quot;,
+                  &quot;uri&quot;: &quot;file:///home/buildAgent/src/collections/list.h&quot;,
+                  &quot;line&quot;: 110,
                   &quot;column&quot;: 15,
-                  &quot;module&quot;: &quot;collections&quot;,
+                  &quot;module&quot;: &quot;platform&quot;,
                   &quot;threadId&quot;: 52,
                   &quot;fullyQualifiedLogicalName&quot;: &quot;collections::list:add_core&quot;,
                   &quot;address&quot;: 10092852,
@@ -4461,10 +4461,10 @@ which is unrealistic.
                   &quot;parameters&quot;: [ &quot;null&quot;, &quot;0&quot;, &quot;14&quot; ]
                 },
                 {
-                  &quot;uri&quot;: &quot;file:///home/build/src/collections/list.h&quot;,
+                  &quot;uri&quot;: &quot;file:///home/buildAgent/src/collections/list.h&quot;,
                   &quot;line&quot;: 43,
                   &quot;column&quot;: 15,
-                  &quot;module&quot;: &quot;collections&quot;,
+                  &quot;module&quot;: &quot;platform&quot;,
                   &quot;threadId&quot;: 52,
                   &quot;fullyQualifiedLogicalName&quot;: &quot;collections::list:add&quot;,
                   &quot;address&quot;: 10092176,
@@ -4472,7 +4472,7 @@ which is unrealistic.
                   &quot;parameters&quot;: [ &quot;14&quot; ]
                 },
                 {
-                  &quot;uri&quot;: &quot;file:///home/build/src/application/main.cpp&quot;,
+                  &quot;uri&quot;: &quot;file:///home/buildAgent/src/application/main.cpp&quot;,
                   &quot;line&quot;: 28,
                   &quot;column&quot;: 9,
                   &quot;module&quot;: &quot;application&quot;,
@@ -4489,7 +4489,7 @@ which is unrealistic.
               &quot;description&quot;: &quot;Initialize the variable to null&quot;,
               &quot;fileChanges&quot;: [
                 {
-                  &quot;uri&quot;: &quot;file:///home/build/src/collections/list.h&quot;,
+                  &quot;uri&quot;: &quot;file:///home/buildAgent/src/collections/list.h&quot;,
                   &quot;replacements&quot;: [
                     {
                       &quot;offset&quot;: 109,
@@ -4522,7 +4522,7 @@ which is unrealistic.
           &quot;level&quot;: &quot;error&quot;,
           &quot;message&quot;: &quot;Exception evaluating rule \&quot;C2152\&quot;. Rule disabled; run continues.&quot;,
           &quot;analysisTarget&quot;: {
-            &quot;uri&quot;: &quot;file:///home/build/src/crypto/hash.cpp&quot;
+            &quot;uri&quot;: &quot;file:///home/buildAgent/src/crypto/hash.cpp&quot;
           },
           &quot;threadId&quot;: 52,
           &quot;time&quot;: &quot;2016-07-16T14:18:43.119Z&quot;,
