@@ -130,19 +130,19 @@ information is not available, that property is recommended (it "should" be prese
         }
       },
       "logicalLocations": {
-        "Example.Worker.DoWork": {
-          "name": "DoWork",
-          "kind": "function",
-          "parentKey": "Example.Worker"
+        "Example": {
+          "name": "Example",
+          "kind": "namespace"
         },
         "Example.Worker": {
           "name": "Worker",
           "kind": "type",
           "parentKey": "Example"
         },
-        "Example": {
-          "name": "Example",
-          "kind": "namespace"
+        "Example.Worker.DoWork": {
+          "name": "DoWork",
+          "kind": "function",
+          "parentKey": "Example.Worker"
         }
       },
       "results": [
