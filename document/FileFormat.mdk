@@ -523,8 +523,16 @@ together with a length. See &sect;[#file].
 
 ### `logicalLocations` property { #run-logicalLocations }
 
-A `run` object should contain a property named `logicalLocations` whose value is an object,
+Depending on the circumstances, a `run` object either may or should contain a property named `logicalLocations` whose value is an object,
 each of whose properties represents the logical location of one or more results detected in the course of the run.
+
+If the tool has source location information available, and therefore can produce `result` objects with
+physical location information (such as the source file name, line, and column), the `logicalLocations` property
+may be present.
+
+If the tool does not have source location information available, and therefore can only produce `result` objects
+with logical location information (such as a namespace, type, and method name), the `logicalLocations` propertys
+should be present.
 
 With one exception described in &sect;[#location-logicalLocationKey], each property name in the `logicalLocations` object shall be
 a string representing the logical location where the result was detected, in a format consistent with

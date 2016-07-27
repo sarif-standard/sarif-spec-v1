@@ -29,10 +29,13 @@ as would happen if the tool detected no issues in any of the files it scanned.
 }
 ```
 
-## Minimal recommended SARIF file resulting from a scan { - #AnnexG-Recommended }
+## Minimal recommended SARIF file with source information { - #AnnexG-RecommendedWithSource }
 
-This is a minimal recommended SARIF file for the case where the analysis tool was run with the
-intent of scanning files and producing results (see &sect;[#run-results]).
+This is a minimal recommended SARIF file for the case where
+
+1. The analysis tool was run with the intent of scanning files and producing results (see &sect;[#run-results]), and
+2. The analysis tool has source location information available.
+
 The file contains those elements recommended by the specification
 (that is, those elements which the specification states "should" be present),
 in addition to the required elements.
@@ -41,10 +44,12 @@ The file contains a single `run` object (&sect;[#run]) with a `results` array (&
 The `results` array contains a single `result` object (&sect;[#result]) 
 so the recommended elements of the `result` object can be shown.
 
-It contains a `files` object (&sect;[#run-files]) specifying only those files in which the tool detected a result.
-It contains a `logicalLocations` object (&sect;[#run-logicalLocations]) specifying only those logical locations in which the tool detected a result.
+It contains a `run.files` property (&sect;[#run-files]) specifying only those files in which the tool detected a result.
 
-This example also includes rule metadata (&sect;[#run-rules]), even though rule metadata is optional,
+It does not contain a `run.logicalLocations` property (&sect;[#run-logicalLocations]), because when physical location
+information is available, that property is optional (it "may" be present).
+
+This example also includes a `run.rules` property (&sect;[#run-rules])  containing rule metadata, even though rule metadata is optional,
 to show how a SARIF log file can be self-contained, in the sense of containing all the information
 necessary to interpret the results.
 
@@ -60,22 +65,6 @@ necessary to interpret the results.
       "files": {
         "file:///user/builder/work/src/collections/list.cpp": {
           "mimeType": "text/x-c"
-        }
-      },
-      "logicalLocations": {
-        "collections::list::add": {
-          "name": "add",
-          "kind": "function",
-          "parentKey": "collections::list"
-        },
-        "collections::list": {
-          "name": "list",
-          "kind": "type",
-          "parentKey": "collections"
-        },
-        "collections": {
-          "name": "collections",
-          "kind": "namespace"
         }
       },
       "results": [
@@ -101,6 +90,73 @@ necessary to interpret the results.
           "fullDescription": "A variable was used without being initialized. This can result in runtime errors such as null reference exceptions"
         }
       }
+    }
+  ]
+}
+```
+
+## Minimal recommended SARIF file without source information { - #AnnexG-RecommendedWithoutSource }
+
+This is a minimal recommended SARIF file for the case where
+
+1. The analysis tool was run with the intent of scanning files and producing results (see &sect;[#run-results]), but
+2. The analysis tool does not have source location information available.
+
+The file contains those elements recommended by the specification
+(that is, those elements which the specification states "should" be present),
+in addition to the required elements.
+
+The file contains a single `run` object (&sect;[#run]) with a `results` array (&sect;[#run-results]).
+The `results` array contains a single `result` object (&sect;[#result]) 
+so the recommended elements of the `result` object can be shown.
+
+It contains a `run.files` property (&sect;[#run-files]) specifying only those files in which the tool detected a result.
+
+It contains a `run.logicalLocations` property (&sect;[#run-logicalLocations]), because when physical location
+information is not available, that property is recommended (it "should" be present).
+
+```
+{
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "BinaryScanner",
+        "semanticVersion": "1.0.1"
+      },
+      "files": {
+        "file:///user/builder/work/bin/example": {
+          "mimeType": "application/vnd.microsoft.portable-executable"
+        }
+      },
+      "logicalLocations": {
+        "Example.Worker.DoWork": {
+          "name": "DoWork",
+          "kind": "function",
+          "parentKey": "Example.Worker"
+        },
+        "Example.Worker": {
+          "name": "Worker",
+          "kind": "type",
+          "parentKey": "Example"
+        },
+        "Example": {
+          "name": "Example",
+          "kind": "namespace"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "B6412",
+          "message": "The insecure method \"Crypto.Sha1.Encrypt\" should not be used.",
+          "level": "warning",
+          "locations": [
+            {
+              "fullyQualifiedLogicalName": "Example.Worker.DoWork"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
