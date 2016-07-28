@@ -41,7 +41,7 @@ analysis target
   ~ programming artifact which a static analysis tool is instructed to analyze
 
 result file
-  ~ file in which a static analysis tool detects a problem
+  ~ file in which a static analysis tool detects a result
 
 rule
   ~ specific criterion for correctness verified by a static analysis tool
@@ -109,11 +109,11 @@ camelCase name
   ~ Example: `camelCase`, `version`, `fullName`.
 
 property bag
-  ~ a JSON object consisting of a set of name/value pairs with arbitrary camelCase names
+  ~ JSON object consisting of a set of name/value pairs with arbitrary camelCase names
 
 newline sequence
   ~ sequence of one or more characters representing the end of a line of text
-  ~ Note: Some systems represent a newline sequence with a single newline character; others represent it as a carriage return character followed by a newline character.
+  ~ NOTE: Some systems represent a newline sequence with a single newline character; others represent it as a carriage return character followed by a newline character.
 
 text file
   ~ file considered as a sequence of characters organized into lines and columns
@@ -139,7 +139,7 @@ binary region
   ~ region representing a contiguous range of zero or more bytes in a binary file
 
 physical location
-  ~ location specified by reference to a programming artifact together with a range of bytes or characters within that artifact
+  ~ location specified by reference to a programming artifact together with a region within that artifact
 
 logical location
   ~ location specified by reference to a programmatic construct, without specifying the programming artifact within which that construct occurs

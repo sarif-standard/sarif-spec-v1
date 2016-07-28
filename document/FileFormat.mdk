@@ -44,7 +44,7 @@ particularly in cases where a tool is analyzing files stored on a physical file 
 For example, a file path might contain the account name of a developer.
 ~
 
-Two URIs shall be considered equivalent if their normalized forms are the same
+Two URIs shall be considered equivalent if their normalized forms are the same,
 as described in RFC 3986.
 
 ~ IsoNumberedNote
@@ -268,7 +268,7 @@ An `sarifLog` object specifies the version of the file format and contains the o
 
 A `sarifLog` object shall contain a property named `version` whose value is a string designating the
 version of the SARIF format to which this log file conforms.
-This string must have the value `"1.0.0"`.
+This string shall have the value `"1.0.0"`.
 
 Although the order in which the name/value pairs appear in a JSON object value is not semantically significant,
 the `version` property should appear first. 
@@ -403,11 +403,13 @@ and for the second run to `"AMD64"`.
 
 ### `tool` property { #run-tool }
 
-A `run` object shall contain a property named `tool` whose value is a `tool` object (&sect;[#tool]).
+A `run` object shall contain a property named `tool` whose value is a `tool` object (&sect;[#tool])
+that describes the analysis tool that was run.
 
 ### `invocation` property { #run-invocation }
 
-A `run` object may contain a property named `invocation` whose value is an `invocation` object (&sect;[#invocation]).
+A `run` object may contain a property named `invocation` whose value is an `invocation` object (&sect;[#invocation])
+that describes the invocation of the analysis tool that was run.
 
 ### `files` property { #run-files }
 
@@ -694,8 +696,11 @@ The tool should report the problem as an error in `configurationNotifications` a
 
 ### `rules` property { #run-rules }
 
-A `run` object (&sect;[#run]) may contain a property named `rules`
+Depending on the circumstances, a `run` object (&sect;[#run]) either shall or may contain a property named `rules`
 whose value is a JSON object, each of whose properties represents an analysis rule.
+If the tool was run solely for the purpose of exporting rule metadata,
+the `rules` property shall be present.
+Otherwise, the `rules` property may be present.
 
 Each property value in the `rules` object shall be a `rule` object (&sect;[#rule]).
 
@@ -1329,7 +1334,7 @@ result with that rule id, it provides a value for `ruleKey` to specify which of 
     "results": [
       {
         "ruleId": "CA1711",  # Matches the "id" value of the specified property value within "rules"
-        "ruleKey": "CA711.1" # Specifies a property name within "rules".
+        "ruleKey": "CA711-1" # Specifies a property name within "rules".
       }
     ],
     "rules": {
@@ -1499,7 +1504,7 @@ every effort to provide it.
 ~
 
 ~ IsoNumberedExample { @IsoNumberedExample=1}
-If a C++ analyzer detects that no file defines a `main` method,
+If a C++ analyzer detects that no file defines a global function `main`,
 then the result cannot be associated with a file.
 ~
 
@@ -1643,9 +1648,9 @@ wishes to convey the information that the condition described by the `result` ob
 be "suppressed".
 
 ~ IsoNote
-The treatment of "suppressed" issues depends on the development environment within which the
+The treatment of "suppressed" results depends on the development environment within which the
 log file is used, for example, a build system, an integrated development environment (IDE), or a result management system.
-Typically, development environments do not expose suppressed issues to the user.
+Typically, development environments do not expose suppressed results to the user.
 For example, they do not include them in build log files, display them in error lists,
 or include them in bug counts.
 ~
@@ -1732,8 +1737,8 @@ This allows tools to include information about the result that is not explicitly
 ### General { #location-General }
 
 A `location` object specifies the location where an analysis tool detected a result.
-A `location` object should specify the physical location (&sect;[#physicalLocation]) of the result,
-and it may also specify the logical location (&sect;[#location-fullyQualifiedLogicalName]) of the result.
+Depending on the circumstances, a `location` object specifies the physical location (&sect;[#physicalLocation]) of the result,
+the logical location (&sect;[#location-fullyQualifiedLogicalName]) of the result, or both.
 
 A logical location specifies a programmatic construct, for example, a class name or a function name,
 without specifying the programming artifact within which that construct occurs.
@@ -1840,8 +1845,10 @@ Whether `resultFile` is present depends on the information available to the tool
 
 ### `fullyQualifiedLogicalName` property { #location-fullyQualifiedLogicalName }
 
-A `location` object may contain a property named `fullyQualifiedLogicalName` whose value is a string
+Depending on the circumstances, a `location` object either should or may contain a property named `fullyQualifiedLogicalName` whose value is a string
 which specifies the fully qualified name of the logical location where the analysis tool detected the result.
+If physical location information is not available, `fullyQualifiedLogicalName` should be present.
+Otherwise, `fullyQualifiedLogicalName` may be present.
 
 The format of the `fullyQualifiedLogicalName` string shall be consistent with the programming language
 in which the programmatic construct specified by that logical location was expressed.
@@ -1908,7 +1915,7 @@ namespace A {
 
 (These could not coexist in the same compilation, but there is no reason two such source files could not exist.)
 
-If the tool detected one result in class `B` in file1.cpp, and another result in namespace `B` in file2.cpp,
+If the tool detected one result in class `B` in _file1.cpp_, and another result in namespace `B` in _file2.cpp_,
 the `fullyQualifiedLogicalName` for both would be `A::B`.
 In that case, the tool might set the `logicalLocationKey` property in either one of the results to `A::B-0`,
 and it might populate the `logicalLocations` property as follows:
@@ -1969,7 +1976,7 @@ This allows tools to include information about the location that is not explicit
 ### General { #physicalLocation-General }
 
 A `physicalLocation` object represents the physical location where a result was detected.
-A physical location specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.
+A physical location specifies a reference to a programming artifact together with a region within that artifact.
 
 ### `uri` property { #physicalLocation-uri }
 
@@ -2032,7 +2039,7 @@ shall be absent.
 
 ### `region` property { #physicalLocation-region }
 
-A `physicalLocation` object may have a property named `region` whose value is a `region` object (&sect;[#region]),
+A `physicalLocation` object may contain a property named `region` whose value is a `region` object (&sect;[#region])
 that represents the region within a file where the result was detected.
 
 If the result occurs in a nested file, then the `region` property shall specify the location of the result
@@ -2077,7 +2084,7 @@ or as a binary file
 
 ### Text regions { #region-textFiles }
 
-The line number of the first line in a text region shall have the value `1`.
+The line number of the first line in a text file shall have the value `1`.
 The column number of the first character in each line shall have the value `1`.
 
 ~ IsoNote
@@ -2099,14 +2106,12 @@ The reason for this requirement is that is common for existing tools to ignore s
 when calculating column numbers.
 ~
 
-~ IsoNumberedNote
 Programs such as viewers that process SARIF log files together with the analysis target files
 to which those log files refer should attempt to determine the character encoding of the target files.
 In the absence of internal information such as a Byte Order Mark, viewers may use external information
 (for example, command line arguments, project settings, or other configuration information)
 to determine the character encoding.
 If external information is also lacking, viewers should assume that each character occupies one byte.
-~
 
 The start of a text region shall be represented by a combination of the `startLine` (&sect;[#region-startLine])
 and `startColumn` (&sect;[#region-startColumn]) properties.
@@ -2235,7 +2240,7 @@ character in the region.
 
 ### `length` property { #region-length }
 
-A `region` object may have a property named `length` whose value is a non-negative integer.
+A `region` object may contain a property named `length` whose value is a non-negative integer.
 
 When the `region` object represents a text region,
 the value of `length` shall  the number of characters in the region.
@@ -2385,7 +2390,7 @@ containing a message relevant to this call stack.
 
 A `stack` object shall contain a property named `frames` whose value is an array of one or more `stackFrame` objects (&sect;[#stackFrame]).
 This array shall include every function call in the stack for which the tool has information,
-and the entries that are present shall occur in chronological order with the most recent (innermost) call first and the least recent (outermost) call last.
+and the entries that are present shall occur in nesting order with the most recent (innermost) call first and the least recent (outermost) call last.
 The entries in this array need not be unique.
 
 ~ IsoNumberedNote { @IsoNumberedNote=1 }
@@ -2506,8 +2511,8 @@ If an `annotatedCodeLocation` object occurs within a `codeFlow`, it may contain 
 If the `annotatedCodeLocation` does not occur within a `codeFlow`, the `step` property shall be absent.
 
 The value of the `step` property shall be an integer whose value is
-the 0-based sequence number of the location within the code flow,
-that is, it shall be 0 for the first location, 1 for the second, and so on.
+the 1-based sequence number of the location within the code flow,
+that is, it shall be 1 for the first location, 2 for the second, and so on.
 
 ~ IsoNote
 This property has two primary purposes:
@@ -2530,8 +2535,11 @@ the tool does not have associated symbol information.
 
 ### `fullyQualifiedLogicalName` property { #annotatedCodeLocation-fullyQualifiedLogicalName }
 
-An `annotatedCodeLocation` object may contain a property named `fullyQualifiedLogicalName` whose value
+Depending on the circumstance, an `annotatedCodeLocation` object either should or may contain a property named `fullyQualifiedLogicalName` whose value
 is a string containing the fully qualified name of the method to which this `annotatedCodeLocation` refers.
+If the `physicalLocation` property (&sect;[#annotatedCodeLocation-physicalLocation]) is absent,
+`fullyQualifiedLogicalName` should be present.
+Otherwise, `fullyQualifiedLogicalName` may be present. 
 See &sect;[#location-fullyQualifiedLogicalName] for examples.
 
 If the `run.logicalLocations` property (&sect;[#run-logicalLocations]) is present,
@@ -2857,9 +2865,28 @@ The value of `formatId` shall correspond to one of the names in the set of name/
 of the `rule` object (&sect;[#rule]) whose `id` property (&sect;[#rule-id]) matches the `ruleId` property (&sect;[#result-ruleId]) of this result.
 
 ### `arguments` property { #formattedMessage-arguments }
-A `formattedMessage` object may contain a property named `arguments`,
+If the message format string specified by `formatId` contains any placeholders,
+the `formattedMessage` object shall contain a property named `arguments`,
 whose value is an array of string values that will be used, in combination with a message format,
 to construct a result message.
+The array shall have as many elements are there are distinct placeholders in the message format.
+The array element at index _n_ shall correspond to the placeholder `{n}` in the message format.
+
+If the message format string specified by `formatId` does not contain any placeholders,
+the `arguments` property shall be absent.
+
+~IsoExample
+
+Suppose `formatId` refers to the following message format:
+
+```
+The variable "{0}" defined on line {1} is never used. Consider removing "{0}".
+```
+
+There are two distinct placeholders, `{0}` and `{1}` (although `{0}` occurs twice).
+Therefore the `arguments` array will have two elements, the first corresponding to `{0}`
+and the second corresponding to `{1}`.
+~
 
 ## `fix` object { #fix }
 
@@ -2891,7 +2918,7 @@ For each file, it specifies which bytes to remove, and provides new bytes to be 
 
 ### `description` property { #fix-description }
 
-A `fix` object may contain a property named `description` whose value is a string describing the proposed fix.
+A `fix` object should contain a property named `description` whose value is a string describing the proposed fix.
 
 ~IsoNote
 The purpose of the `description` property is to enable a result log viewer to present the proposed fix to the end user.
@@ -2949,12 +2976,12 @@ the location of the file as a valid URI (&sect;[#fileFormat-uriProperties]).
 
 ### `uriBaseId` property { #fileChange-uriBaseId }
 
-If the `uri` property (&sect;[#fileChange-uri]) is present and contains a relative URI,
+If the `uri` property (&sect;[#fileChange-uri]) contains a relative URI,
 then the `fileChange` object may contain a property named `uriBaseId` whose value shall be
 a string containing a URI base id (see &sect;[#fileFormat-uriBaseIdProperties]) which indirectly specifies
 the absolute URI with respect to which `uri` shall be interpreted.
 
-If the `uri` property is absent or contains an absolute URI, then the `uriBaseId` property
+If the `uri` property contains an absolute URI, then the `uriBaseId` property
 shall be absent.
 
 ### `replacements` property { #fileChange-replacements }
