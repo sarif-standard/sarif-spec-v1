@@ -1917,7 +1917,7 @@ namespace A {
 
 If the tool detected one result in class `B` in _file1.cpp_, and another result in namespace `B` in _file2.cpp_,
 the `fullyQualifiedLogicalName` for both would be `A::B`.
-In that case, the tool might set the `logicalLocationKey` property in either one of the results to `A::B-0`,
+In that case, the tool might set the `logicalLocationKey` property in either one of the results to `A::B-1`,
 and it might populate the `logicalLocations` property as follows:
 
 ```
@@ -2390,7 +2390,7 @@ containing a message relevant to this call stack.
 
 A `stack` object shall contain a property named `frames` whose value is an array of one or more `stackFrame` objects (&sect;[#stackFrame]).
 This array shall include every function call in the stack for which the tool has information,
-and the entries that are present shall occur in nesting order with the most recent (innermost) call first and the least recent (outermost) call last.
+and the entries that are present shall occur in chronological order with the most recent (innermost) call first and the least recent (outermost) call last.
 The entries in this array need not be unique.
 
 ~ IsoNumberedNote { @IsoNumberedNote=1 }
