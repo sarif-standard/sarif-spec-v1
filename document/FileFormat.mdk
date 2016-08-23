@@ -939,7 +939,7 @@ An `invocation` object contains information describing the invocation of the ana
 
 An `invocation` object may contain a property named `commandLine` whose value is a string
 containing the completely specified command line used to invoke the tool,
-starting with the path to the tool's executable or script file.
+starting with the name of the tool's executable or script file, optionally qualified by the relative or absolute path to the file.
 
 ~ IsoNumberedNote { @IsoNumberedNote=1 }
 The information in the `commandLine` property makes it possible to precisely repeat a run of an analysis tool,
