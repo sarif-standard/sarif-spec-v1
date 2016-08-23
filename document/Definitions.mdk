@@ -156,6 +156,9 @@ nested logical location
 empty array
   ~ array that contains no elements, and so has a length of 0
 
+empty object
+  ~ object that contains no properties
+
 empty string
   ~ string that contains no characters, and so has a length of 0
 
