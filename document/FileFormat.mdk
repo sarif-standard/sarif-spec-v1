@@ -488,6 +488,32 @@ If the file is a nested file,
 then the property name shall be the URI of the outermost parent,
 together with a fragment that describes the nesting of the file within
 its parent or parents.
+The fragment shall be expressed as an absolute path;
+that is, it shall begin with a forward slash character (`/`).
+
+~ IsoNumberedExample
+Valid: The fragment is expressed as an absolute path:
+
+```
+"files": {
+    "file:///C:/bin/archive.zip#/images/grape.jpg": {
+        ...
+    }
+}
+```
+~
+
+~ IsoNumberedExample
+Invalid: The fragment is not expressed as an absolute path:
+
+```
+"files": {
+    "file:///C:/bin/archive.zip#images/grape.jpg": {
+        ...
+    }
+}
+```
+~
 
 If the file is nested more than one level deep in the outermost parent,
 the fragments representing each level of nesting may be combined in any way desired,
