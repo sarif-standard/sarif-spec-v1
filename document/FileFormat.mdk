@@ -3238,11 +3238,11 @@ notification with that rule id, it provides a value for `ruleKey` to specify whi
 ```
 ~
 
-### `analysisTarget` property { #notification-analysisTarget }
+### `physicalLocation` property { #notification-physicalLocation }
 
-If the condition described by the `notification` object is relevant to a particular analysis target,
-the `notification` object should contain a property named `analysisTarget` whose value is a `physicalLocation` object
-(&sect;[#physicalLocation]) that identifies the analysis target.
+If the condition described by the `notification` object is relevant to a particular file location,
+the `notification` object should contain a property named `physicalLocation` whose value is a `physicalLocation` object
+(&sect;[#physicalLocation]) that identifies the relevant location.
 
 ### `message` property { #notification-message }
 
