@@ -3238,7 +3238,7 @@ notification with that rule id, it provides a value for `ruleKey` to specify whi
 ```
 ~
 
-### `analysisTarget` { #notification-analysisTarget }
+### `analysisTarget` property { #notification-analysisTarget }
 
 If the condition described by the `notification` object is relevant to a particular analysis target,
 the `notification` object should contain a property named `analysisTarget` whose value is a `physicalLocation` object
