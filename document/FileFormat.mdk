@@ -2653,6 +2653,9 @@ If present, the `kind` property shall have one of the following values, with the
 * `"branch"`: At this location, a branch in the execution path occurred.
 
 * `"call"`: This location is the site of a function or method call.
+    Every `annotatedCodeLocation` whose `kind` property is `"call"` shall be paired with a
+    subsequent `annotatedCodeLocation` whose `kind` property is `"callReturn"` and which refers to the same function,
+    unless the `codeFlow` in which the call occurs terminates before the function returns.
 
 * `"callReturn"`: This location is the target of a return from a function or method.
 
@@ -2672,16 +2675,20 @@ This can be used, for example, to designate the target of a jump instruction, or
 * `"declaration"`: The location introduces into the program a name which denotes an entity such as a variable, function, template, _etc_.
 
 * `"functionEnter"`: This location is an entry point to a function or method.
+    Every `annotatedCodeLocation` whose `kind` property is `"functionEnter"` shall be paired with a
+    subsequent `annotatedCodeLocation` whose `kind` property is `"functionExit"` and which refers to the same function,
+    unless the `codeFlow` in which the call occurs terminates before a function exit point is reached. 
 
-* `"functionExit"`: This location is an exit point from a function or method (for example, a return statement).
+* `"functionExit"`: This location represents the actual exit point from the function.
 
-* `"sanitizer"`: This is the location of a statement (for example, a function call), after the execution of which data that entered the system from outside (for example, from user input)
-is presumed to be safe.
+* `"functionReturn"`: This is the location of a statement that returns control from a function or method
+(for example, a `return` statement or a `throw` statement).
 
-* `"sink"`: At this location, untrusted data enters some security-sensitive code (for example, an `eval` statement
-that converts untrusted text to executable code).
-
-* `"source"`: At this location, untrusted data enters the system (for example, by being provided by a user or read from a file on disk).
+~ IsoNumberedNote
+Unlike `functionReturn`, `functionExit` is not associated with a source code location. It is a conceptual location,
+used by some analysis tools to represent the final node in the directed acyclic graph that represents the control
+flow through a function.
+~
 
 * `"usage"`: At this location, data is used.
 
@@ -2696,31 +2703,318 @@ The tool might provide a "related location" (&sect;[#result-relatedLocations]) w
 an `annotatedCodeLocation` object with the message "Insecure data entered the system here". 
 ~
 
-### `callee` property { #annotatedCodeLocation-callee }
+### `target`, `parameters`, and `variables` properties { #annotatedCodeLocation-target }
 
-If the value of the `kind` property (&sect;[#annotatedCodeLocation-kind]) of this `annotatedCodeLocation` object
-is `call`, then the `annotatedCodeLocation` object should contain a property named `callee` whose value is
-the fully qualified logical name of the function being called.
+Depending on the value of the `kind` property (&sect;[#annotatedCodeLocation-kind]) of this `annotatedCodeLocation` object,
+the `annotatedCodeLocation` object:
 
-If the value of the `kind` property is anything other than `call`, the `callee` property shall be absent.
+* either should or shall not contain a property named `target` whose value is a string.
+* either may, should, or shall not contain a property named `parameters` whose value is an array of strings,
+each representing a variable or expression.
+* either may or shall not contain a property named `variables` whose value is a sub-object,
+each of whose keys is the name of a variable, and each of whose values is a string representing the value of the variable.
 
-The format of the `callee` string shall be consistent with the programming language
-in which the function specified by that string was written.
+These properties shall appear only in `annotatedCodeLocation` objects that are part of a `codeFlow` (&sect;[#codeFlow]).
+
+The format of the string value of the `target` property, the elements of the `parameters` array,
+the property names in the `variables` sub-object, and the property values in the `variables` sub-object,
+shall be consistent with the syntax of the programming language in which the code being analyzed was written.
+
+The interpretation of the `target`, `parameters`, and `variables` properties,
+and whether those properties may, should, or shall not be present,
+depends on the value of the `kind` property, as specified in Table [#annotatedCodeLocation-target].1.
+In this table, for each value of `kind`, "optional" means that the property may be present,
+"recommended" means that the property should be present, and "absent" means that the property shall be absent.
+
+~ Center
+Table [#annotatedCodeLocation-target].1: Interpretation of `target`, `variables`, and `parameters`
+
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+| **`kind`**       | **`target`**                | **`parameters`**            | **`variables`**             |
++:-----------------+:----------------------------+:----------------------------+:----------------------------+
+| `alias`          | Recommended: The            | Recommended: The            | Optional: The name and      |
+|                  | name of the alias being     | name of the variable        | current value of the        |
+|                  | created. If multiple        | being aliased               | variable being aliased.     |
+|                  | aliases are created in      |                             |                             |
+|                  | the same statement, a       |                             |                             |
+|                  | separate                    |                             |                             |
+|                  | `annotatedCodeLocation`     |                             |                             |
+|                  | object shall be created     |                             |                             |
+|                  | for each alias that the     |                             |                             |
+|                  | tool creating the log       |                             |                             |
+|                  | wishes to represent.        |                             |                             |
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+| `assignment`     | Recommended: The            | Recommended: A              | Optional: the names and     |
+|                  | name of the variable        | string representation       | values of the variables     |
+|                  | being assigned to.          | of the value                | participating in the        |
+|                  |                             | assigned to the             | expression on the right-    |
+|                  |                             | target variable.            | hand side of the            |
+|                  |                             |                             | assignment.                 |
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+| `branch`         | Recommended: If the         | Optional: If the branch     | Optional: If the branch is  |
+|                  | target of the branch is a   | is the result of a test,    | the result of a test,       |
+|                  | named label, in which       | in which case, a string     | in which case, the names    |
+|                  | case, the name of           | representation of the       | and values of the variables |
+|                  | the label.                  | Boolean                     | participating in the        |
+|                  | Optional: If the target of  | value of the test           | expression being tested.    |
+|                  | the branch is a known       | condition (`"true"`         | Absent: If the branch is    |
+|                  | address or offset, in       | or `"false"`).              | unconditional.              |
+|                  | which case, a               | Absent: If the branch is    |                             |
+|                  | hexadecimal                 | unconditional.              |                             |
+|                  | string representation of    |                             |                             |
+|                  | that address or offset.     |                             |                             |
+|                  | Absent: If the target of    |                             |                             | 
+|                  | the branch is not           |                             |                             |
+|                  | known.|                     |                             |                             |
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+| `call`           | Recommended: The            | Optional: An array of       | Optional: The names and     |
+|                  | fully qualified name of     | strings representing        | values of any variables     |
+|                  | the function being          | the arguments               | in  the expressions passed  |
+|                  | called.                     | passed to the               | as the arguments to the     |  
+|                  |                             | function.                   | function.                   |
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+| `callReturn`     | Recommended: The            | Optional: If the function   | Absent                      |
+|                  | fully qualified name of     | returns a value or          |                             |
+|                  | the  function being         | values, in which case,      |                             |
+|                  | returned from.              | string representations      |                             |
+|                  |                             | of the value or values      |                             |
+|                  |                             | returned.                   |                             |
+|                  |                             | Absent: If the function     |                             |
+|                  |                             | does not return a value.    |                             |
+|                  |                             |                             |                             |
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+| `continuation`   | Absent                      | Absent                      | Optional: The names and     |
+|                  |                             |                             | values of selected variables|
+|                  |                             |                             | at the specified location.  |
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+| `declaration`    | Recommended: The            | Optional: If the            | Optional: If the            |
+|                  | name of the variable        | declaration has an          | declaration has an          |
+|                  | being declared. If          | initializer, in which       | initializer, in which case, |
+|                  | multiple variables are      | case, the value of          | the names and values of     |
+|                  | declared in the same        | the initializer             | any variables participating |
+|                  | statement, a separate       | expression.                 | in the initializer          |
+|                  | `annotatedCodeLocation`     | Absent: If the              | expression.                 |
+|                  | object shall be created     | declaration has no          | Absent: If the              |
+|                  | for each declaration that   | initializer.                | declaration has no          |
+|                  | the tool creating the       |                             | initializer.                |
+|                  | log wishes to represent.    |                             |                             |
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+| `functionEnter`  | Recommended: The            | Absent                      | Absent                      |
+|                  | fully qualified name of     |                             |                             |
+|                  | the function being          |                             |                             |
+|                  | entered.                    |                             |                             |
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+| `functionExit`   | Recommended: The            | Optional: If the function   | Absent                      |
+|                  | fully qualified name of     | returns a value or          |                             |
+|                  | the function being          | values, in which case,      |                             |
+|                  | returned from.              | string representations      |                             |
+|                  |                             | of the value or values      |                             |
+|                  |                             | returned.                   |                             |
+|                  |                             | Absent: If the function     |                             |
+|                  |                             | does not return a value.    |                             |
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+| `functionReturn` | Recommended: The            | Optional: If the function   | Optional: If the function   |
+|                  | fully qualified name of     | returns a value or          | returns a value or          |
+|                  | the function being          | values, in which case,      | values, in which case,      |
+|                  | exited.                     | string representations      | the names and values        |
+|                  |                             | of the value or values      | of any variables            | 
+|                  |                             | returned.                   | participating in the        |
+|                  |                             | Absent: If the function     | return expression           |
+|                  |                             | does not return a value.    | or expressions.             |
+|                  |                             |                             | Absent: If the function     |
+|                  |                             |                             | does not return a value.    |
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+| `usage`          | Recommended: The            | Optional: A string          | Absent                      |
+|                  | name of the variable        | representation of the       |                             |
+|------------------|-----------------------------|-----------------------------|-----------------------------|
+
+~
+
+~IsoNumberedExample { @IsoNumberedExample=1 }
+In C++, if the source code contains the declaration
+
+```
+std::string &str = name;
+```
+
+then the value of `kind` would be `"alias"`, the value of `target` would be `"str"`, the value of `parameters` would be
+
+```
+[ "name" ]
+```
+
+and the value of `values` might be
+
+```
+{ "name": "\"John\"" }
+```
+~
+
+~IsoNumberedExample
+In C++, if the source code contains the declaration
+
+```
+std::string &str = name, &str2 = address;
+```
+
+and if the tool creating the log wished to represent both aliases in the log file, then the tool would create
+two `annotatedCodeLocation` objects, each with `kind` set to `"alias"`, and referring to the same source line.
+~
+
+~IsoNumberedExample
+In C++ or C#, if the source code contains the assignment
+
+```
+m = n + p;
+```
+
+then the value of `kind` would be `"assignment"`, the value of `target` would be `"m"`, the value of `parameters` might be
+
+```
+[ "5" ]
+```
+
+and the value of `variables` might be
+
+```
+{  "n": "2", "p": "3" }
+```
+~
+
+~IsoNumberedExample
+In C#, if the source code contains the test
+
+```
+if (s.Length > 0 && y > 2 && valid())
+```
+
+then the value of `kind` would be `"branch"`, `target` would be absent, the value of `parameters`
+might be
+
+```
+[ "true" ]
+```
+
+and the value of `variables` might be
+
+```
+{ "s": "\"A string\"", "y": "3" }
+```
+~
+
+~IsoNumberedExample
+In C++ or C#, if the source code contains the function call
+
+```
+f(7, m + n, "s", this, g(2));
+```
+
+then the value of `kind` would be `"call"`, the value of `target` might be `"f"` (or, for example, `"N.C.f"` if
+the function `f` occurred in class `C` in namespace `N`), the value of `parameters` would be
+
+```
+[ "7", "m + n", "\"s\"", "this", "g(2)" ]
+```
+
+and the value of `variables` might be
+
+```
+{ "m": "2", "n": "3" }
+```
+
+~
+
+~IsoNumberedExample
+In C++ or C#, if the source code contains the function call:
+
+```
+int n = f();
+```
+
+then the value of `kind` would be `"callReturn"`, the value of `target` might be `"f"` (or, for example, `"N.C.f"` if
+the function `f` occurred in class `C` in namespace `N`), the value of `parameters` might be
+
+```
+[ "5" ]
+```
+
+and `variables` would be absent. 
+
+~
+
+~IsoNumberedExample
+In C++ or C#, if the source code contains the declaration
+
+```
+int m = n + p;
+```
+
+then the value of `kind` would be `"declaration"`, the value of `target` would be `"m"`,
+the value of `parameters` might be
+
+```
+[ "5" ]
+```
+
+and the value of `variables` might be
+
+```
+{ "n": "2", "p": "3" }
+```
+
+~
+
+~IsoNumberedExample
+In C++ or C#, if the source code contains the declaration
+
+```
+int m = n + p, q = k + r;
+```
+
+and if the tool creating the log wished to represent the declarations of both variables in the log file, then the tool would create
+two `annotatedCodeLocation` objects, each with `kind` set to `"declaration"`, and referring to the same source line.
+~
+
+~IsoNumberedExample
+In C++ or C#, if the source code contains the `return` statement
+
+```
+int f()
+{
+    ...
+    return m + n;
+}
+```
+
+then the value of `kind` would be `"functionExit"`, the value of `target` might be `"f"` (or, for example, `"N.C.f"` if
+the function `f` occurred in class `C` in namespace `N`), the value of `parameters` might be
+
+```
+[ "5" ]
+```
+
+and the value of `variables` might be
+
+```
+{ "m": "2", "n": "3" }
+```
+~
 
 If the `run.logicalLocations` property (&sect;[#run-logicalLocations]) is present,
-the value of the `callee` property should be equal to the name of one of the properties on the `run.logicalLocations` object,
-with one exception, described in &sect;[#annotatedCodeLocation-calleeKey].
+and the the value of `kind` is `"call"`, then
+the value of the `target` property should be equal to the name of one of the properties on the `run.logicalLocations` object,
+with one exception, described in &sect;[#annotatedCodeLocation-targetKey].
 
-### `calleeKey` { #annotatedCodeLocation-calleeKey }
+### `targetKey` property { #annotatedCodeLocation-targetKey }
 
-The `annotatedCodeLocation` object may contain a property named `calleeKey` whose value is a string.
+The `annotatedCodeLocation` object may contain a property named `targetKey` whose value is a string.
 If present, this string shall be equal to the name of one of the properties on the `run.logicalLocations` object (&sect;[#run-logicalLocations]),
-which provides additional information about the function specified by `callee` (&sect;[#annotatedCodeLocation-callee]).
+which provides additional information about the function specified by `target` (&sect;[#annotatedCodeLocation-target]).
 
-`calleeKey` is only necessary if, in the course of a run, the tool encounters two or more
+`targetKey` is only necessary if, in the course of a run, the tool encounters two or more
 distinct functions with the same fully qualified logical name.
-In that case, the tool shall synthesize a unique name by appending a suffix to `callee`,
-assign the resulting string to `calleeKey`, and use that string as the key into the `run.logicalLocations` dictionary.
+In that case, the tool shall synthesize a unique name by appending a suffix to `target`,
+assign the resulting string to `targetKey`, and use that string as the key into the `run.logicalLocations` dictionary.
 
 ### `importance` property { #annotatedCodeLocation-importance }
 
@@ -2747,6 +3041,21 @@ A viewer might use this property to offer the user three options for viewing a l
 `"essential"`.
 * A "verbose view," which displays all the locations in the code flow.
 ~
+
+### `taintKind` property { #annotatedCodeLocation-taintKind }
+
+An `annotatedCodeLocation` object may contain a property named `taintKind` whose value is a string which
+classifies state transitions in code locations relevant to a taint analysis.
+
+If present, the `taintKind` property shall have one of the following values, with the specified meanings:
+
+* `"source"`: At this location, untrusted data enters the system (for example, by being provided by a user or read from a file on disk).
+
+* `"sanitizer"`: This is the location of a statement (for example, a function call), after the execution of which data that entered the system from outside (for example, from user input)
+is presumed to be safe.
+
+* `"sink"`: At this location, untrusted data enters some security-sensitive code (for example, an `eval` statement
+that converts untrusted text to executable code).
 
 ### `snippet` property { #annotatedCodeLocation-snippet }
 
