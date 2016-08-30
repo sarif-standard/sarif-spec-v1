@@ -2682,7 +2682,7 @@ This can be used, for example, to designate the target of a jump instruction, or
 * `"functionExit"`: This location represents the actual exit point from the function.
 
 * `"functionReturn"`: This is the location of a statement that returns control from a function or method
-(for example, a `return` statement or a `throw` statement).
+(for example, a `return` statement).
 
 ~ IsoNumberedNote
 Unlike `functionReturn`, `functionExit` is not associated with a source code location. It is a conceptual location,
