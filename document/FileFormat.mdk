@@ -2602,6 +2602,8 @@ This property should be absent only if the tool does not have physical location 
 
 NOTE: This could happen, for example, if this `annotatedCodeLocation` occurs within a binary for which
 the tool does not have associated symbol information.
+It might also happen if the value of the `kind` property (&sect;[#annotatedCodeLocation-kind]) is `"functionExit"`,
+and the tool has chosen not to associate the function exit with a source code location.
 
 ### `fullyQualifiedLogicalName` property { #annotatedCodeLocation-fullyQualifiedLogicalName }
 
@@ -2679,16 +2681,19 @@ This can be used, for example, to designate the target of a jump instruction, or
     subsequent `annotatedCodeLocation` whose `kind` property is `"functionExit"` and which refers to the same function,
     unless the `codeFlow` in which the call occurs terminates before a function exit point is reached. 
 
-* `"functionExit"`: This location represents the actual exit point from the function.
+* `"functionExit"`: This location represents the conceptual exit from the function,
+    used by some analysis tools to represent the final node in the directed acyclic
+    graph that represents the control flow through a function.
+    A `"functionExit"` may be preceded in the code flow by a `"functionReturn"`.
+
+~ IsoNumberedNote
+A tool might choose (for example) to associate a `functionExit` with the closing brace of a function,
+or to associate it with the final statement in the function,
+or not to associate it with a source code location at all. 
+~
 
 * `"functionReturn"`: This is the location of a statement that returns control from a function or method
 (for example, a `return` statement).
-
-~ IsoNumberedNote
-Unlike `functionReturn`, `functionExit` is not associated with a source code location. It is a conceptual location,
-used by some analysis tools to represent the final node in the directed acyclic graph that represents the control
-flow through a function.
-~
 
 * `"usage"`: At this location, data is used.
 
@@ -2726,6 +2731,38 @@ depends on the value of the `kind` property, as specified in Table [#annotatedCo
 In this table, for each value of `kind`, "optional" means that the property may be present,
 "recommended" means that the property should be present, and "absent" means that the property shall be absent.
 
+In this table, a "variable name" may be any of the following, unless otherwise specified:
+
+* A simple variable name.
+* An object property reference.
+* An array element reference.
+* A reference to the current object.
+* Any combination of these.
+
+~ IsoNumberedExample { @IsoNumberedExample=1 }
+Examples of valid "variable names" in C++:
+
+* `count`
+* `str->length`
+* `values[0]`
+* `this`
+* `this->size`
+* `this->car->wheels[0]`
+
+~
+
+In the following table, whenever a "value" is mentioned, it means a string representation of the
+value.
+
+~ IsoNumberedExample
+Examples of valid "values":
+
+* A integer value of `2` would be represented as `"2"`.
+* A string value of `"abc"` would be represented as `"\"abc\""`.
+* A Boolean value of `true` would be represented as `"true"`.
+
+~
+
 ~ Center
 Table [#annotatedCodeLocation-target].1: Interpretation of `target`, `variables`, and `parameters`
 
@@ -2734,9 +2771,9 @@ Table [#annotatedCodeLocation-target].1: Interpretation of `target`, `variables`
 +:-----------------+:----------------------------+:----------------------------+:----------------------------+
 | `alias`          | Recommended: The            | Recommended: The            | Optional: The name and      |
 |                  | name of the alias being     | name of the variable        | current value of the        |
-|                  | created. If multiple        | being aliased               | variable being aliased.     |
-|                  | aliases are created in      |                             |                             |
-|                  | the same statement, a       |                             |                             |
+|                  | created. If multiple        | being aliased. Only a       | variable being aliased.     |
+|                  | aliases are created in      | simple variable name        |                             |
+|                  | the same statement, a       | shall be specified here.    |                             |
 |                  | separate                    |                             |                             |
 |                  | `annotatedCodeLocation`     |                             |                             |
 |                  | object shall be created     |                             |                             |
@@ -2744,71 +2781,82 @@ Table [#annotatedCodeLocation-target].1: Interpretation of `target`, `variables`
 |                  | tool creating the log       |                             |                             |
 |                  | wishes to represent.        |                             |                             |
 |------------------|-----------------------------|-----------------------------|-----------------------------|
-| `assignment`     | Recommended: The            | Recommended: A              | Optional: the names and     |
-|                  | name of the variable        | string representation       | values of the variables     |
-|                  | being assigned to.          | of the value                | participating in the        |
-|                  |                             | assigned to the             | expression on the right-    |
-|                  |                             | target variable.            | hand side of the            |
+| `assignment`     | Recommended: The            | Recommended: The            | Optional: the names and     |
+|                  | name of the variable        | value assigned to           | values of the variables     |
+|                  | being assigned to.          | the target variable.        | participating in the        |
+|                  |                             |                             | expression on the right-    |
+|                  |                             |                             | hand side of the            |
 |                  |                             |                             | assignment.                 |
 |------------------|-----------------------------|-----------------------------|-----------------------------|
 | `branch`         | Recommended: If the         | Optional: If the branch     | Optional: If the branch is  |
-|                  | target of the branch is a   | is the result of a test,    | the result of a test,       |
-|                  | named label, in which       | in which case, a string     | in which case, the names    |
-|                  | case, the name of           | representation of the       | and values of the variables |
-|                  | the label.                  | Boolean                     | participating in the        |
-|                  | Optional: If the target of  | value of the test           | expression being tested.    |
-|                  | the branch is a known       | condition (`"true"`         | Absent: If the branch is    |
-|                  | address or offset, in       | or `"false"`).              | unconditional.              |
-|                  | which case, a               | Absent: If the branch is    |                             |
-|                  | hexadecimal                 | unconditional.              |                             |
-|                  | string representation of    |                             |                             |
-|                  | that address or offset.     |                             |                             |
+|                  | target of the branch is     | is the result of a test,    | the result of a test,       |
+|                  | a named label, in           | in which case, the          | in which case, the names    |
+|                  | which case, the name        | Boolean value of the test   | and values of the variables |
+|                  | of the label.               | condition.                  | participating in the        |
+|                  | Optional: If the target     | Absent: If the branch is    | expression being tested.    |
+|                  | of the branch is a          | unconditional.              | Absent: If the branch is    |
+|                  | known address or            |                             | unconditional.              |
+|                  | offset, in which case,      |                             |                             |
+|                  | a hexadecimal               |                             |                             |
+|                  | string representation       |                             |                             |
+|                  | of that address or          |                             |                             |
+|                  | offset.                     |                             |                             |
 |                  | Absent: If the target of    |                             |                             | 
 |                  | the branch is not           |                             |                             |
-|                  | known.|                     |                             |                             |
+|                  | known.                      |                             |                             |
 |------------------|-----------------------------|-----------------------------|-----------------------------|
-| `call`           | Recommended: The            | Optional: An array of       | Optional: The names and     |
-|                  | fully qualified name of     | strings representing        | values of any variables     |
-|                  | the function being          | the arguments               | in  the expressions passed  |
+| `call`           | Recommended: The            | Optional: An array          | Optional: The names and     |
+|                  | fully qualified name of     | containing the values of    | values of any variables     |
+|                  | the function being          | the arguments               | in the expressions passed   |
 |                  | called.                     | passed to the               | as the arguments to the     |  
-|                  |                             | function.                   | function.                   |
+|                  |                             | function. This array        | function. For object        |
+|                  |                             | shall not include the       | method calls, this may      |
+|                  |                             | implicit object reference   | include the name and value  |
+|                  |                             | (for example, `this`)       | of the object on which      |
+|                  |                             | passed to object            | the method was invoked.     |
+|                  |                             | method calls.               |                             |
 |------------------|-----------------------------|-----------------------------|-----------------------------|
 | `callReturn`     | Recommended: The            | Optional: If the function   | Absent                      |
 |                  | fully qualified name of     | returns a value or          |                             |
 |                  | the  function being         | values, in which case,      |                             |
-|                  | returned from.              | string representations      |                             |
-|                  |                             | of the value or values      |                             |
+|                  | returned from.              | the value or values         |                             |
 |                  |                             | returned.                   |                             |
 |                  |                             | Absent: If the function     |                             |
 |                  |                             | does not return a value.    |                             |
-|                  |                             |                             |                             |
 |------------------|-----------------------------|-----------------------------|-----------------------------|
 | `continuation`   | Absent                      | Absent                      | Optional: The names and     |
-|                  |                             |                             | values of selected variables|
-|                  |                             |                             | at the specified location.  |
+|                  |                             |                             | values of selected          |
+|                  |                             |                             | variables at the specified  |
+|                  |                             |                             | location. Any variable whose|
+|                  |                             |                             | value is available at the   |
+|                  |                             |                             | specified location may be   |
+|                  |                             |                             | mentioned.                  |
 |------------------|-----------------------------|-----------------------------|-----------------------------|
 | `declaration`    | Recommended: The            | Optional: If the            | Optional: If the            |
 |                  | name of the variable        | declaration has an          | declaration has an          |
 |                  | being declared. If          | initializer, in which       | initializer, in which case, |
 |                  | multiple variables are      | case, the value of          | the names and values of     |
-|                  | declared in the same        | the initializer             | any variables participating |
-|                  | statement, a separate       | expression.                 | in the initializer          |
-|                  | `annotatedCodeLocation`     | Absent: If the              | expression.                 |
+|                  | declared in the same        | the initializer             | any variables               |
+|                  | statement, a separate       | expression.                 | participating in the        |
+|                  | `annotatedCodeLocation`     | Absent: If the              | initializer expression.     |
 |                  | object shall be created     | declaration has no          | Absent: If the              |
-|                  | for each declaration that   | initializer.                | declaration has no          |
-|                  | the tool creating the       |                             | initializer.                |
-|                  | log wishes to represent.    |                             |                             |
+|                  | for each declaration        | initializer.                | declaration has no          |
+|                  | that the tool creating      |                             | initializer.                |
+|                  | the log wishes to           |                             |                             |
+|                  | represent.                  |                             |                             |
 |------------------|-----------------------------|-----------------------------|-----------------------------|
-| `functionEnter`  | Recommended: The            | Absent                      | Absent                      |
-|                  | fully qualified name of     |                             |                             |
-|                  | the function being          |                             |                             |
-|                  | entered.                    |                             |                             |
+| `functionEnter`  | Recommended: The            | Optional: An array          | Optional: The names and     |
+|                  | fully qualified name of     | containing the values of    | values of selected          |
+|                  | the function being          | the arguments passed to     | variables at the specified  |
+|                  | entered.                    | the function.               | location. Any variable      |
+|                  |                             |                             | whose value is available    |
+|                  |                             |                             | at the specified location   |
+|                  |                             |                             | may be mentioned.           |
 |------------------|-----------------------------|-----------------------------|-----------------------------|
 | `functionExit`   | Recommended: The            | Optional: If the function   | Absent                      |
 |                  | fully qualified name of     | returns a value or          |                             |
 |                  | the function being          | values, in which case,      |                             |
-|                  | returned from.              | string representations      |                             |
-|                  |                             | of the value or values      |                             |
+|                  | returned from.              | the value or values         |                             |
 |                  |                             | returned.                   |                             |
 |                  |                             | Absent: If the function     |                             |
 |                  |                             | does not return a value.    |                             |
@@ -2816,21 +2864,22 @@ Table [#annotatedCodeLocation-target].1: Interpretation of `target`, `variables`
 | `functionReturn` | Recommended: The            | Optional: If the function   | Optional: If the function   |
 |                  | fully qualified name of     | returns a value or          | returns a value or          |
 |                  | the function being          | values, in which case,      | values, in which case,      |
-|                  | exited.                     | string representations      | the names and values        |
-|                  |                             | of the value or values      | of any variables            | 
-|                  |                             | returned.                   | participating in the        |
-|                  |                             | Absent: If the function     | return expression           |
-|                  |                             | does not return a value.    | or expressions.             |
+|                  | exited.                     | the value or values         | the names and values        |
+|                  |                             | returned.                   | of any variables            | 
+|                  |                             | Absent: If the function     | participating in the        |
+|                  |                             | does not return a value.    | return expression           |
+|                  |                             |                             | or expressions.             |
 |                  |                             |                             | Absent: If the function     |
 |                  |                             |                             | does not return a value.    |
 |------------------|-----------------------------|-----------------------------|-----------------------------|
-| `usage`          | Recommended: The            | Optional: A string          | Absent                      |
-|                  | name of the variable        | representation of the       |                             |
+| `usage`          | Recommended: The            | Optional: The value         | Absent                      |
+|                  | name of the variable        | of the variable at          |                             |
+|                  | being used.                 | the specified location.     |                             |
 |------------------|-----------------------------|-----------------------------|-----------------------------|
 
 ~
 
-~IsoNumberedExample { @IsoNumberedExample=1 }
+~IsoNumberedExample
 In C++, if the source code contains the declaration
 
 ```
@@ -2906,11 +2955,11 @@ and the value of `variables` might be
 In C++ or C#, if the source code contains the function call
 
 ```
-f(7, m + n, "s", this, g(2));
+func(7, m + n, "s", this, g(2));
 ```
 
-then the value of `kind` would be `"call"`, the value of `target` might be `"f"` (or, for example, `"N.C.f"` if
-the function `f` occurred in class `C` in namespace `N`), the value of `parameters` would be
+then the value of `kind` would be `"call"`, the value of `target` might be `"func"` (or, for example, `"N.C.func"` if
+the function `func` occurred in class `C` in namespace `N`), the value of `parameters` would be
 
 ```
 [ "7", "m + n", "\"s\"", "this", "g(2)" ]
@@ -2924,21 +2973,44 @@ and the value of `variables` might be
 
 ~
 
-~IsoNumberedExample
-In C++ or C#, if the source code contains the function call:
+~ IsoNumberedExample
+In C#, if the source code contains the method invocation
 
 ```
-int n = f();
+example.Func(n);
 ```
 
-then the value of `kind` would be `"callReturn"`, the value of `target` might be `"f"` (or, for example, `"N.C.f"` if
-the function `f` occurred in class `C` in namespace `N`), the value of `parameters` might be
+where `example` is an object of type `SomeClass`, then the value of `kind` would be `"call"`,
+the value of `target` would be `SomeClass.Func`, the value of `parameters` might be
 
 ```
 [ "5" ]
 ```
 
-and `variables` would be absent. 
+and the value of `variables` might be
+
+```
+{ "example": "null", "n": "5" }
+```
+
+(assuming that the method was mistakenly invoked on a null reference).
+~
+
+~IsoNumberedExample
+In C++ or C#, if the source code contains the function call:
+
+```
+int n = func();
+```
+
+then the value of `kind` would be `"callReturn"`, the value of `target` might be `"func"` (or, for example, `"N.C.func"` if
+the function `func` occurred in class `C` in namespace `N`), the value of `parameters` might be
+
+```
+[ "5" ]
+```
+
+(assuming that the function returned the value `5`), and `variables` would be absent. 
 
 ~
 
@@ -2979,15 +3051,15 @@ two `annotatedCodeLocation` objects, each with `kind` set to `"declaration"`, an
 In C++ or C#, if the source code contains the `return` statement
 
 ```
-int f()
+int func()
 {
     ...
     return m + n;
 }
 ```
 
-then the value of `kind` would be `"functionExit"`, the value of `target` might be `"f"` (or, for example, `"N.C.f"` if
-the function `f` occurred in class `C` in namespace `N`), the value of `parameters` might be
+then the value of `kind` would be `"functionExit"`, the value of `target` might be `"func"` (or, for example, `"N.C.func"` if
+the function `func` occurred in class `C` in namespace `N`), the value of `parameters` might be
 
 ```
 [ "5" ]
