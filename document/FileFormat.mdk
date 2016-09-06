@@ -983,7 +983,7 @@ an analysis run. The value of `commandLine` would have to be combined with infor
 source to allow the run to be repeated.
 ~
 
-~ IsoExample
+~ IsoNumberedExample { @IsoNumberedExample=1 }
 Suppose a tool is invoked with the command line
 
 ```
@@ -997,6 +997,22 @@ Then the value of the `commandLine` property might contain the redacted command 
     [REMOVED]\DbScanner.exe /connectionString=[REMOVED] /input=*.sql 
 ```
 ~
+
+The `commandLine` property might describe a command that would be harmful if it were executed.
+For this reason, the recipient of a SARIF log file from an untrusted source should not execute the
+command line without first examining it carefully.
+In particular, an automated system should not execute a command line in a SARIF log file from an untrusted source.
+
+~IsoNumberedExample
+An example of a harmful command line:
+
+```
+"invocation": {
+  "commandLine": "rm -rf /"
+}
+```
+~
+
 
 ### `responseFiles` property { #invocation-responseFiles }
 
