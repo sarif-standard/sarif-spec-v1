@@ -983,7 +983,7 @@ an analysis run. The value of `commandLine` would have to be combined with infor
 source to allow the run to be repeated.
 ~
 
-~ IsoExample
+~ IsoNumberedExample { @IsoNumberedExample=1 }
 Suppose a tool is invoked with the command line
 
 ```
@@ -997,6 +997,22 @@ Then the value of the `commandLine` property might contain the redacted command 
     [REMOVED]\DbScanner.exe /connectionString=[REMOVED] /input=*.sql 
 ```
 ~
+
+The `commandLine` property might describe a command that would be harmful if it were executed.
+For this reason, the recipient of a SARIF log file from an untrusted source should not execute the
+command line without first examining it carefully.
+In particular, an automated system should not execute a command line in a SARIF log file from an untrusted source.
+
+~IsoNumberedExample
+An example of a harmful command line:
+
+```
+"invocation": {
+  "commandLine": "rm -rf /"
+}
+```
+~
+
 
 ### `responseFiles` property { #invocation-responseFiles }
 
@@ -2738,6 +2754,7 @@ In this table, a "variable name" may be any of the following, unless otherwise s
 * An array element reference.
 * A reference to the current object.
 * Any combination of these.
+* Any valid expression that produces a value.
 
 ~ IsoNumberedExample { @IsoNumberedExample=1 }
 Examples of valid "variable names" in C++:
@@ -2748,6 +2765,7 @@ Examples of valid "variable names" in C++:
 * `this`
 * `this->size`
 * `this->car->wheels[0]`
+* `func()` (assuming that `func` returns a value)
 
 ~
 
@@ -2758,9 +2776,16 @@ value.
 Examples of valid "values":
 
 * A integer value of `2` would be represented as `"2"`.
-* A string value of `"abc"` would be represented as `"\"abc\""`.
+* A string value of `"2"` would be represented as `"\"2\""`.
 * A Boolean value of `true` would be represented as `"true"`.
 
+~
+
+~ IsoNote
+In languages where all objects have a built-in string representation (for example, by means of a method such as `ToString()`),
+the analysis tool might choose to obtain the string representation by calling that method.
+For example, in C#, given an object `uri` of type `System.Uri`, the tool might choose to obtain the string value
+by calling `uri.ToString()`, perhaps resulting in `"http://www.example.com"`.
 ~
 
 ~ Center
@@ -2928,6 +2953,19 @@ and the value of `variables` might be
 ```
 {  "n": "2", "p": "3" }
 ```
+
+Or, since `variables` can include expressions, the value of `variables` might be
+
+```
+{  "n + p": "5" }
+```
+
+or even
+
+```
+{  "n": "2", "p": "3", "n + p": "5" }
+```
+
 ~
 
 ~IsoNumberedExample
