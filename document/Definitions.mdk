@@ -164,3 +164,9 @@ empty string
 
 response file
   ~ file containing arguments for a tool, which are interpreted as if they had appeared directly on the command line
+
+tainted data
+  ~ data that enters a program from an untrusted source, such as user input
+
+taint analysis
+  ~ the process of tracing the path of tainted data through a program
