@@ -2735,27 +2735,34 @@ The tool might provide a "related location" (&sect;[#result-relatedLocations]) w
 an `annotatedCodeLocation` object with the message "Insecure data entered the system here". 
 ~
 
-### `kind`-dependent properties: `target`, `targetLocation`, `parameters`, and `variables` { #annotatedCodeLocation-target }
+### `kind`-dependent properties: `target`, `targetLocation`, `values`, and `state` { #annotatedCodeLocation-target }
 
-Depending on the value of the `kind` property (&sect;[#annotatedCodeLocation-kind]) of this `annotatedCodeLocation` object,
-the `annotatedCodeLocation` object either may, should, or shall not contain:
+Depending on the value of its `kind` property (&sect;[#annotatedCodeLocation-kind]),
+an `annotatedCodeLocation` object either may, should, or shall not contain:
 
 * a property named `target` whose value is a string.
 * a property named `targetLocation` whose value is a `physicalLocation` object (&sect;[#physicalLocation]).
-* a property named `parameters` whose value is an array of strings, each representing a variable.
-* a property named `variables` whose value is a sub-object,
-each of whose property names is the name of a variable,
-and each of whose property values is a string representing the value of the variable.
+* a property named `values` whose value is an array of strings.
+* a property named `state` whose value is an object.
 
 These properties shall appear only in `annotatedCodeLocation` objects that are part of a `codeFlow` (&sect;[#codeFlow]).
 
-The format of the string value of the `target` property, the elements of the `parameters` array,
-the property names in the `variables` sub-object, and the property values in the `variables` sub-object,
-shall be consistent with the syntax of the programming language in which the code being analyzed was written.
+The precise interpretation of these properties,
+and whether they may, should, or shall not be present,
+depends on the value of the `kind` property.
 
-The interpretation of the `target`, `targetLocation`, `parameters`, and `variables` properties,
-and whether those properties may, should, or shall not be present,
-depends on the value of the `kind` property, as specified in this section.
+~ IsoNumberedNote { @IsoNumberedNote=1 }
+In imprecise terms, the meanings of these properties are as follows:
+
+* `target` represents the thing being operated on at the specified location.
+* `targetLocation` represents the physical location of that thing.
+* `values` represents a set of values that are input to the operation or produced by the operation.
+* `state` is a set of key/value pairs, each of which represents a variable or expression which participates in the operation.
+~
+
+The format of the string value of the `target` property, the elements of the `values` array,
+the property names in the `state` object, and the property values in the `state` object,
+shall be consistent with the syntax of the programming language in which the code being analyzed was written.
 
 In this section, a "variable name" may be any of the following, unless otherwise specified:
 
@@ -2791,14 +2798,14 @@ Examples of valid "values":
 
 ~
 
-~ IsoNote
+~ IsoNumberedNote
 In languages where all objects have a built-in string representation (for example, by means of a method such as `ToString()`),
 the analysis tool might choose to obtain the string representation by calling that method.
 For example, in C#, given an object `uri` of type `System.Uri`, the tool might choose to obtain the string value
 by calling `uri.ToString()`, perhaps resulting in `"http://www.example.com"`.
 ~
 
-The requirements and interpretation of the `target`, `targetLocation`, `parameters`, and `variables` properties are as follows:
+The requirements and interpretation of the `target`, `targetLocation`, `values`, and `state` properties are as follows:
 
 * When `kind` is `"alias"`:
 
@@ -2809,10 +2816,10 @@ The requirements and interpretation of the `target`, `targetLocation`, `paramete
 
     * `targetLocation` shall be absent. 
 
-    * `parameters` should be present. If present, its value shall be an array with one element, whose
+    * `values` should be present. If present, its value shall be an array with one element, whose
     value is the name of the variable being aliased.
 
-    * `variables` may be present. If present, it shall contain a single property whose name is the name
+    * `state` may be present. If present, it shall contain a single property whose name is the name
     of the variable being aliased, and whose value is the value of that variable.
 
 * When `kind` is `"assignment"`:
@@ -2824,10 +2831,10 @@ The requirements and interpretation of the `target`, `targetLocation`, `paramete
 
     * `targetLocation` shall be absent.
 
-    * `parameters` should be present. If present, its value shall be an array with one element, whose
+    * `values` should be present. If present, its value shall be an array with one element, whose
     value is the value assigned to the target variable.
 
-    * `variables` may be present. If present, it shall contain properties which specify the names and values
+    * `state` may be present. If present, it shall contain properties which specify the names and values
     of selected variables or subexpressions which participate in the expression on the right-hand side
     of the assignment.
 
@@ -2838,11 +2845,11 @@ The requirements and interpretation of the `target`, `targetLocation`, `paramete
 
     * `targetLocation` may be present. If present, its value shall specify the location of the target of the branch.
 
-    * `parameters` may be present if the branch is the result of a test, in which case its value shall be
+    * `values` may be present if the branch is the result of a test, in which case its value shall be
     an array with one element, whose value is the Boolean value of the test condition;
     otherwise, it shall be absent.
 
-    * `variables` may be present if the branch is the result of a test, in which case it shall contain
+    * `state` may be present if the branch is the result of a test, in which case it shall contain
     properties which specify the names and values of selected variables or subexpressions which participate
     in the expression being tested; otherwise, it shall be absent.
 
@@ -2852,11 +2859,11 @@ The requirements and interpretation of the `target`, `targetLocation`, `paramete
 
     * `targetLocation` may be present. If present, its value shall specify the physical location of the function being called.
 
-    * `parameters` may be present. If present, its value shall be an array containing the values of the arguments
+    * `values` may be present. If present, its value shall be an array containing the values of the arguments
     passed to the function.
     This array shall not include the implicit object reference (for example, `this`) passed to object method calls.
 
-    * `variables` may be present. If present, it shall contain properties which specify the names and values of
+    * `state` may be present. If present, it shall contain properties which specify the names and values of
     selected variables or subexpressions participating in the expressions passed as arguments to the function.
     For object method calls, this may include the name and value of the object on which the method was invoked,
     or any variables or subexpressions which participate in an expression which resolves to that object.
@@ -2868,10 +2875,10 @@ The requirements and interpretation of the `target`, `targetLocation`, `paramete
 
     * `targetLocation` shall be absent.
 
-    * `parameters` may be present, in which case its value shall be an array containing the value or values
+    * `values` may be present, in which case its value shall be an array containing the value or values
     returned from the function; otherwise, it shall be absent.
 
-    * `variables` may be present. If present, it shall contain the names and values of any parameters
+    * `state` may be present. If present, it shall contain the names and values of any parameters
     that were passed by reference to the called function and whose value was reassigned by the called function.
 
 * When `kind` is `"continuation"`:
@@ -2880,9 +2887,9 @@ The requirements and interpretation of the `target`, `targetLocation`, `paramete
 
     * `targetLocation` shall be absent.
 
-    * `parameters` shall be absent.
+    * `values` shall be absent.
 
-    * `variables` may be present. If present, it shall contain the names and values of selected variables or
+    * `state` may be present. If present, it shall contain the names and values of selected variables or
     expressions at the specified location. Any variable that is in scope at the specified location may be
     mentioned or used in an expression.
 
@@ -2895,13 +2902,13 @@ The requirements and interpretation of the `target`, `targetLocation`, `paramete
 
     * `targetLocation` shall be absent.
 
-    * `parameters` may be present if the declaration has an initializer, in which case its value shall be
+    * `values` may be present if the declaration has an initializer, in which case its value shall be
     an array containing one element, whose value shall be the value of the initializer expression,
     or if the variable is automatically initialized to a default value, in which case its value shall be
     an array containing one element, whose value shall be that default value;
     otherwise, it shall be absent.
 
-    * `variables` may be present if the declaration has an initializer, in which case it shall contain
+    * `state` may be present if the declaration has an initializer, in which case it shall contain
     the names and values of selected variables or subexpressions participating in the initializer expression;
     otherwise, it shall be absent.
 
@@ -2913,11 +2920,11 @@ The requirements and interpretation of the `target`, `targetLocation`, `paramete
 
     * `targetLocation` shall be absent.
 
-    * `parameters` may be present. If present, its value shall be an array containing the values of the
+    * `values` may be present. If present, its value shall be an array containing the values of the
     arguments passed to the function.
     This array shall not include the implicit object reference (for example, `this`) passed to object method calls.
 
-    * `variables` may be present. If present, it shall contain the names and values of selected variables
+    * `state` may be present. If present, it shall contain the names and values of selected variables
     or expressions at the specified location.
     Any variable whose value is available at the specified location may be mentioned or used in an expression.
 
@@ -2929,10 +2936,10 @@ The requirements and interpretation of the `target`, `targetLocation`, `paramete
 
     * `targetLocation` shall be absent.
 
-    * `parameters` may be present if the function returns a value or values, in which case its value shall be
+    * `values` may be present if the function returns a value or values, in which case its value shall be
     an array containing the value or values returned from the function; otherwise, it shall be absent.
 
-    * `variables` shall be absent.
+    * `state` shall be absent.
 
 * When `kind` is `"functionReturn"`:
 
@@ -2942,10 +2949,10 @@ The requirements and interpretation of the `target`, `targetLocation`, `paramete
 
     * `targetLocation` shall be absent.
 
-    * `parameters` may be present if the function returns a value or values, in which case its value shall be
+    * `values` may be present if the function returns a value or values, in which case its value shall be
     an array containing the value or values returned from the function; otherwise, it shall be absent.
 
-    * `variables` may be present if the function returns a value or values, in which case it shall contain
+    * `state` may be present if the function returns a value or values, in which case it shall contain
     properties which specify the names and values of selected variables or subexpressions which participate
     in the expressions which produce the returned value or values; otherwise, it shall be absent.
 
@@ -2958,10 +2965,10 @@ The requirements and interpretation of the `target`, `targetLocation`, `paramete
 
     * `targetLocation` shall be absent.
 
-    * `parameters` may be present. If present, its value shall be an array with one element,
+    * `values` may be present. If present, its value shall be an array with one element,
     whose value is the value of the used variable at the specified location.
 
-    * `variables` shall be absent.
+    * `state` shall be absent.
 
 ~IsoNumberedExample
 In C++, if the source code contains the declaration
@@ -2970,7 +2977,7 @@ In C++, if the source code contains the declaration
 std::string &str = name;
 ```
 
-then the value of `kind` would be `"alias"`, the value of `target` would be `"str"`, the value of `parameters` would be
+then the value of `kind` would be `"alias"`, the value of `target` would be `"str"`, the value of `values` would be
 
 ```
 [ "name" ]
@@ -3001,19 +3008,19 @@ In C++ or C#, if the source code contains the assignment
 m = n + p;
 ```
 
-then the value of `kind` would be `"assignment"`, the value of `target` would be `"m"`, the value of `parameters` might be
+then the value of `kind` would be `"assignment"`, the value of `target` would be `"m"`, the value of `values` might be
 
 ```
 [ "5" ]
 ```
 
-and the value of `variables` might be
+and the value of `state` might be
 
 ```
 {  "n": "2", "p": "3" }
 ```
 
-Or, since `variables` can include expressions, the value of `variables` might be
+Or, since `state` can include expressions, the value of `state` might be
 
 ```
 {  "n + p": "5" }
@@ -3034,14 +3041,14 @@ In C#, if the source code contains the test
 if (s.Length > 0 && y > 2 && valid())
 ```
 
-then the value of `kind` would be `"branch"`, `target` would be absent, the value of `parameters`
+then the value of `kind` would be `"branch"`, `target` would be absent, the value of `values`
 might be
 
 ```
 [ "true" ]
 ```
 
-and the value of `variables` might be
+and the value of `state` might be
 
 ```
 { "s": "\"A string\"", "y": "3" }
@@ -3062,13 +3069,13 @@ func(7, m + n, "s", this, g(2));
 ```
 
 then the value of `kind` would be `"call"`, the value of `target` might be `"func"` (or, for example, `"N.C.func"` if
-the function `func` occurred in class `C` in namespace `N`), the value of `parameters` would be
+the function `func` occurred in class `C` in namespace `N`), the value of `values` would be
 
 ```
 [ "7", "m + n", "\"s\"", "this", "g(2)" ]
 ```
 
-and the value of `variables` might be
+and the value of `state` might be
 
 ```
 { "m": "2", "n": "3" }
@@ -3086,13 +3093,13 @@ example.Func(n);
 ```
 
 where `example` is an object of type `SomeClass`, then the value of `kind` would be `"call"`,
-the value of `target` would be `"SomeClass.Func"`, the value of `parameters` might be
+the value of `target` would be `"SomeClass.Func"`, the value of `values` might be
 
 ```
 [ "5" ]
 ```
 
-and the value of `variables` might be
+and the value of `state` might be
 
 ```
 { "example": "null", "n": "5" }
@@ -3109,13 +3116,13 @@ int n = func();
 ```
 
 then the value of `kind` would be `"callReturn"`, the value of `target` might be `"func"` (or, for example, `"N.C.func"` if
-the function `func` occurred in class `C` in namespace `N`), the value of `parameters` might be
+the function `func` occurred in class `C` in namespace `N`), the value of `values` might be
 
 ```
 [ "5" ]
 ```
 
-(assuming that the function returned the value `5`), and `variables` would be absent. 
+(assuming that the function returned the value `5`), and `state` would be absent. 
 
 ~
 
@@ -3127,13 +3134,13 @@ int m = n + p;
 ```
 
 then the value of `kind` would be `"declaration"`, the value of `target` would be `"m"`,
-the value of `parameters` might be
+the value of `values` might be
 
 ```
 [ "5" ]
 ```
 
-and the value of `variables` might be
+and the value of `state` might be
 
 ```
 { "n": "2", "p": "3" }
@@ -3164,13 +3171,13 @@ int func()
 ```
 
 then the value of `kind` would be `"functionExit"`, the value of `target` might be `"func"` (or, for example, `"N.C.func"` if
-the function `func` occurred in class `C` in namespace `N`), the value of `parameters` might be
+the function `func` occurred in class `C` in namespace `N`), the value of `values` might be
 
 ```
 [ "5" ]
 ```
 
-and the value of `variables` might be
+and the value of `state` might be
 
 ```
 { "m": "2", "n": "3" }
