@@ -2066,8 +2066,11 @@ A physical location specifies a reference to a programming artifact together wit
 
 ### `uri` property { #physicalLocation-uri }
 
-A `physicalLocation` object shall contain a property named `uri` whose value is a string that represents
+With one exception, a `physicalLocation` object shall contain a property named `uri` whose value is a string that represents
 the location of the file as a valid URI (&sect;[#fileFormat-uriProperties]).
+
+Under certain circumstance, if the `physicalLocation` object appears as the value of an `annotatedCodeLocation.targetLocation` property (&sect;[#annotatedCodeLocation-target]),
+the `uri` property may be absent, as described in that section.
 
 If the `run.files` property (&sect;[#run-files]) is present, the value of the `uri` property should be equal to
 the name of one of the properties on the `run.files` object,
@@ -2759,6 +2762,11 @@ In imprecise terms, the meanings of these properties are as follows:
 * `values` represents a set of values that are input to the operation or produced by the operation.
 * `state` is a set of key/value pairs, each of which represents a variable or expression which participates in the operation.
 ~
+
+If both the `targetLocation` property and the `physicalLocation` property (&sect;[#annotatedCodeLocation-physicalLocation])
+of this `annotatedCodeLocation` object are present, then `targetLocation.uri` (&sect;[#physicalLocation-uri]) may be absent,
+in which case it is considered to have the same value as `physicalLocation.uri`.
+This is the only situation in which the `uri` property of a `physicalLocation` object (&sect;[#physicalLocation]) may be omitted.
 
 The format of the string value of the `target` property, the elements of the `values` array,
 the property names in the `state` object, and the property values in the `state` object,
