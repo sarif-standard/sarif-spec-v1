@@ -359,13 +359,36 @@ which is unrealistic.
                   "step": 1,
                   "kind": "assignment",
                   "importance": "unimportant",
-                  "snippet": "offset = 0;",
+                  "snippet": "offset = (y + z) + 1;",
                   "physicalLocation": {
                     "uri": "file:///home/buildAgent/src/collections/list.h",
                     "region": {
                       "startLine": 15
                     }
                   },
+                  "values": [
+                    "42"
+                  ],
+                  "state": {
+                    "y": "2",
+                    "z": "4",
+                    "y + z": "6",
+                    "q": "7"
+                  },
+                  "annotations": [
+                    {
+                      "message": "(y + z) = 42",
+                      "locations": [
+                        {
+                          "region": {
+                            "startLine": 15,
+                            "startColumn": 13,
+                            "endColumn": 19
+                          }
+                        }
+                      ]
+                    }
+                  ],
                   "fullyQualifiedLogicalName": "collections::list:add",
                   "module": "platform",
                   "threadId": 52
