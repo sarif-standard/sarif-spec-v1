@@ -2066,8 +2066,17 @@ A physical location specifies a reference to a programming artifact together wit
 
 ### `uri` property { #physicalLocation-uri }
 
-A `physicalLocation` object shall contain a property named `uri` whose value is a string that represents
+With certain exceptions, a `physicalLocation` object shall contain a property named `uri` whose value is a string that represents
 the location of the file as a valid URI (&sect;[#fileFormat-uriProperties]).
+
+The exceptions are as follows:
+
+* Under certain circumstances, if the `physicalLocation` object appears as the value of an `annotatedCodeLocation.targetLocation` property (&sect;[#annotatedCodeLocation-target]),
+the `uri` property may be absent, as described in &sect;[#annotatedCodeLocation-target].
+
+* Under certain circumstances, if the `physicalLocation` object appears as a member of an `annotation.locations` array (&sect;[#annotation-locations])
+which in turn appears as the value of an `annotatedCodeLocation.annotations` property (&sect;[#annotatedCodeLocation-annotations]),
+the `uri` property may be absent, as described in &sect;[#annotatedCodeLocation-annotations].
 
 If the `run.files` property (&sect;[#run-files]) is present, the value of the `uri` property should be equal to
 the name of one of the properties on the `run.files` object,
@@ -2760,6 +2769,10 @@ In imprecise terms, the meanings of these properties are as follows:
 * `state` is a set of key/value pairs, each of which represents a variable or expression which participates in the operation.
 ~
 
+If both the `targetLocation` property and the `physicalLocation` property (&sect;[#annotatedCodeLocation-physicalLocation])
+of this `annotatedCodeLocation` object are present, then `targetLocation.uri` (&sect;[#physicalLocation-uri]) may be absent,
+in which case it is considered to have the same value as `physicalLocation.uri`.
+
 The format of the string value of the `target` property, the elements of the `values` array,
 the property names in the `state` object, and the property values in the `state` object,
 shall be consistent with the syntax of the programming language in which the code being analyzed was written.
@@ -3246,10 +3259,79 @@ that converts untrusted text to executable code).
 An `annotatedCodeLocation` object may contain a property named `snippet` whose value is a string containing
 the text of the source code lines specified by `annotatedCodeLocation.physicalLocation.region`.
 
+### `annotations` property { #annotatedCodeLocation-annotations }
+
+An `annotatedCodeLocation` object may contain a property named `annotations` whose value is an array containing
+one or more unique (&sect;[#unique-array-properties]) `annotation` objects (&sect;[#annotation]),
+each of which describes one or more additional physical locations which are relavant to this
+`annotatedCodeLocation` object.
+
+~ IsoExample
+Consider an `annotatedCodeLocation` object which describes the declaration statement
+
+```
+    int x = (y + z) * q;
+```
+
+The `kind` property would be `"declaration"`, the `target` property would be `"x"`, the `values` property
+might be `"42"`, and the `state` property might be
+
+```
+{ "y": "2", "z": "4", "y + z": "6", "q": "7" }
+```
+
+Now, if the analysis tool wanted to emphasize the value of the expression `(y + z)`, for example, to allow
+a viewer to highlight the expression, or to display a message when the mouse hovered over the expression,
+it might set the `annotations` property to
+
+```
+[                                       # an array of annotation objects
+ {                                      # an annotation object
+    "message": "(y + z) = 42",
+    "locations": [                      # an array of physicalLocation objects
+      {                                 # a physicalLocation object
+                                        # The uri property can be omitted if it is the same
+                                        # as annotatedCodeLocation.physicalLocation.uri
+        "region": {
+          "startLine": 12,
+          "startColumn": 13,
+          "endColumn": 19
+        }
+      }
+    ]
+  }
+]
+```
+
+~
+
+For any integer array indices `i` and `j`, if value the of the property `annotatedCodeLocation.annotations[i].locations[j].uri`
+is the same as the value of the property `annotatedCodeLocation.physicalLocation.uri`, then the `uri` property may be
+omitted from the `physicalLocation` object `annotatedCodeLocation.annotations[i].locations[j]`, as in the example above.
+In that case, `annotatedCodeLocation.annotations[i].locations[j].uri` is considered to have the
+same value as `annotatedCodeLocation.physicalLocation.uri`.
+
 ### `properties` property { #annotatedCodeLocation-properties }
 
 An `annotatedCodeLocation` object may contain a property named `properties` whose value is a property bag (&sect;[#property-bags]).
 This allows tools to include additional information about the use of the location in this context that is not explicitly specified in the SARIF format.
+
+## `annotation` object { #annotation }
+
+### General { #annotation-General }
+
+An `annotation` object associates a message with one ore more physical locations.
+
+### `message` property { #annotation-message }
+
+An `annotation` object shall contain a property named `message` whose value is a string that describes the physical location or locations
+specified by the `locations` property (&sect;[#annotation-locations]).
+
+### `locations` property { #annotation-locations }
+
+An `annotation` object shall contain a property named `locations` whose value is an array containing one or more
+unique (&sect;[#unique-array-properties]) `physicalLocation` objects (&sect;[#physicalLocation]) to which the `message` (&sect;[#annotation-message])
+is relevant.
 
 ## `rule` object { #rule }
 
