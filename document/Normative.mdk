@@ -6,20 +6,23 @@ For dated references, only the edition cited applies.
 For undated references, the latest edition of the referenced document (including any amendments) applies.
 
 ECMA-404, The JSON Data Interchange Format.
-Available from &lt;<http://ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf>&gt;
+Available from <http://ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf>
 
 FIPS PUB 180-4, Secure Hash Standard (SHS).
-Available from &lt;<http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf>&gt;
+Available from <http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf>
 
 ISO 8601:2004, _Data elements and interchange formats -- Information interchange -- Representation of dates and times_.
-Available from  &lt;<http://www.iso.org/iso/catalogue_detail?csnumber=40874>&gt;
+Available from <http://www.iso.org/iso/catalogue_detail?csnumber=40874>
 
-JSON Schema: core definitions and terminology \[viewed 2016-04-22\]. Available from &lt;<http://json-schema.org/latest/json-schema-core.html>&gt;
+JSON Schema: core definitions and terminology \[viewed 2016-04-22\]. Available from <http://json-schema.org/latest/json-schema-core.html>
 
 RFC 2045, Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies.
-Available from &lt;<http://www.ietf.org/rfc/rfc2045.txt>&gt;
+Available from <http://www.ietf.org/rfc/rfc2045.txt>
+
+RFC 2119, Key words for use in RFCs to Indicate Requirement Levels.
+Available from <https://www.ietf.org/rfc/rfc2119.txt>
 
 RFC 3986, Uniform Resource Identifier (URI): Generic Syntax.
-Available from &lt;<https://tools.ietf.org/html/rfc3986>&gt;
+Available from <https://tools.ietf.org/html/rfc3986>
 
-Semantic Versioning 2.0.0 \[viewed 2015-06-02\]. Available from &lt;<http://semver.org>&gt;
+Semantic Versioning 2.0.0 \[viewed 2015-06-02\]. Available from <http://semver.org>

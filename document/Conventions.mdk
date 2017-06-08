@@ -4,6 +4,11 @@
 
 The following conventions are used within this document.
 
+## Key words for requirements levels
+
+In this document, the key words "must", "must not", "required", "shall", "shall not",
+"should", "should not", "recommended", "may", and "optional" are used as defined in RFC 2119.
+
 ## Format examples
 
 This document contains several partial examples of the SARIF format.
