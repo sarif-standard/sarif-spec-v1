@@ -3263,7 +3263,7 @@ the text of the source code lines specified by `annotatedCodeLocation.physicalLo
 
 An `annotatedCodeLocation` object may contain a property named `annotations` whose value is an array containing
 one or more unique (&sect;[#unique-array-properties]) `annotation` objects (&sect;[#annotation]),
-each of which describes one or more additional physical locations which are relavant to this
+each of which describes one or more additional physical locations which are relevant to this
 `annotatedCodeLocation` object.
 
 ~ IsoExample
@@ -3320,7 +3320,7 @@ This allows tools to include additional information about the use of the locatio
 
 ### General { #annotation-General }
 
-An `annotation` object associates a message with one ore more physical locations.
+An `annotation` object associates a message with one or more physical locations.
 
 ### `message` property { #annotation-message }
 
