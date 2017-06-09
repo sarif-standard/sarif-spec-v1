@@ -463,7 +463,7 @@ property is present and contains information for every file in which results wer
         "hashes": [
             {
                 "value": "b13ce2678a8807ba0765ab94a0ecd394f869bc81",
-                "algorithm": "sha256
+                "algorithm": "sha256"
             }
         ]
     }
