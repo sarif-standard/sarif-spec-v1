@@ -2415,7 +2415,7 @@ but `name` is not equal to the property name, so it cannot be omitted.
 
 ### `kind` property { #logicalLocation-kind }
 
-A `logicalLocation` object should contain a property named `kind` whose value is of the following strings,
+A `logicalLocation` object should contain a property named `kind` whose value is one of the following strings,
 if any of those strings accurately describes the construct identified by this object:
 
 *   `"function"` 
