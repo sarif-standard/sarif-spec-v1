@@ -1302,6 +1302,18 @@ Analysis tools that are configurable to produce hashes with a variety of commonl
 will interoperate most easily with such systems.
 ~
 
+### `contents` property { #file-contents }
+
+A `file` object may contain a property named `contents` whose value shall be a string
+representation of the contents of the file.
+
+If the `file` object represents a binary file, the value of the `contents` string
+shall be the MIME Base64 encoding of the bytes contained in the file.
+
+If the `file` object represents a text file, the value of the `contents` string
+shall be computed by first encoding the characters in the file to UTF-8,
+and then encoding the resulting byte sequence with MIME Base64.
+
 ### `properties` property { #file-properties }
 
 A `file` object may contain a property named `properties` whose value is a property bag (&sect;[#property-bags]).
