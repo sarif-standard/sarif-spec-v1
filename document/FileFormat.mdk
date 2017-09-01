@@ -458,7 +458,7 @@ property is present and contains information for every file in which results wer
 
 ```
 "files": {
-    "file:///C:/Code/main.cc": {
+    "file:///C:/Code/main.c": {
         "mimeType": "text/x-c",
         "hashes": [
             {
@@ -2103,7 +2103,7 @@ which provides additional information about the file specified by `uri`.
     {
       "run": {
         "files": {
-          "file:///C:/Code/main.cc": [
+          "file:///C:/Code/main.c": [
             {
               "mimeType": "text/x-c",
             }
@@ -2118,7 +2118,7 @@ which provides additional information about the file specified by `uri`.
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///C:/Code/main.cc",
+                "uri": "file:///C:/Code/main.c",
                 "region: {
                   "startLine": 24,
                   "startColumn": 9
