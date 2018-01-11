@@ -1,4 +1,11 @@
+# **This repository is frozen**
+
+The specification in this repository documents SARIF v1.0.0.
+
+SARIF is now undergoing standardization by the [OASIS Static Analysis Results Interchange Format (SARIF) TC](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=sarif), which will release its first public version as SARIF v2.0.0.
+
 # sarif-spec
+
 This repo contains the draft of the specification document for the Static Analysis Results Interchange Format (SARIF).
 The current HTML is always available [here](https://rawgit.com/sarif-standard/sarif-spec/master/Static%20Analysis%20Results%20Interchange%20Format%20(SARIF).html).
 
