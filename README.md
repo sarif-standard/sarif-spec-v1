@@ -1,4 +1,9 @@
+# **This repository is obsolete**
+
+It is maintained for historical reasons only. The Static Analysis Results Interchange Format is now undergoing standardization by OASIS. The work is going on in a GitHub repo belonging to the OASIS SARIF Technical Committee: [https://github.com/oasis-tcs/sarif-spec](). At the time of this writing, the TC has not yet 
+
 # sarif-spec
+
 This repo contains the draft of the specification document for the Static Analysis Results Interchange Format (SARIF).
 The current HTML is always available [here](https://rawgit.com/sarif-standard/sarif-spec/master/Static%20Analysis%20Results%20Interchange%20Format%20(SARIF).html).
 
