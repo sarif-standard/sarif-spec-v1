@@ -2350,7 +2350,7 @@ character in the region.
 A `region` object may contain a property named `length` whose value is a non-negative integer.
 
 When the `region` object represents a text region,
-the value of `length` shall  the number of characters in the region.
+the value of `length` shall be the number of characters in the region.
 If the region consists of 0 characters, then `length` shall either be absent or shall have the value 0.
 
 When a `region` object represents a binary region,
